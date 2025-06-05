@@ -1,6 +1,5 @@
 package com.example.marketplace_backend.controller.Responses;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,13 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductResponse {
-    private Long id;
-    private String name;
-    private String description;
-    private String categoryName;
-    private Long categoryId;
-    private FileResponse imageFile;
-
-
+public class FileResponse {
+    private String uniqueName;
+    private String originalName;
+    private String url;
+    private String fileType;
 }

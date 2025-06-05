@@ -1,0 +1,80 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Удаляем старые текстовые поля image -->
+    <changeSet id="drop-image-fields" author="JekiChan08">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="subcategory" columnName="image"/>
+        </preConditions>
+        <sql>
+            ALTER TABLE subcategory DROP COLUMN IF EXISTS image;
+            ALTER TABLE categories DROP COLUMN IF EXISTS image;
+            ALTER TABLE products DROP COLUMN IF EXISTS image;
+        </sql>
+    </changeSet>
+
+    <!-- Создаём таблицу files -->
+    <changeSet id="create-files-table" author="JekiChan08">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="files"/>
+            </not>
+        </preConditions>
+        <sql>
+            CREATE TABLE files (
+                                   id BIGSERIAL PRIMARY KEY,
+                                   original_name VARCHAR(255),
+                                   unique_name VARCHAR(255) NOT NULL,
+                                   file_type VARCHAR(100),
+                                   file_path TEXT,
+                                   upload_time TIMESTAMP
+            );
+        </sql>
+    </changeSet>
+
+    <!-- Добавляем image_id как внешний ключ в subcategory -->
+    <changeSet id="add-image-fk-subcategory" author="JekiChan08">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="subcategory" columnName="image_id"/>
+            </not>
+        </preConditions>
+        <sql>
+            ALTER TABLE subcategory
+                ADD COLUMN image_id BIGINT,
+            ADD CONSTRAINT fk_subcategory_image FOREIGN KEY (image_id) REFERENCES files(id) ON DELETE SET NULL;
+        </sql>
+    </changeSet>
+
+    <!-- В categories -->
+    <changeSet id="add-image-fk-categories" author="JekiChan08">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="categories" columnName="image_id"/>
+            </not>
+        </preConditions>
+        <sql>
+            ALTER TABLE categories
+                ADD COLUMN image_id BIGINT,
+            ADD CONSTRAINT fk_categories_image FOREIGN KEY (image_id) REFERENCES files(id) ON DELETE SET NULL;
+        </sql>
+    </changeSet>
+
+    <!-- В products -->
+    <changeSet id="add-image-fk-products" author="JekiChan08">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="products" columnName="image_id"/>
+            </not>
+        </preConditions>
+        <sql>
+            ALTER TABLE products
+                ADD COLUMN image_id BIGINT,
+            ADD CONSTRAINT fk_products_image FOREIGN KEY (image_id) REFERENCES files(id) ON DELETE SET NULL;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

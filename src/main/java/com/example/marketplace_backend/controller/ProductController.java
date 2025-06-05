@@ -4,6 +4,7 @@ import com.example.marketplace_backend.Model.Product;
 import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
 import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
 import com.example.marketplace_backend.Service.Impl.UserServiceImpl;
+import com.example.marketplace_backend.controller.Responses.FileResponse;
 import com.example.marketplace_backend.controller.Responses.ProductResponse;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Tag(name = "Product Controller", description = "API для управления продуктами")
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 @RequiredArgsConstructor
 public class ProductController {
 
@@ -25,36 +26,34 @@ public class ProductController {
     private final UserServiceImpl userService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getById(
-            @PathVariable Long id
-    ) {
+    public ResponseEntity<ProductResponse> getById(@PathVariable Long id) {
         Product product = productService.getById(id);
-        if (product == null) {
+        if (product == null || product.isDeleted()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        ProductResponse productResponse = convertToProductResponse(product);
 
-        ProductResponse response = new ProductResponse();
-        response.setId(id);
-        response.setName(product.getName());
-        response.setDescription(product.getDescription());
-        response.setCategoryId(product.getCategory().getId());
-        response.setCategoryName(product.getCategory().getName());
-
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(productResponse);
     }
 
+
+
     @GetMapping("/list")
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
         List<Product> products = productService.findAllActive();
         if (products.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(products);
+
+        List<ProductResponse> responses = products.stream()
+                .map(this::convertToProductResponse)
+                .toList();
+
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/list/search")
-    public ResponseEntity<List<Product>> findByNameContaining(
+    public ResponseEntity<List<ProductResponse>> findByNameContaining(
             @Parameter(description = "Поисковый запрос", required = true, example = "Пицца")
             @RequestParam String query
     ) {
@@ -62,19 +61,37 @@ public class ProductController {
         if (products.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(products);
+
+        List<ProductResponse> responses = products.stream()
+                .map(this::convertToProductResponse)
+                .toList();
+
+        return ResponseEntity.ok(responses);
     }
 
+    private ProductResponse convertToProductResponse(Product product) {
+        ProductResponse response = new ProductResponse();
+        response.setId(product.getId());
+        response.setName(product.getName());
+        response.setDescription(product.getDescription());
+        response.setCategoryId(product.getCategory().getId());
+        response.setCategoryName(product.getCategory().getName());
 
-    @GetMapping("/{id}/image")
-    public ResponseEntity<String> getProductImage(
-            @Parameter(description = "ID продукта", required = true, example = "123")
-            @PathVariable Long id
-    ) {
-        Product product = productService.getById(id);
-        if (product != null && product.getImage() != null) {
-            return ResponseEntity.ok(product.getImage());
+        if (product.getImage() != null) {
+            var image = product.getImage();
+
+            FileResponse fileResponse = new FileResponse();
+            fileResponse.setUniqueName(image.getUniqueName());
+            fileResponse.setOriginalName(image.getOriginalName());
+            fileResponse.setUrl("http://localhost:8080/uploads/" + image.getUniqueName());
+            fileResponse.setFileType(image.getFileType());
+
+            response.setImageFile(fileResponse);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        return response;
     }
+
+
+
 }

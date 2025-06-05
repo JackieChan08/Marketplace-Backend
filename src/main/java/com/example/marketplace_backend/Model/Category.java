@@ -18,9 +18,9 @@ public class Category {
     private String name;
     @Column(name = "description")
     private String description;
-    @JsonBackReference
-    @Column(name = "image")
-    private String image;
+    @ManyToOne
+    @JoinColumn(name = "image_id")
+    private FileEntity image;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference

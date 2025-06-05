@@ -20,7 +20,7 @@ import java.util.List;
 @Tag(name = "Order Controller", description = "Управление заказами")
 @Controller
 @Data
-@RequestMapping("/orders")
+@RequestMapping("/api/orders")
 public class OrderController {
     private final ProductServiceImpl productService;
     private final OrderServiceImpl orderService;

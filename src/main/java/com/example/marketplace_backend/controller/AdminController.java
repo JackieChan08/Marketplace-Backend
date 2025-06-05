@@ -1,16 +1,16 @@
 package com.example.marketplace_backend.controller;
 
 import com.example.marketplace_backend.Model.Category;
+import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Product;
-import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
-import com.example.marketplace_backend.Service.Impl.OrderServiceImpl;
-import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
-import com.example.marketplace_backend.Service.Impl.UserServiceImpl;
+import com.example.marketplace_backend.Model.Subcategory;
+import com.example.marketplace_backend.Service.Impl.*;
 import com.example.marketplace_backend.controller.Requests.models.CategoryRequest;
 import com.example.marketplace_backend.controller.Requests.models.ProductRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -19,12 +19,16 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 public class AdminController {
     private final UserServiceImpl userService;
     private final OrderServiceImpl orderService;
     private final ProductServiceImpl productService;
     private final CategoryServiceImpl categoryService;
+    private final SubcategoryServiceImpl subcategoryService;
+    private final FileUploadService fileUploadService;
+
+    // Products
 
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getAllProducts() {
@@ -32,57 +36,50 @@ public class AdminController {
         return ResponseEntity.ok(products);
     }
 
-
-    @PostMapping(value = "/products/edit/{id}", consumes = "application/json")
+    @PostMapping(value = "/products/edit/{id}", consumes = {"multipart/form-data"})
     public ResponseEntity<Product> editProduct(
             @PathVariable Long id,
-            @RequestBody ProductRequest productRequest) throws IOException {
-
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Double price,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Long subcategoryId,
+            @RequestParam(required = false) MultipartFile image
+    ) throws IOException {
         Product product = productService.getById(id);
 
-        if (productRequest.getName() != null) {
-            product.setName(productRequest.getName());
-        }
+        if (name != null) product.setName(name);
+        if (price != null) product.setPrice(price);
+        if (description != null) product.setDescription(description);
+        if (categoryId != null) product.setCategory(categoryService.getById(categoryId));
+        if (subcategoryId != null) product.setSubcategory(subcategoryService.getById(subcategoryId));
 
-        if (productRequest.getPrice() != 0) {
-            product.setPrice(productRequest.getPrice());
-        }
-
-        if (productRequest.getDescription() != null) {
-            product.setDescription(productRequest.getDescription());
-        }
-
-        if (productRequest.getCategoryId() != null) {
-            product.setCategory(categoryService.getById(productRequest.getCategoryId()));
-        }
-
-        if (productRequest.getImage() != null && !productRequest.getImage().isEmpty()) {
-            byte[] imageBytes = productRequest.getImage().getBytes();
-            String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
-            product.setImage(encodedImage);
+        if (image != null && !image.isEmpty()) {
+            FileEntity savedImage = fileUploadService.saveImage(image);
+            product.setImage(savedImage);
         }
 
         Product updatedProduct = productService.save(product);
         return ResponseEntity.ok(updatedProduct);
     }
 
+    @PostMapping("/products/create")
+    public ResponseEntity<Product> createProduct(
+            @RequestParam String name,
+            @RequestParam double price,
+            @RequestParam String description,
+            @RequestParam Long categoryId,
+            @RequestParam Long subcategoryId,
+            @RequestParam MultipartFile image) throws Exception {
+        ProductRequest dto = new ProductRequest();
+        dto.setName(name);
+        dto.setPrice(price);
+        dto.setDescription(description);
+        dto.setCategoryId(categoryId);
+        dto.setSubcategoryId(subcategoryId);
+        dto.setImage(image);
 
-    @PostMapping(value = "/products/create", consumes = "application/json")
-    public ResponseEntity<Product> createProduct(@RequestBody ProductRequest productRequest) throws IOException {
-        Product product = new Product();
-        product.setName(productRequest.getName());
-        product.setPrice(productRequest.getPrice());
-        product.setDescription(productRequest.getDescription());
-        product.setCategory(categoryService.findActiveCategoryById(productRequest.getCategoryId()));
-
-        if (productRequest.getImage() != null && !productRequest.getImage().isEmpty()) {
-            byte[] imageBytes = productRequest.getImage().getBytes();
-            String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
-            product.setImage(encodedImage);
-        }
-
-        Product savedProduct = productService.save(product);
-        return ResponseEntity.ok(savedProduct);
+        return ResponseEntity.ok(productService.createProduct(dto));
     }
 
 
@@ -101,6 +98,9 @@ public class AdminController {
         productService.save(product);
         return ResponseEntity.ok(product);
     }
+
+
+    // Categories
 
     @GetMapping("/categories")
     public ResponseEntity<List<Category>> getAllCategories() {
@@ -124,45 +124,124 @@ public class AdminController {
         return ResponseEntity.ok(category);
     }
 
-    @PostMapping(value = "/categories/create", consumes = "application/json")
-    public ResponseEntity<Category> createCategoryJson(@RequestBody CategoryRequest categoryRequest) {
+    @PostMapping("/categories/create")
+    public ResponseEntity<Category> createCategoryWithImage(
+            @RequestParam String name,
+            @RequestParam String description,
+            @RequestParam MultipartFile image) throws Exception {
+
         Category category = new Category();
-        category.setName(categoryRequest.getName());
-        category.setDescription(categoryRequest.getDescription());
-        category.setImage(categoryRequest.getImage());
+        category.setName(name);
+        category.setDescription(description);
+        category.setDeleted(false);
 
-
-        if (categoryRequest.getImage() != null && !categoryRequest.getImage().isEmpty()) {
-            byte[] imageBytes = categoryRequest.getImage().getBytes();
-            String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
-            category.setImage(encodedImage);
-        }
+        // сохраняем фото
+        FileEntity savedImage = fileUploadService.saveImage(image);
+        category.setImage(savedImage);
 
         categoryService.save(category);
         return ResponseEntity.ok(category);
     }
-    @PostMapping(value = "/categories/edit/{id}", consumes = "application/json")
+
+    @PostMapping(value = "/categories/edit/{id}", consumes = {"multipart/form-data"})
     public ResponseEntity<Category> editCategory(
             @PathVariable Long id,
-            @RequestBody CategoryRequest categoryRequest) throws IOException {
-
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) MultipartFile image
+    ) throws IOException {
         Category category = categoryService.getById(id);
 
-        if (categoryRequest.getName() != null && !categoryRequest.getName().isEmpty()) {
-            category.setName(categoryRequest.getName());
+        if (name != null && !name.isEmpty()) {
+            category.setName(name);
         }
-
-        if (categoryRequest.getDescription() != null && !categoryRequest.getDescription().isEmpty()) {
-            category.setDescription(categoryRequest.getDescription());
+        if (description != null && !description.isEmpty()) {
+            category.setDescription(description);
         }
-
-        if (categoryRequest.getImage() != null && !categoryRequest.getImage().isEmpty()) {
-            byte[] imageBytes = categoryRequest.getImage().getBytes();
-            String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
-            category.setImage(encodedImage);
+        if (image != null && !image.isEmpty()) {
+            FileEntity savedImage = fileUploadService.saveImage(image);
+            category.setImage(savedImage);
         }
 
         categoryService.save(category);
         return ResponseEntity.ok(category);
     }
+
+
+    // subcategory
+
+
+    @PostMapping("/subcategories/create")
+    public ResponseEntity<Subcategory> createSubcategoryWithImage(
+            @RequestParam String name,
+            @RequestParam String description,
+            @RequestParam Long categoryId,
+            @RequestParam(required = false) Long subcategoryId,
+            @RequestParam MultipartFile image) throws Exception {
+
+        Subcategory subcategory = new Subcategory();
+        subcategory.setName(name);
+        subcategory.setDescription(description);
+
+        subcategory.setCategory(categoryService.getById(categoryId));
+
+        if (subcategoryId != null) {
+            subcategory.setSubcategory(subcategoryService.getById(subcategoryId));
+        }
+
+        FileEntity savedImage = fileUploadService.saveImage(image);
+        subcategory.setImage(savedImage);
+
+        subcategoryService.save(subcategory);
+        return ResponseEntity.ok(subcategory);
+    }
+
+    @PostMapping(value = "/subcategories/edit/{id}", consumes = {"multipart/form-data"})
+    public ResponseEntity<Subcategory> editSubcategory(
+            @PathVariable Long id,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Long subcategoryId,
+            @RequestParam(required = false) MultipartFile image
+    ) throws IOException {
+        Subcategory subcategory = subcategoryService.getById(id);
+
+        if (name != null && !name.isEmpty()) {
+            subcategory.setName(name);
+        }
+        if (description != null && !description.isEmpty()) {
+            subcategory.setDescription(description);
+        }
+        if (categoryId != null) {
+            subcategory.setCategory(categoryService.getById(categoryId));
+        }
+        if (subcategoryId != null) {
+            subcategory.setSubcategory(subcategoryService.getById(subcategoryId));
+        }
+        if (image != null && !image.isEmpty()) {
+            FileEntity savedImage = fileUploadService.saveImage(image);
+            subcategory.setImage(savedImage);
+        }
+
+        subcategoryService.save(subcategory);
+        return ResponseEntity.ok(subcategory);
+    }
+
+    @DeleteMapping("/subcategories/{id}")
+    public ResponseEntity<Void> deleteSubcategory(@PathVariable Long id) {
+        Subcategory subcategory = subcategoryService.getById(id);
+        subcategory.setDeleted(true);
+        subcategoryService.save(subcategory);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/subcategories/restore/{id}")
+    public ResponseEntity<Subcategory> restoreSubcategory(@PathVariable Long id) {
+        Subcategory subcategory = subcategoryService.getById(id);
+        subcategory.setDeleted(false);
+        subcategoryService.save(subcategory);
+        return ResponseEntity.ok(subcategory);
+    }
+
 }

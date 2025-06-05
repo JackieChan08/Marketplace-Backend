@@ -28,9 +28,9 @@ public class Product {
     @JsonBackReference
     @JoinColumn(name = "subcategory_id")
     private Subcategory subcategory;
-    @JsonBackReference
-    @Column(name = "image", columnDefinition = "LONGTEXT")
-    private String image;
+    @ManyToOne
+    @JoinColumn(name = "image_id")
+    private FileEntity image;
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;

@@ -1,14 +1,11 @@
 package com.example.marketplace_backend.controller;
 
-import com.example.marketplace_backend.Model.*;
-import com.example.marketplace_backend.Service.Impl.*;
-import com.example.marketplace_backend.Repositories.*;
-import io.swagger.v3.oas.annotations.Operation;
+import com.example.marketplace_backend.Model.Category;
+import com.example.marketplace_backend.Model.Product;
+import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
+import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
+import com.example.marketplace_backend.controller.Responses.*;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,49 +16,76 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Set;
-
-@Tag(name = "Category Controller", description = "API для управления категориями товаров")
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/api/categories")
 @RequiredArgsConstructor
+@Tag(name = "Category Controller", description = "API для управления категориями товаров")
 public class CategoryController {
 
     private final ProductServiceImpl productService;
     private final CategoryServiceImpl categoryService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getById(
+    public ResponseEntity<CategoryResponse> getById(
             @Parameter(description = "ID категории", required = true, example = "123")
             @PathVariable Long id
     ) {
         Category category = categoryService.getById(id);
-        List<Product> products = category.getProducts();
-
-        if (category == null) {
+        if (category == null || category.isDeleted()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(category);
+
+        CategoryResponse response = convertToCategoryResponse(category);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Category>> getCategories() {
+    public ResponseEntity<List<CategoryResponse>> getCategories() {
         List<Category> categories = categoryService.findAllActive();
         if (categories.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(categories);
+
+        List<CategoryResponse> responses = categories.stream()
+                .map(this::convertToCategoryResponse)
+                .toList();
+
+        return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/{id}/image")
-    public ResponseEntity<String> getCategoryImage(
-            @Parameter(description = "ID категории", required = true, example = "123")
-            @PathVariable Long id
-    ) {
-        Category category = categoryService.getById(id);
-        if (category != null && category.getImage() != null) {
-            return ResponseEntity.ok(category.getImage());
+    private CategoryResponse convertToCategoryResponse(Category category) {
+        CategoryResponse response = new CategoryResponse();
+        response.setId(category.getId());
+        response.setName(category.getName());
+        response.setDescription(category.getDescription());
+
+        List<ProductResponse> productResponses = category.getProducts().stream()
+                .filter(product -> !product.isDeleted())
+                .map(this::convertToProductResponse)
+                .toList();
+
+        response.setProducts(productResponses);
+
+        return response;
+    }
+
+    private ProductResponse convertToProductResponse(Product product) {
+        ProductResponse response = new ProductResponse();
+        response.setId(product.getId());
+        response.setName(product.getName());
+        response.setDescription(product.getDescription());
+        response.setCategoryId(product.getCategory().getId());
+        response.setCategoryName(product.getCategory().getName());
+
+        if (product.getImage() != null) {
+            FileResponse fileResponse = new FileResponse();
+            fileResponse.setUniqueName(product.getImage().getUniqueName());
+            fileResponse.setOriginalName(product.getImage().getOriginalName());
+            fileResponse.setUrl("http://localhost:8080/uploads/" + product.getImage().getUniqueName());
+            fileResponse.setFileType(product.getImage().getFileType());
+            response.setImageFile(fileResponse);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        return response;
     }
 }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/api/cart")
 @Tag(name = "Cart API", description = "API для управления корзиной пользователей")
 public class CartController {
 

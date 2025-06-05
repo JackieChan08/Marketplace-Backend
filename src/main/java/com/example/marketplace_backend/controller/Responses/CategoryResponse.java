@@ -6,17 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductResponse {
+public class CategoryResponse {
     private Long id;
     private String name;
     private String description;
-    private String categoryName;
-    private Long categoryId;
-    private FileResponse imageFile;
-
-
+    private List<ProductResponse> products;
 }
