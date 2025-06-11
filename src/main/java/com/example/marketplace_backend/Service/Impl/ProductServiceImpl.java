@@ -7,7 +7,6 @@ import com.example.marketplace_backend.Repositories.CategoryRepository;
 import com.example.marketplace_backend.Repositories.ProductRepository;
 import com.example.marketplace_backend.Repositories.SubcategoryRepository;
 import com.example.marketplace_backend.controller.Requests.models.ProductRequest;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

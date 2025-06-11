@@ -4,7 +4,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <!-- Удаляем старые текстовые поля image -->
     <changeSet id="drop-image-fields" author="JekiChan08">
         <preConditions onFail="MARK_RAN">
             <columnExists tableName="subcategory" columnName="image"/>
@@ -16,7 +15,6 @@
         </sql>
     </changeSet>
 
-    <!-- Создаём таблицу files -->
     <changeSet id="create-files-table" author="JekiChan08">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -35,7 +33,6 @@
         </sql>
     </changeSet>
 
-    <!-- Добавляем image_id как внешний ключ в subcategory -->
     <changeSet id="add-image-fk-subcategory" author="JekiChan08">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -49,7 +46,6 @@
         </sql>
     </changeSet>
 
-    <!-- В categories -->
     <changeSet id="add-image-fk-categories" author="JekiChan08">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -63,7 +59,6 @@
         </sql>
     </changeSet>
 
-    <!-- В products -->
     <changeSet id="add-image-fk-products" author="JekiChan08">
         <preConditions onFail="MARK_RAN">
             <not>

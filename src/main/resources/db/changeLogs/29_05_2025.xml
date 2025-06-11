@@ -4,44 +4,18 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="add-table-roles" author="JekiChan08">
-        <preConditions onFail="MARK_RAN">
-            <not><tableExists tableName="roles"/></not>
-        </preConditions>
-        <sql>
-            CREATE TABLE roles (
-                                   id BIGSERIAL PRIMARY KEY,
-                                   role_name VARCHAR(255) NOT NULL
-            );
-        </sql>
-    </changeSet>
-
     <changeSet id="add-table-users" author="JekiChan08">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="users"/></not>
         </preConditions>
         <sql>
             CREATE TABLE users (
-                                   id BIGSERIAL PRIMARY KEY,
-                                   login VARCHAR(255) NOT NULL UNIQUE,
-                                   password TEXT NOT NULL,
-                                   email VARCHAR(255),
-                                   phone_number VARCHAR(50)
-            );
-        </sql>
-    </changeSet>
-
-    <changeSet id="add-table-users_roles" author="JekiChan08">
-        <preConditions onFail="MARK_RAN">
-            <not><tableExists tableName="users_roles"/></not>
-        </preConditions>
-        <sql>
-            CREATE TABLE users_roles (
-                                         user_id BIGINT NOT NULL,
-                                         role_id BIGINT NOT NULL,
-                                         CONSTRAINT fk_users_roles_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-                                         CONSTRAINT fk_users_roles_role FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
-                                         PRIMARY KEY (user_id, role_id)
+                                   id SERIAL PRIMARY KEY,
+                                   email VARCHAR(255) UNIQUE NOT NULL,
+                                   name VARCHAR(255),
+                                   role VARCHAR(20) NOT NULL,
+                                   provider VARCHAR(50),
+                                   password varchar(250)
             );
         </sql>
     </changeSet>

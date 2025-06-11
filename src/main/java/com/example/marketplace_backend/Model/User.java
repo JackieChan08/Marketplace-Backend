@@ -1,39 +1,36 @@
 package com.example.marketplace_backend.Model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import com.example.marketplace_backend.enums.Role;
 
-import java.util.List;
-
-@Entity
 @Data
+@Entity
 @Table(name = "users")
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
-public class User{
+public class User {
+
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String login;
-    @JsonBackReference
-    private String password;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_roles",
-    joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles;
-    private String email;
-    private String phoneNumber;
-    public User() {
 
-    }
-    public User(String login, String password, List<Role>  role){
-        this.login = login;
-        this.password = password;
-        this.roles = role;
-    }
+    private String email;
+
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    private String provider;
+
+    private String password;
+
+
+
 }
+

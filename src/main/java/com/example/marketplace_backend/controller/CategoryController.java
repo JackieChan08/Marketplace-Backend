@@ -59,6 +59,18 @@ public class CategoryController {
         response.setName(category.getName());
         response.setDescription(category.getDescription());
 
+        if (category.getImage() != null) {
+            var image = category.getImage();
+
+            FileResponse fileResponse = new FileResponse();
+            fileResponse.setUniqueName(image.getUniqueName());
+            fileResponse.setOriginalName(image.getOriginalName());
+            fileResponse.setUrl("http://localhost:8080/uploads/" + image.getUniqueName());
+            fileResponse.setFileType(image.getFileType());
+
+            response.setImageFile(fileResponse);
+        }
+
         List<ProductResponse> productResponses = category.getProducts().stream()
                 .filter(product -> !product.isDeleted())
                 .map(this::convertToProductResponse)

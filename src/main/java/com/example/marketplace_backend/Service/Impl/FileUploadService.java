@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,7 +33,6 @@ public class FileUploadService {
         String originalName = file.getOriginalFilename();
         String uniqueName = UUID.randomUUID() + "_" + originalName;
 
-        // Проверка: не загружать повторно одинаковые фото
         Optional<FileEntity> existing = fileRepository.findByOriginalName(originalName);
         if (existing.isPresent()) {
             return existing.get();
@@ -49,7 +47,6 @@ public class FileUploadService {
         fileEntity.setFileType(file.getContentType());
         fileEntity.setFilePath(filePath.toString());
         fileEntity.setUploadTime(LocalDateTime.now());
-        System.out.println("FILE SAVED TO: " + filePath);
 
         return fileRepository.save(fileEntity);
     }

@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.controller;
 
 import com.example.marketplace_backend.Model.Product;
+import com.example.marketplace_backend.Repositories.UserRepository;
 import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
 import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
 import com.example.marketplace_backend.Service.Impl.UserServiceImpl;

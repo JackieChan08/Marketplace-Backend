@@ -1,97 +1,104 @@
 package com.example.marketplace_backend.controller;
 
-//import com.example.marketplace_crm.Config.Jwt.JwtProvider;
-//import com.example.marketplace_crm.Model.User;
-//import com.example.marketplace_crm.Service.Impl.UserServiceImpl;
-//import io.swagger.v3.oas.annotations.Operation;
-//import io.swagger.v3.oas.annotations.media.Content;
-//import io.swagger.v3.oas.annotations.media.Schema;
-//import io.swagger.v3.oas.annotations.responses.ApiResponse;
-//import io.swagger.v3.oas.annotations.responses.ApiResponses;
-//import io.swagger.v3.oas.annotations.tags.Tag;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.security.authentication.AuthenticationManager;
-//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestBody;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RestController;
-//
-//import java.util.HashMap;
-//import java.util.Map;
-//
-//@RestController
-//@RequestMapping("/auth")
-//@RequiredArgsConstructor
-//@Tag(name = "Authentication API", description = "API для аутентификации и регистрации пользователей")
-//public class AuthController {
-//    private final AuthenticationManager authenticationManager;
-//    private final JwtProvider jwtProvider;
-//    private final UserServiceImpl userService;
-//
-//    @Operation(summary = "Аутентификация пользователя", description = "Принимает логин и пароль, возвращает access и refresh токены")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "Успешная аутентификация",
-//                    content = @Content(mediaType = "application/json",
-//                            schema = @Schema(implementation = Map.class))),
-//            @ApiResponse(responseCode = "401", description = "Ошибка аутентификации")
-//    })
-//    @PostMapping("/login")
-//    public ResponseEntity<?> authenticateUser(@RequestBody User loginRequest) {
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(loginRequest.getLogin(), loginRequest.getPassword())
-//        );
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        User user = userService.findByLogin(loginRequest.getLogin());
-//        String token = jwtProvider.generateToken(user);
-//        String refreshToken = jwtProvider.generateRefreshToken(user);
-//
-//        Map<String, String> tokens = new HashMap<>();
-//        tokens.put("accessToken", token);
-//        tokens.put("refreshToken", refreshToken);
-//        return ResponseEntity.ok(tokens);
-//    }
-//
-//    @Operation(summary = "Регистрация пользователя", description = "Создаёт нового пользователя, если логин не занят")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "Пользователь успешно зарегистрирован"),
-//            @ApiResponse(responseCode = "400", description = "Логин уже занят или ошибка регистрации")
-//    })
-//    @PostMapping("/register")
-//    public ResponseEntity<?> registerUser(@RequestBody User registrationRequest) {
-//        if (userService.findByLogin(registrationRequest.getLogin()) != null) {
-//            return ResponseEntity.badRequest().body("Пользователь с таким логином уже существует");
-//        }
-//
-//        User newUser = userService.save(registrationRequest);
-//        if (newUser == null) {
-//            return ResponseEntity.badRequest().body("Ошибка регистрации пользователя");
-//        }
-//
-//        return ResponseEntity.ok("Пользователь успешно зарегистрирован");
-//    }
-//
-//    @Operation(summary = "Обновление токена", description = "Принимает refresh-токен и возвращает новый access-токен")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "Новый access-токен успешно сгенерирован",
-//                    content = @Content(mediaType = "application/json",
-//                            schema = @Schema(implementation = Map.class))),
-//            @ApiResponse(responseCode = "403", description = "Недействительный refresh-токен")
-//    })
-//    @PostMapping("/refresh")
-//    public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
-//        String refreshToken = request.get("refreshToken");
-//        if (jwtProvider.validateToken(refreshToken)) {
-//            String username = jwtProvider.getUsernameFromToken(refreshToken);
-//            User user = userService.findByLogin(username);
-//            String newToken = jwtProvider.generateToken(user);
-//            Map<String, String> response = new HashMap<>();
-//            response.put("accessToken", newToken);
-//            return ResponseEntity.ok(response);
-//        }
-//        return ResponseEntity.status(403).body("Invalid refresh token");
-//    }
-//}
+
+import com.example.marketplace_backend.Model.RefreshToken;
+import com.example.marketplace_backend.Model.User;
+import com.example.marketplace_backend.Repositories.RefreshTokenRepository;
+import com.example.marketplace_backend.Repositories.UserRepository;
+import com.example.marketplace_backend.Service.Impl.JwtService;
+import com.example.marketplace_backend.Service.Impl.UserServiceImpl;
+import com.example.marketplace_backend.controller.Requests.Jwt.LoginRequest;
+import com.example.marketplace_backend.controller.Requests.Jwt.RegisterRequest;
+import com.example.marketplace_backend.controller.Responses.Jwt.JwtResponse;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.Instant;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/auth")
+@AllArgsConstructor
+public class AuthController {
+
+    private AuthenticationManager authenticationManager;
+    private UserRepository userRepository;
+    private JwtService jwtService;
+    private RefreshTokenRepository refreshTokenRepository;
+    private UserServiceImpl userService;
+
+
+    @PostMapping("/register")
+    public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest request) {
+        JwtResponse jwtResponse = userService.register(request);
+        return ResponseEntity.ok(jwtResponse);
+    }
+
+
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
+            );
+
+            User user = userRepository.findByEmail(loginRequest.getEmail())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            String accessToken = jwtService.generateAccessToken(user);
+            String refreshToken = jwtService.generateRefreshToken(user);
+
+            refreshTokenRepository.deleteByUser(user);
+
+            RefreshToken rt = new RefreshToken();
+            rt.setUser(user);
+            rt.setToken(refreshToken);
+            rt.setExpiryDate(Instant.now().plusMillis(2592000000L));
+            refreshTokenRepository.save(rt);
+
+            return ResponseEntity.ok(Map.of(
+                    "accessToken", accessToken,
+                    "refreshToken", refreshToken,
+                    "email", user.getEmail()
+            ));
+        } catch (BadCredentialsException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        }
+    }
+
+    @GetMapping("/oauth2/success")
+    public ResponseEntity<?> oauth2Success(@AuthenticationPrincipal OAuth2User oauth2User) {
+        String email = oauth2User.getAttribute("email");
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found after OAuth2 login"));
+
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+
+        refreshTokenRepository.deleteByUser(user);
+
+        RefreshToken token = new RefreshToken();
+        token.setUser(user);
+        token.setToken(refreshToken);
+        token.setExpiryDate(Instant.now().plusMillis(2592000000L));
+        refreshTokenRepository.save(token);
+
+        return ResponseEntity.ok(Map.of(
+                "accessToken", accessToken,
+                "refreshToken", refreshToken,
+                "email", user.getEmail(),
+                "name", user.getName()
+        ));
+    }
+
+}
