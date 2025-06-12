@@ -30,7 +30,7 @@ public class AdminController {
 
     // Products
 
-    @GetMapping("/products")
+    @GetMapping("/products/list")
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.findAll();
         return ResponseEntity.ok(products);
@@ -134,8 +134,6 @@ public class AdminController {
         category.setName(name);
         category.setDescription(description);
         category.setDeleted(false);
-
-        // сохраняем фото
         FileEntity savedImage = fileUploadService.saveImage(image);
         category.setImage(savedImage);
 

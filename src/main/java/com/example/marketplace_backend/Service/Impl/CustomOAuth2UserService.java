@@ -52,6 +52,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .email(email)
                     .name(name)
                     .role(Role.USER)
+                    .password("oauth2_placeholder")
                     .provider(userRequest.getClientRegistration().getRegistrationId())
                     .build();
             userRepository.save(user);

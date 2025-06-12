@@ -50,4 +50,15 @@ public class JwtService {
             return false;
         }
     }
+
+    public boolean isTokenValid(String token, User user) {
+        final String email = getEmailFromToken(token);
+        return email.equals(user.getEmail());
+    }
+
+
+    public String extractUsername(String token) {
+        return getEmailFromToken(token);
+    }
+
 }
