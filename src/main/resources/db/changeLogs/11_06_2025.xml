@@ -20,5 +20,7 @@
         </sql>
     </changeSet>
 
-
+    <changeSet id="Admin" author="JekiChan08">
+        <loadData tableName="users" file="data/users.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
 </databaseChangeLog>

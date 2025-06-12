@@ -5,11 +5,15 @@ import com.example.marketplace_backend.Model.RefreshToken;
 import com.example.marketplace_backend.Model.User;
 import com.example.marketplace_backend.Repositories.RefreshTokenRepository;
 import com.example.marketplace_backend.Repositories.UserRepository;
+import com.example.marketplace_backend.Service.Impl.ExternalOAuth2ServiceImpl;
 import com.example.marketplace_backend.Service.Impl.JwtService;
 import com.example.marketplace_backend.Service.Impl.UserServiceImpl;
 import com.example.marketplace_backend.controller.Requests.Jwt.LoginRequest;
+import com.example.marketplace_backend.controller.Requests.Jwt.OAuth2TokenRequest;
 import com.example.marketplace_backend.controller.Requests.Jwt.RegisterRequest;
 import com.example.marketplace_backend.controller.Responses.Jwt.JwtResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +38,7 @@ public class AuthController {
     private JwtService jwtService;
     private RefreshTokenRepository refreshTokenRepository;
     private UserServiceImpl userService;
+    private ExternalOAuth2ServiceImpl externalOAuth2Service;
 
 
     @PostMapping("/register")
@@ -100,5 +105,47 @@ public class AuthController {
                 "name", user.getName()
         ));
     }
+    @PostMapping("/oauth2/token")
+    public ResponseEntity<?> oauth2TokenLogin(
+            @RequestBody OAuth2TokenRequest request,
+            HttpServletResponse response
+    ) {
+        try {
+            User user = externalOAuth2Service.processOAuth2Token(request.getToken(), request.getProvider());
+
+            String accessToken = jwtService.generateAccessToken(user);
+            String refreshToken = jwtService.generateRefreshToken(user);
+
+            refreshTokenRepository.deleteByUser(user);
+
+            RefreshToken token = new RefreshToken();
+            token.setUser(user);
+            token.setToken(refreshToken);
+            token.setExpiryDate(Instant.now().plusMillis(2592000000L));
+            refreshTokenRepository.save(token);
+
+            // Устанавливаем токены в куки
+            Cookie accessCookie = new Cookie("accessToken", accessToken);
+            accessCookie.setHttpOnly(true);
+            accessCookie.setPath("/");
+            accessCookie.setMaxAge(3600); // 1 час
+
+            Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+            refreshCookie.setHttpOnly(true);
+            refreshCookie.setPath("/");
+            refreshCookie.setMaxAge(2592000); // 30 дней
+
+            response.addCookie(accessCookie);
+            response.addCookie(refreshCookie);
+
+            return ResponseEntity.ok(Map.of(
+                    "email", user.getEmail(),
+                    "name", user.getName()
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("OAuth2 Login failed: " + e.getMessage());
+        }
+    }
+
 
 }

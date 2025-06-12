@@ -7,10 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.example.marketplace_backend.enums.Role;
 
+@Builder
 @Data
 @Entity
 @Table(name = "users")
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
