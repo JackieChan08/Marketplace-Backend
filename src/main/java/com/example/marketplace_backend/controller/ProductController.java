@@ -77,21 +77,23 @@ public class ProductController {
         response.setDescription(product.getDescription());
         response.setCategoryId(product.getCategory().getId());
         response.setCategoryName(product.getCategory().getName());
+        response.setSubcategoryId(product.getSubcategory().getId());
 
-        if (product.getImage() != null) {
-            var image = product.getImage();
-
-            FileResponse fileResponse = new FileResponse();
-            fileResponse.setUniqueName(image.getUniqueName());
-            fileResponse.setOriginalName(image.getOriginalName());
-            fileResponse.setUrl("http://localhost:8080/uploads/" + image.getUniqueName());
-            fileResponse.setFileType(image.getFileType());
-
-            response.setImageFile(fileResponse);
+        if (product.getImages() != null && !product.getImages().isEmpty()) {
+            List<FileResponse> images = product.getImages().stream().map(image -> {
+                FileResponse fileResponse = new FileResponse();
+                fileResponse.setUniqueName(image.getUniqueName());
+                fileResponse.setOriginalName(image.getOriginalName());
+                fileResponse.setUrl("http://localhost:8080/uploads/" + image.getUniqueName());
+                fileResponse.setFileType(image.getFileType());
+                return fileResponse;
+            }).toList();
+            response.setImages(images);
         }
 
         return response;
     }
+
 
 
 

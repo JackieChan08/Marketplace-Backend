@@ -51,7 +51,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/admin/").hasRole("ADMIN")
-                        .requestMatchers("/auth/**", "**/token/**", "**/oauth2/**", "/login", "/auth/oauth2/token-login", "api/products/**", "api/categories/**", "api/subcategories/**", "/auth/oauth2/token").permitAll()
+                        .requestMatchers("/auth/**", "**/token/**", "**/oauth2/**", "/login", "/auth/oauth2/token-login", "api/products/**", "api/categories/**", "api/subcategories/**", "/auth/oauth2/token", "/uploads/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth -> oauth

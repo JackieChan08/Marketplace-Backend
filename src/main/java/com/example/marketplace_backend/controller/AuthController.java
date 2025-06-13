@@ -124,16 +124,15 @@ public class AuthController {
             token.setExpiryDate(Instant.now().plusMillis(2592000000L));
             refreshTokenRepository.save(token);
 
-            // Устанавливаем токены в куки
             Cookie accessCookie = new Cookie("accessToken", accessToken);
             accessCookie.setHttpOnly(true);
             accessCookie.setPath("/");
-            accessCookie.setMaxAge(3600); // 1 час
+            accessCookie.setMaxAge(3600);
 
             Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
             refreshCookie.setHttpOnly(true);
             refreshCookie.setPath("/");
-            refreshCookie.setMaxAge(2592000); // 30 дней
+            refreshCookie.setMaxAge(2592000);
 
             response.addCookie(accessCookie);
             response.addCookie(refreshCookie);

@@ -20,9 +20,7 @@ public class Subcategory {
 
     private String name;
     private String description;
-    @ManyToOne
-    @JoinColumn(name = "image_id")
-    private FileEntity image;
+
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;
 }

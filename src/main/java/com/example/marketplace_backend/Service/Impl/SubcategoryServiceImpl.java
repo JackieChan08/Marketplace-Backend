@@ -5,6 +5,7 @@ import com.example.marketplace_backend.Repositories.SubcategoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, Long>{
@@ -19,4 +20,7 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, Long>{
         return repository.findAllActive();
     }
 
+    public Optional<Subcategory> findById(Long subcategoryId) {
+        return repository.findById(subcategoryId);
+    }
 }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,9 +29,14 @@ public class Product {
     @JsonBackReference
     @JoinColumn(name = "subcategory_id")
     private Subcategory subcategory;
-    @ManyToOne
-    @JoinColumn(name = "image_id")
-    private FileEntity image;
+    @OneToMany
+    @JoinTable(
+            name = "product_images",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id")
+    )
+    private List<FileEntity> images;
+
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;

@@ -61,15 +61,6 @@ public class SubcategoryController {
             response.setParentSubcategoryName(subcategory.getSubcategory().getName());
         }
 
-        if (subcategory.getImage() != null) {
-            FileResponse fileResponse = new FileResponse();
-            fileResponse.setUniqueName(subcategory.getImage().getUniqueName());
-            fileResponse.setOriginalName(subcategory.getImage().getOriginalName());
-            fileResponse.setUrl("http://localhost:8080/uploads/" + subcategory.getImage().getUniqueName());
-            fileResponse.setFileType(subcategory.getImage().getFileType());
-            response.setImage(fileResponse);
-        }
-
         return response;
     }
 }

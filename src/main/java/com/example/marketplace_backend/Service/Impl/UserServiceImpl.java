@@ -63,5 +63,8 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long>{
     public List<Order> ordersByUser(User user) {
         return userRepository.ordersByUser(user);
     }
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
 
 }

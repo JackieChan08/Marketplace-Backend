@@ -18,9 +18,13 @@ public class Category {
     private String name;
     @Column(name = "description")
     private String description;
-    @ManyToOne
-    @JoinColumn(name = "image_id")
-    private FileEntity image;
+    @OneToMany
+    @JoinTable(
+            name = "category_images",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id")
+    )
+    private List<FileEntity> images;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference

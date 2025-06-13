@@ -59,16 +59,19 @@ public class CategoryController {
         response.setName(category.getName());
         response.setDescription(category.getDescription());
 
-        if (category.getImage() != null) {
-            var image = category.getImage();
+        if (category.getImages() != null && !category.getImages().isEmpty()) {
+            List<FileResponse> imageFiles = category.getImages().stream()
+                    .map(image -> {
+                        FileResponse fileResponse = new FileResponse();
+                        fileResponse.setUniqueName(image.getUniqueName());
+                        fileResponse.setOriginalName(image.getOriginalName());
+                        fileResponse.setUrl("http://localhost:8080/uploads/" + image.getUniqueName());
+                        fileResponse.setFileType(image.getFileType());
+                        return fileResponse;
+                    })
+                    .toList();
 
-            FileResponse fileResponse = new FileResponse();
-            fileResponse.setUniqueName(image.getUniqueName());
-            fileResponse.setOriginalName(image.getOriginalName());
-            fileResponse.setUrl("http://localhost:8080/uploads/" + image.getUniqueName());
-            fileResponse.setFileType(image.getFileType());
-
-            response.setImageFile(fileResponse);
+            response.setImageFiles(imageFiles);
         }
 
         List<ProductResponse> productResponses = category.getProducts().stream()
@@ -81,6 +84,8 @@ public class CategoryController {
         return response;
     }
 
+
+
     private ProductResponse convertToProductResponse(Product product) {
         ProductResponse response = new ProductResponse();
         response.setId(product.getId());
@@ -89,13 +94,16 @@ public class CategoryController {
         response.setCategoryId(product.getCategory().getId());
         response.setCategoryName(product.getCategory().getName());
 
-        if (product.getImage() != null) {
-            FileResponse fileResponse = new FileResponse();
-            fileResponse.setUniqueName(product.getImage().getUniqueName());
-            fileResponse.setOriginalName(product.getImage().getOriginalName());
-            fileResponse.setUrl("http://localhost:8080/uploads/" + product.getImage().getUniqueName());
-            fileResponse.setFileType(product.getImage().getFileType());
-            response.setImageFile(fileResponse);
+        if (product.getImages() != null && !product.getImages().isEmpty()) {
+            List<FileResponse> images = product.getImages().stream().map(image -> {
+                FileResponse fileResponse = new FileResponse();
+                fileResponse.setUniqueName(image.getUniqueName());
+                fileResponse.setOriginalName(image.getOriginalName());
+                fileResponse.setUrl("http://localhost:8080/uploads/" + image.getUniqueName());
+                fileResponse.setFileType(image.getFileType());
+                return fileResponse;
+            }).toList();
+            response.setImages(images);
         }
 
         return response;

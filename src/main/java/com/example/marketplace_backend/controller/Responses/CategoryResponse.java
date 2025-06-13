@@ -17,6 +17,6 @@ public class CategoryResponse {
     private Long id;
     private String name;
     private String description;
-    private FileResponse imageFile;
+    List<FileResponse> imageFiles;
     private List<ProductResponse> products;
 }
