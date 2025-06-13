@@ -44,24 +44,45 @@ public class SecurityConfig {
                 .and()
                 .build();
     }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/admin/").hasRole("ADMIN")
-                        .requestMatchers("/auth/**", "**/token/**", "**/oauth2/**", "/login", "/auth/oauth2/token-login", "api/products/**", "api/categories/**", "api/subcategories/**", "/auth/oauth2/token", "/uploads/**").permitAll()
+                        .requestMatchers(
+                                "/auth/**",
+                                "**/token/**",
+                                "**/oauth2/**",
+                                "/login",
+                                "/auth/oauth2/token-login",
+                                "/api/products/**",
+                                "/api/categories/**",
+                                "/api/subcategories/**",
+                                "/auth/oauth2/token",
+                                "/uploads/**",
+                                "/auth/logout"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth -> oauth
-                        .userInfoEndpoint(u -> u.userService(oAuth2UserService))
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(oAuth2UserService)
+                        )
                         .defaultSuccessUrl("/auth/oauth2/success", true)
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID", "token", "accessToken", "refreshToken")
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
+
 
 
 }
