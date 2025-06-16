@@ -8,6 +8,7 @@ import com.example.marketplace_backend.controller.Responses.*;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,8 @@ public class CategoryController {
 
     private final ProductServiceImpl productService;
     private final CategoryServiceImpl categoryService;
+    @Value("${app.base-url}")
+    private String baseUrl;
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponse> getById(
@@ -65,7 +68,7 @@ public class CategoryController {
                         FileResponse fileResponse = new FileResponse();
                         fileResponse.setUniqueName(image.getUniqueName());
                         fileResponse.setOriginalName(image.getOriginalName());
-                        fileResponse.setUrl("http://localhost:8080/uploads/" + image.getUniqueName());
+                        fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
                         fileResponse.setFileType(image.getFileType());
                         return fileResponse;
                     })
@@ -99,7 +102,7 @@ public class CategoryController {
                 FileResponse fileResponse = new FileResponse();
                 fileResponse.setUniqueName(image.getUniqueName());
                 fileResponse.setOriginalName(image.getOriginalName());
-                fileResponse.setUrl("http://localhost:8080/uploads/" + image.getUniqueName());
+                fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
                 fileResponse.setFileType(image.getFileType());
                 return fileResponse;
             }).toList();
