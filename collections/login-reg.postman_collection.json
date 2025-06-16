@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "270b7ae9-c13f-4360-8797-782a5b0e3b13",
+		"_postman_id": "600aa90d-59b2-43ef-96e6-8e0794b70a59",
 		"name": "login/reg",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "40388756",
-		"_collection_link": "https://test99-0330.postman.co/workspace/test~7488d7e6-fe20-496e-ad1d-0a4b9129da6b/collection/40388756-270b7ae9-c13f-4360-8797-782a5b0e3b13?action=share&source=collection_link&creator=40388756"
+		"_collection_link": "https://test99-0330.postman.co/workspace/test~7488d7e6-fe20-496e-ad1d-0a4b9129da6b/collection/40388756-600aa90d-59b2-43ef-96e6-8e0794b70a59?action=share&source=collection_link&creator=40388756"
 	},
 	"item": [
 		{
@@ -93,6 +93,24 @@
 					"path": [
 						"token",
 						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/auth/logout",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"logout"
 					]
 				}
 			},
