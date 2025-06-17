@@ -9,6 +9,9 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    @Query("SELECT o FROM Order o WHERE o.status is null")
-    List<Order> getAllOrdersIfActive();
+
+
+    List<Order> findAllByOrderByCreatedAtDesc();
+
+
 }

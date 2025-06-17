@@ -1,0 +1,16 @@
+package com.example.marketplace_backend.controller.Requests.models;
+
+
+import com.example.marketplace_backend.enums.Role;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class UserResponse {
+    private Long id;
+    private String email;
+    private String name;
+    private Role role;
+}
+

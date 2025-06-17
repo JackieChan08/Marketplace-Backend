@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,9 +26,9 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
+    @JsonBackReference
     private String provider;
-
+    @JsonBackReference
     private String password;
 
 

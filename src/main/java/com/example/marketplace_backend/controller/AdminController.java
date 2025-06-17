@@ -1,14 +1,12 @@
 package com.example.marketplace_backend.controller;
 
-import com.example.marketplace_backend.Model.Category;
-import com.example.marketplace_backend.Model.FileEntity;
-import com.example.marketplace_backend.Model.Product;
-import com.example.marketplace_backend.Model.Subcategory;
+import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Repositories.CategoryRepository;
 import com.example.marketplace_backend.Repositories.SubcategoryRepository;
 import com.example.marketplace_backend.Service.Impl.*;
 import com.example.marketplace_backend.controller.Requests.models.CategoryRequest;
 import com.example.marketplace_backend.controller.Requests.models.ProductRequest;
+import com.example.marketplace_backend.controller.Requests.models.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -267,6 +266,47 @@ public class AdminController {
         subcategory.setDeleted(false);
         subcategoryService.save(subcategory);
         return ResponseEntity.ok(subcategory);
+    }
+
+    // Orders
+
+    @GetMapping("/orders/list")
+    public ResponseEntity<List<Order>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
+    @PutMapping("/orders/{orderId}/status")
+    public ResponseEntity<Order> updateStatus(@PathVariable Long orderId,
+                                              @RequestParam String status) {
+        return ResponseEntity.ok(orderService.updateOrderStatus(orderId, status));
+    }
+
+    @PutMapping("/orders/{orderId}/comment")
+    public ResponseEntity<Order> updateComment(@PathVariable Long orderId,
+                                               @RequestParam String comment) {
+        return ResponseEntity.ok(orderService.updateOrderComment(orderId, comment));
+    }
+    @PutMapping("/orders/{orderId}/address")
+    public ResponseEntity<Order> updateAddress(@PathVariable Long orderId,
+                                               @RequestParam String address) {
+        return ResponseEntity.ok(orderService.updateOrderAddress(orderId, address));
+    }
+
+    //User
+    @GetMapping("/users/list")
+    public List<UserResponse> getAllUsers() {
+        return userService.getAll().stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    private UserResponse convertToResponse(User user) {
+        return new UserResponse(
+                user.getId(),
+                user.getEmail(),
+                user.getName(),
+                user.getRole()
+        );
     }
 
 }
