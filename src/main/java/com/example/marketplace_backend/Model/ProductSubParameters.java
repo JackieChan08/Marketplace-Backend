@@ -4,13 +4,15 @@ package com.example.marketplace_backend.Model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Entity
 @Data
 @Table(name = "product_sub_parameters")
 public class ProductSubParameters {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String name;
     private String value;
 

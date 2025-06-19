@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "Order Controller", description = "Управление заказами")
 @Controller
@@ -34,7 +35,7 @@ public class OrderController {
         this.cartService = cartService;
     }
     @PutMapping("/{orderId}/address")
-    public ResponseEntity<Order> updateAddress(@PathVariable Long orderId,
+    public ResponseEntity<Order> updateAddress(@PathVariable UUID orderId,
                                                @RequestParam String address) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -47,7 +48,7 @@ public class OrderController {
     public ResponseEntity<Order> createOrder(@RequestBody OrderRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        Long userId = userService.findByEmail(email).getId();
+        UUID userId = userService.findByEmail(email).getId();
         return ResponseEntity.ok(orderService.createOrderFromCart(userId, request));
     }
 

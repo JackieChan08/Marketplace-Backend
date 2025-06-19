@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.controller.Responses;
 
 
+import com.example.marketplace_backend.Model.Description;
 import com.example.marketplace_backend.Model.FileEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,15 +9,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryResponse {
-    private Long id;
+    private UUID id;
     private String name;
-    private String description;
     List<FileResponse> imageFiles;
     private List<ProductResponse> products;
 }

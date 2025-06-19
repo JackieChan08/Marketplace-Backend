@@ -1,12 +1,14 @@
 package com.example.marketplace_backend.controller.Responses;
 
 
+import com.example.marketplace_backend.Model.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Data
@@ -14,12 +16,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductResponse {
-    private Long id;
+    private UUID id;
     private String name;
-    private String description;
+    private List<Description> descriptions;
     private String categoryName;
-    private Long categoryId;
+    private UUID categoryId;
     private List<FileResponse> images;
     private double price;
-    private Long SubcategoryId;
+    private double discountedPrice;
+    private UUID brandId;
 }

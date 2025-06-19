@@ -8,11 +8,12 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 
-public class OrderServiceImpl extends BaseServiceImpl<Order, Long> {
+public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
@@ -27,7 +28,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> {
         this.productRepository = productRepository;
         this.cartService = cartService;
     }
-    public Order createOrderFromCart(Long userId, OrderRequest request) {
+    public Order createOrderFromCart(UUID userId, OrderRequest request) {
         Cart cart = cartRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
@@ -41,6 +42,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> {
         order.setAddress(request.getAddress());
         order.setPhoneNumber(request.getPhoneNumber());
         order.setStatus("collecting");
+        order.setWholesale(request.getIsWholesale());
+        order.setComment(request.getComment());
 
         List<OrderItem> orderItems = new ArrayList<>();
         double total = 0;
@@ -67,25 +70,29 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> {
         return savedOrder;
     }
 
-    public List<Order> getAllOrders() {
-        return orderRepository.findAllByOrderByCreatedAtDesc();
+    public List<Order> getAllWholesaleOrders() {
+        return orderRepository.findAllWholesaleOrders();
     }
 
-    public Order updateOrderStatus(Long orderId, String status) {
+    public List<Order> getAllRetailOrders() {
+        return orderRepository.findAllRetailOrders();
+    }
+
+    public Order updateOrderStatus(UUID orderId, String status) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         order.setStatus(status);
         return orderRepository.save(order);
     }
 
-    public Order updateOrderComment(Long orderId, String comment) {
+    public Order updateOrderComment(UUID orderId, String comment) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         order.setComment(comment);
         return orderRepository.save(order);
     }
 
-    public Order updateOrderAddress(Long orderId, String address) {
+    public Order updateOrderAddress(UUID orderId, String address) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         order.setAddress(address);

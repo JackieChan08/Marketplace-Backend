@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "Product Controller", description = "API для управления продуктами")
 @RestController
@@ -30,9 +31,9 @@ public class ProductController {
     private String baseUrl;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<ProductResponse> getById(@PathVariable UUID id) {
         Product product = productService.getById(id);
-        if (product == null || product.isDeleted()) {
+        if (product == null || product.getDeletedAt() != null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         ProductResponse productResponse = convertToProductResponse(product);
@@ -77,10 +78,10 @@ public class ProductController {
         ProductResponse response = new ProductResponse();
         response.setId(product.getId());
         response.setName(product.getName());
-        response.setDescription(product.getDescription());
+        response.setDescriptions(product.getDescriptions());
         response.setCategoryId(product.getCategory().getId());
         response.setCategoryName(product.getCategory().getName());
-        response.setSubcategoryId(product.getSubcategory().getId());
+        response.setBrandId(product.getBrand().getId());
 
         if (product.getImages() != null && !product.getImages().isEmpty()) {
             List<FileResponse> images = product.getImages().stream().map(image -> {
