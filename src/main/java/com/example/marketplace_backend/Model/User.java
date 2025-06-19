@@ -8,6 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.example.marketplace_backend.enums.Role;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Builder
 @Data
 @Entity
@@ -15,10 +18,9 @@ import com.example.marketplace_backend.enums.Role;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     private String email;
 
@@ -30,8 +32,14 @@ public class User {
     private String provider;
     @JsonBackReference
     private String password;
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
 }
 

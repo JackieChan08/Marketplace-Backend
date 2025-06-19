@@ -8,9 +8,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
-public class CategoryServiceImpl extends BaseServiceImpl<Category, Long> {
+public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
     private final CategoryRepository categoryRepository;
 
     @Autowired
@@ -33,15 +34,15 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, Long> {
         return categoryRepository.findAll();
     }
 
-    public Category findActiveCategoryById(Long id) {
+    public Category findActiveCategoryById(UUID id) {
         Category category = categoryRepository.getById(id);
-        if (!category.isDeleted()) {
+        if (category.getDeletedAt() == null) {
             return category;
         }
         return null;
     }
 
-    public Optional<Category> findById(Long categoryId) {
+    public Optional<Category> findById(UUID categoryId) {
         return categoryRepository.findById(categoryId);
     }
 }

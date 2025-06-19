@@ -6,19 +6,28 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.security.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Data
 @Table(name = "products")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
     private String name;
+
     private double price;
-    private String description;
+    @Column(name = "discounted_price")
+    private double discountedPrice;
+
+    @OneToMany
+    private List<Description> descriptions;
 
     @ManyToOne
     @JsonBackReference
@@ -27,8 +36,9 @@ public class Product {
 
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name = "subcategory_id")
-    private Subcategory subcategory;
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
+
     @OneToMany
     @JoinTable(
             name = "product_images",
@@ -37,10 +47,14 @@ public class Product {
     )
     private List<FileEntity> images;
 
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
 
     public Product() {

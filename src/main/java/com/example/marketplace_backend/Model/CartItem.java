@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "cart_items")
 @Getter @Setter
@@ -14,8 +16,8 @@ import lombok.Setter;
 public class CartItem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne
     @JsonBackReference
@@ -23,7 +25,7 @@ public class CartItem {
     private Cart cart;
 
     @Column(nullable = false)
-    private Long productId;
+    private UUID productId;
 
     @Column(nullable = false)
     private int quantity;

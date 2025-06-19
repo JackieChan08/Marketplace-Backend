@@ -1,7 +1,6 @@
 package com.example.marketplace_backend.Model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,24 +11,19 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "categories")
-public class Category {
+@Table(name = "brand")
+public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @Column(name = "name")
     private String name;
     @OneToMany
     @JoinTable(
-            name = "category_images",
-            joinColumns = @JoinColumn(name = "category_id"),
+            name = "brand_images",
+            joinColumns = @JoinColumn(name = "brand_id"),
             inverseJoinColumns = @JoinColumn(name = "image_id")
     )
     private List<FileEntity> images;
-
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<Product> products;
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
@@ -39,8 +33,4 @@ public class Category {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    public Category() {
-
-    }
 }

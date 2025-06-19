@@ -3,50 +3,51 @@ package com.example.marketplace_backend.Service.Impl;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Product;
-import com.example.marketplace_backend.Model.ProductImage;
+import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
+import com.example.marketplace_backend.Repositories.BrandRepository;
 import com.example.marketplace_backend.Repositories.CategoryRepository;
 import com.example.marketplace_backend.Repositories.ProductImageRepository;
 import com.example.marketplace_backend.Repositories.ProductRepository;
-import com.example.marketplace_backend.Repositories.SubcategoryRepository;
 import com.example.marketplace_backend.controller.Requests.models.ProductRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
-public class ProductServiceImpl extends BaseServiceImpl<Product, Long> {
+public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    private final SubcategoryRepository subcategoryRepository;
     private final FileUploadService fileUploadService;
     private final ProductImageRepository productImageRepository;
+    private final BrandRepository brandRepository;
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository,
                               CategoryRepository categoryRepository,
-                              SubcategoryRepository subcategoryRepository,
                               FileUploadService fileUploadService,
-                              ProductImageRepository productImageRepository) {
+                              ProductImageRepository productImageRepository, BrandRepository brandRepository) {
         super(productRepository);
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
-        this.subcategoryRepository = subcategoryRepository;
         this.fileUploadService = fileUploadService;
         this.productImageRepository = productImageRepository;
+        this.brandRepository = brandRepository;
     }
 
     public Product createProduct(ProductRequest dto) throws Exception {
         Product product = new Product();
         product.setName(dto.getName());
         product.setPrice(dto.getPrice());
-        product.setDescription(dto.getDescription());
-        product.setDeleted(false);
+        product.setDescriptions(dto.getDescriptions());
         product.setCategory(categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found")));
-        product.setSubcategory(subcategoryRepository.findById(dto.getSubcategoryId())
-                .orElseThrow(() -> new RuntimeException("Subcategory not found")));
+        product.setBrand(brandRepository.findById(dto.getBrandId())
+                .orElseThrow(() -> new RuntimeException("Brand not found")));
 
         Product savedProduct = productRepository.save(product);
 
@@ -64,21 +65,22 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, Long> {
         return savedProduct;
     }
 
-    public Product editProduct(Long id, ProductRequest dto) throws Exception {
+    public Product editProduct(UUID id, ProductRequest dto) throws Exception {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         if (dto.getName() != null) product.setName(dto.getName());
         if (dto.getPrice() != 0) product.setPrice(dto.getPrice());
-        if (dto.getDescription() != null) product.setDescription(dto.getDescription());
+        if (dto.getDescriptions() != null) product.setDescriptions(dto.getDescriptions());
         if (dto.getCategoryId() != null) {
             product.setCategory(categoryRepository.findById(dto.getCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category not found")));
         }
-        if (dto.getSubcategoryId() != null) {
-            product.setSubcategory(subcategoryRepository.findById(dto.getSubcategoryId())
-                    .orElseThrow(() -> new RuntimeException("Subcategory not found")));
+        if (dto.getBrandId() != null) {
+            product.setBrand(brandRepository.findById(dto.getBrandId())
+                    .orElseThrow(() -> new RuntimeException("Brand not found")));
         }
+        product.setCreatedAt(LocalDateTime.now());
 
         Product updatedProduct = productRepository.save(product);
 
@@ -111,14 +113,14 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, Long> {
     public void deActiveProductByCategory(Category category){
         List<Product> products = productRepository.findByCategory(category);
         for(Product product : products){
-            product.setDeleted(true);
+            product.setDeletedAt(LocalDateTime.now());
             productRepository.save(product);
         }
     }
     public void activeProductByCategory(Category category){
         List<Product> products = productRepository.findByCategory(category);
         for(Product product : products){
-            product.setDeleted(false);
+            product.setDeletedAt(null);
             productRepository.save(product);
         }
     }

@@ -10,6 +10,7 @@
     <include file="changeLogs/11_06_2025.xml" relativeToChangelogFile="true"/>
     <include file="changeLogs/13_06_2025.xml" relativeToChangelogFile="true"/>
     <include file="changeLogs/17_06_2025.xml" relativeToChangelogFile="true"/>
+    <include file="changeLogs/18_06_2025.xml" relativeToChangelogFile="true"/>
 
 
 </databaseChangeLog>

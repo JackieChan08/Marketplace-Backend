@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 @Service
 public class CartService {
 
@@ -28,7 +30,7 @@ public class CartService {
         this.productService = productService;
     }
 
-    public Cart getCart(Long userId) {
+    public Cart getCart(UUID userId) {
         return cartRepository.findById(userId).orElseGet(() -> {
             Cart newCart = new Cart();
             newCart.setUserId(userId);
@@ -38,7 +40,7 @@ public class CartService {
     }
 
     @Transactional
-    public Cart addItemToCart(Long userId, Long productId, int quantity) {
+    public Cart addItemToCart(UUID userId, UUID productId, int quantity) {
         Cart cart = getCart(userId);
 
         Optional<CartItem> existingItem = cart.getItems().stream()
@@ -62,25 +64,25 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    private double getProductPrice(Long productId) {
+    private double getProductPrice(UUID productId) {
         return productService.getById(productId).getPrice();
     }
 
     @Transactional
-    public void removeItemFromCart(Long userId, Long productId) {
+    public void removeItemFromCart(UUID userId, UUID productId) {
         Cart cart = getCart(userId);
         cart.getItems().removeIf(item -> item.getProductId().equals(productId));
         cartRepository.save(cart);
     }
 
     @Transactional
-    public void clearCart(Long userId) {
+    public void clearCart(UUID userId) {
         Cart cart = getCart(userId);
         cart.getItems().clear();
         cartRepository.save(cart);
     }
 
-    public ResponseEntity<List<CartItem>> getCartItemsByUserId(Long userId) {
+    public ResponseEntity<List<CartItem>> getCartItemsByUserId(UUID userId) {
         return cartRepository.findById(userId)
                 .map(cart -> ResponseEntity.ok(cart.getItems()))
                 .orElse(ResponseEntity.notFound().build());

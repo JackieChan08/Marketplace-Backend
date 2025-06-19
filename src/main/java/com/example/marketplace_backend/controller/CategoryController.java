@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
@@ -31,10 +33,10 @@ public class CategoryController {
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponse> getById(
             @Parameter(description = "ID категории", required = true, example = "123")
-            @PathVariable Long id
+            @PathVariable UUID id
     ) {
         Category category = categoryService.getById(id);
-        if (category == null || category.isDeleted()) {
+        if (category == null || category.getDeletedAt() != null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
@@ -60,7 +62,6 @@ public class CategoryController {
         CategoryResponse response = new CategoryResponse();
         response.setId(category.getId());
         response.setName(category.getName());
-        response.setDescription(category.getDescription());
 
         if (category.getImages() != null && !category.getImages().isEmpty()) {
             List<FileResponse> imageFiles = category.getImages().stream()
@@ -78,7 +79,7 @@ public class CategoryController {
         }
 
         List<ProductResponse> productResponses = category.getProducts().stream()
-                .filter(product -> !product.isDeleted())
+                .filter(product -> product.getDeletedAt() == null)
                 .map(this::convertToProductResponse)
                 .toList();
 
@@ -93,9 +94,10 @@ public class CategoryController {
         ProductResponse response = new ProductResponse();
         response.setId(product.getId());
         response.setName(product.getName());
-        response.setDescription(product.getDescription());
+        response.setDescriptions(product.getDescriptions());
         response.setCategoryId(product.getCategory().getId());
         response.setCategoryName(product.getCategory().getName());
+        response.setBrandId(product.getBrand().getId());
 
         if (product.getImages() != null && !product.getImages().isEmpty()) {
             List<FileResponse> images = product.getImages().stream().map(image -> {
