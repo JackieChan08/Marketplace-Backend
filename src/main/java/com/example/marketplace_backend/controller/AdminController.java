@@ -291,14 +291,9 @@ public class AdminController {
 //    }
 
     // Orders
-    @GetMapping("/orders/wholesale")
+    @GetMapping("/orders")
     public ResponseEntity<List<Order>> getWholesaleOrders() {
-        return ResponseEntity.ok(orderService.getAllWholesaleOrders());
-    }
-
-    @GetMapping("/orders/retail")
-    public ResponseEntity<List<Order>> getRetailOrders() {
-        return ResponseEntity.ok(orderService.getAllRetailOrders());
+        return ResponseEntity.ok(orderService.getAllOrders());
     }
 
     @PutMapping("/orders/{orderId}/status")

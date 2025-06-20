@@ -35,7 +35,7 @@ public class Favorite {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "favorite_id", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "favorite", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FavoriteItem> favoriteItems;
 
 }

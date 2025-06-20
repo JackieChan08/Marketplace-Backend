@@ -11,9 +11,6 @@ import java.util.UUID;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, UUID> {
 
-    @Query("SELECT o FROM Order o WHERE o.isWholesale = true ORDER BY o.createdAt DESC")
-    List<Order> findAllWholesaleOrders();
-
-    @Query("SELECT o FROM Order o WHERE o.isWholesale = false ORDER BY o.createdAt DESC")
-    List<Order> findAllRetailOrders();
+    @Query("SELECT o FROM Order o  ORDER BY o.createdAt DESC")
+    List<Order> findAllOrders();
 }
