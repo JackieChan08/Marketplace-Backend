@@ -5,10 +5,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-
-    <changeSet id="update-products-name-index" author="JekiChan08" runOnChange="true">
-        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
-
     <changeSet id="1" author="author">
         <createTable tableName="files">
             <column name="upload_time" type="timestamp(6)"/>
@@ -127,7 +123,6 @@
             </column>
             <column name="password" type="varchar(255)"/>
             <column name="phone_number" type="varchar(255)">
-                <constraints nullable="false"/>
             </column>
             <column name="provider" type="varchar(255)"/>
             <column name="role" type="varchar(255)"/>
@@ -390,14 +385,16 @@
                                  constraintName="fk_refresh_tokens_user"/>
     </changeSet>
 
-<!--    <changeSet id="Admin" author="JekiChan08">-->
-<!--        <loadData tableName="users" file="data/users.csv" relativeToChangelogFile="true" separator=";"/>-->
-<!--    </changeSet>-->
-
     <changeSet id="update-products-name-index" author="JekiChan08">
         <sql splitStatements="true" stripComments="true">
             CREATE EXTENSION IF NOT EXISTS pg_trgm;
             CREATE INDEX IF NOT EXISTS idx_products_name_trgm ON products USING gin (name gin_trgm_ops);
         </sql>
     </changeSet>
+
+    <changeSet id="Admin" author="JekiChan08">
+        <loadData tableName="users" file="data/users.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+
+
 </databaseChangeLog>
