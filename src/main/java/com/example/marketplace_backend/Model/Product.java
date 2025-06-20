@@ -1,30 +1,40 @@
 package com.example.marketplace_backend.Model;
 
 
+import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.security.Timestamp;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Data
 @Table(name = "products")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+//@SQLDelete(sql = "UPDATE products SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+//@Where(clause = "deleted_at IS NULL")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(nullable = false)
     private String name;
 
-    private double price;
-    @Column(name = "discounted_price")
-    private double discountedPrice;
+    @Column(nullable = false, precision = 15, scale = 2)
+    private BigDecimal price;
+
+    @Column(name = "discounted_price", precision = 15, scale = 2)
+    private BigDecimal discountedPrice;
 
     @OneToMany
     private List<Description> descriptions;
@@ -39,25 +49,24 @@ public class Product {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    @OneToMany
-    @JoinTable(
-            name = "product_images",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "image_id")
-    )
-    private List<FileEntity> images;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
+    private List<ProductImage> productImages;
+//    @JoinTable(
+//            name = "product_images",
+//            joinColumns = @JoinColumn(name = "product_id"),
+//            inverseJoinColumns = @JoinColumn(name = "image_id")
+//    )
+//    private List<FileEntity> images;
 
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
-    @Column(name = "created_at")
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-
-    public Product() {
-
-    }
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 }

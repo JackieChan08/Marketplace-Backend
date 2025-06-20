@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.controller;
 
+import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Product;
 import com.example.marketplace_backend.Repositories.UserRepository;
 import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
@@ -83,20 +84,25 @@ public class ProductController {
         response.setCategoryName(product.getCategory().getName());
         response.setBrandId(product.getBrand().getId());
 
-        if (product.getImages() != null && !product.getImages().isEmpty()) {
-            List<FileResponse> images = product.getImages().stream().map(image -> {
-                FileResponse fileResponse = new FileResponse();
-                fileResponse.setUniqueName(image.getUniqueName());
-                fileResponse.setOriginalName(image.getOriginalName());
-                fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
-                fileResponse.setFileType(image.getFileType());
-                return fileResponse;
-            }).toList();
+        if (product.getProductImages() != null && !product.getProductImages().isEmpty()) {
+            List<FileResponse> images = product.getProductImages().stream()
+                    .map(productImage -> {
+                        FileEntity image = productImage.getImage(); // ✅ получаем FileEntity из ProductImage
+                        FileResponse fileResponse = new FileResponse();
+                        fileResponse.setUniqueName(image.getUniqueName());
+                        fileResponse.setOriginalName(image.getOriginalName());
+                        fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
+                        fileResponse.setFileType(image.getFileType());
+                        return fileResponse;
+                    })
+                    .toList();
+
             response.setImages(images);
         }
 
         return response;
     }
+
 
 
 

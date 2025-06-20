@@ -4,11 +4,14 @@ import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Repositories.*;
 import com.example.marketplace_backend.controller.Responses.CartItemResponse;
 import com.example.marketplace_backend.controller.Responses.CartResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jdbc.core.JdbcAggregateOperations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,34 +23,41 @@ public class CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final ProductServiceImpl productService;
+    private final UserRepository userRepository;
 
     @Autowired
     public CartService(CartRepository cartRepository,
                        CartItemRepository cartItemRepository,
-                       ProductServiceImpl productService) {
+                       ProductServiceImpl productService,
+                       UserRepository userRepository) {
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.productService = productService;
+        this.userRepository = userRepository;
     }
 
     public Cart getCart(UUID userId) {
-        return cartRepository.findById(userId).orElseGet(() -> {
+        return cartRepository.findByUserId(userId).orElseGet(() -> {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
             Cart newCart = new Cart();
-            newCart.setUserId(userId);
-            newCart.setItems(new ArrayList<>());
+            newCart.setUser(user);
+            newCart.setCartItems(new ArrayList<>());
             return cartRepository.save(newCart);
         });
     }
+
 
     @Transactional
     public Cart addItemToCart(UUID userId, UUID productId, int quantity) {
         Cart cart = getCart(userId);
 
-        Optional<CartItem> existingItem = cart.getItems().stream()
+        Optional<CartItem> existingItem = cart.getCartItems().stream()
                 .filter(item -> item.getProductId().equals(productId))
                 .findFirst();
 
-        double productPrice = getProductPrice(productId);
+        BigDecimal productPrice = getProductPrice(productId);
 
         if (existingItem.isPresent()) {
             CartItem item = existingItem.get();
@@ -55,54 +65,54 @@ public class CartService {
         } else {
             CartItem newItem = new CartItem();
             newItem.setCart(cart);
-            newItem.setProductId(productId);
+            newItem.getProductId().setId(productId);
             newItem.setQuantity(quantity);
             newItem.setPrice(productPrice);
-            cart.getItems().add(newItem);
+            cart.getCartItems().add(newItem);
         }
 
         return cartRepository.save(cart);
     }
 
-    private double getProductPrice(UUID productId) {
+    private BigDecimal getProductPrice(UUID productId) {
         return productService.getById(productId).getPrice();
     }
 
     @Transactional
     public void removeItemFromCart(UUID userId, UUID productId) {
         Cart cart = getCart(userId);
-        cart.getItems().removeIf(item -> item.getProductId().equals(productId));
+        cart.getCartItems().removeIf(item -> item.getProductId().equals(productId));
         cartRepository.save(cart);
     }
 
     @Transactional
     public void clearCart(UUID userId) {
         Cart cart = getCart(userId);
-        cart.getItems().clear();
+        cart.getCartItems().clear();
         cartRepository.save(cart);
     }
 
     public ResponseEntity<List<CartItem>> getCartItemsByUserId(UUID userId) {
         return cartRepository.findById(userId)
-                .map(cart -> ResponseEntity.ok(cart.getItems()))
+                .map(cart -> ResponseEntity.ok(cart.getCartItems()))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     public CartResponse convertToCartResponse(Cart cart) {
-        List<CartItemResponse> items = cart.getItems().stream().map(item -> {
-            double totalPrice = item.getQuantity() * item.getPrice();
+        List<CartItemResponse> items = cart.getCartItems().stream().map(item -> {
+            BigDecimal totalPrice = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
             return CartItemResponse.builder()
-                    .productId(item.getProductId())
-                    .productName(productService.getById(item.getProductId()).getName())
+                    .productId(item.getProductId().getId())
+                    .productName(productService.getById(item.getProductId().getId()).getName())
                     .quantity(item.getQuantity())
                     .pricePerItem(item.getPrice())
                     .totalPrice(totalPrice)
                     .build();
         }).toList();
 
-        double total = items.stream()
-                .mapToDouble(CartItemResponse::getTotalPrice)
-                .sum();
+        BigDecimal total = items.stream()
+                .map(CartItemResponse::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         return CartResponse.builder()
                 .items(items)
@@ -110,3 +120,4 @@ public class CartService {
                 .build();
     }
 }
+
