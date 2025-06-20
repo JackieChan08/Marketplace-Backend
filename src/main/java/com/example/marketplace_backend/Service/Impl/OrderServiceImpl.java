@@ -75,13 +75,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         return savedOrder;
     }
 
-
-    public List<Order> getAllWholesaleOrders() {
-        return orderRepository.findAllWholesaleOrders();
-    }
-
-    public List<Order> getAllRetailOrders() {
-        return orderRepository.findAllRetailOrders();
+    public List<Order> getAllOrders() {
+        return orderRepository.findAllOrders();
     }
 
     public Order updateOrderStatus(UUID orderId, String status) {

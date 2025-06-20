@@ -6,7 +6,6 @@ import com.example.marketplace_backend.controller.Responses.CartItemResponse;
 import com.example.marketplace_backend.controller.Responses.CartResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jdbc.core.JdbcAggregateOperations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
