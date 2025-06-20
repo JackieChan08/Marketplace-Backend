@@ -1,24 +1,24 @@
 package com.example.marketplace_backend.Model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "carts")
-@Getter
-@Setter
+@Table(name = "favorites")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Cart {
+public class Favorite {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -32,11 +32,10 @@ public class Cart {
     private LocalDateTime updatedAt;
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JsonManagedReference
-    private List<CartItem> cartItems = new ArrayList<>();
+    @OneToMany(mappedBy = "favorite_id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FavoriteItem> favoriteItems;
 
 }

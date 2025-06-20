@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ProductRequest {
     private String name;
-    private double price;
+    private BigDecimal price;
     private UUID categoryId;
     private List<MultipartFile> images;
     private List<Description> descriptions;

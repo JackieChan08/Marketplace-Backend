@@ -5,6 +5,7 @@ import com.example.marketplace_backend.Repositories.*;
 import com.example.marketplace_backend.controller.Requests.models.OrderRequest;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +29,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         this.productRepository = productRepository;
         this.cartService = cartService;
     }
+
     public Order createOrderFromCart(UUID userId, OrderRequest request) {
         Cart cart = cartRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
-        if (cart.getItems().isEmpty()) {
+        if (cart.getCartItems().isEmpty()) {
             throw new RuntimeException("Cart is empty");
         }
 
@@ -42,33 +44,37 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         order.setAddress(request.getAddress());
         order.setPhoneNumber(request.getPhoneNumber());
         order.setStatus("collecting");
-        order.setWholesale(request.getIsWholesale());
         order.setComment(request.getComment());
 
         List<OrderItem> orderItems = new ArrayList<>();
-        double total = 0;
+        BigDecimal total = BigDecimal.ZERO;
 
-        for (CartItem cartItem : cart.getItems()) {
+        for (CartItem cartItem : cart.getCartItems()) {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
-            orderItem.setProduct(productRepository.findById(cartItem.getProductId())
+            orderItem.setProduct(productRepository.findById(cartItem.getProductId().getId())
                     .orElseThrow(() -> new RuntimeException("Product not found")));
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setPrice(cartItem.getPrice());
 
-            total += cartItem.getQuantity() * cartItem.getPrice();
+            BigDecimal itemTotal = cartItem.getPrice()
+                    .multiply(BigDecimal.valueOf(cartItem.getQuantity()));
+            total = total.add(itemTotal);
+
             orderItems.add(orderItem);
         }
 
-        order.setItems(orderItems);
+        order.setOrderItems(orderItems);
         order.setTotalPrice(total);
 
         Order savedOrder = orderRepository.save(order);
-        cart.getItems().clear();
+
+        cart.getCartItems().clear();
         cartRepository.save(cart);
 
         return savedOrder;
     }
+
 
     public List<Order> getAllWholesaleOrders() {
         return orderRepository.findAllWholesaleOrders();

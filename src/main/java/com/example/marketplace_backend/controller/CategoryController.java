@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.controller;
 
 import com.example.marketplace_backend.Model.Category;
+import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Product;
 import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
 import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
@@ -63,9 +64,11 @@ public class CategoryController {
         response.setId(category.getId());
         response.setName(category.getName());
 
-        if (category.getImages() != null && !category.getImages().isEmpty()) {
-            List<FileResponse> imageFiles = category.getImages().stream()
-                    .map(image -> {
+        // Преобразуем изображения категории из categoryImages
+        if (category.getCategoryImages() != null && !category.getCategoryImages().isEmpty()) {
+            List<FileResponse> imageFiles = category.getCategoryImages().stream()
+                    .map(categoryImage -> {
+                        FileEntity image = categoryImage.getImage(); // предполагается, что у CategoryImage есть поле image
                         FileResponse fileResponse = new FileResponse();
                         fileResponse.setUniqueName(image.getUniqueName());
                         fileResponse.setOriginalName(image.getOriginalName());
@@ -75,20 +78,21 @@ public class CategoryController {
                     })
                     .toList();
 
-            response.setImageFiles(imageFiles);
+            response.setImageFiles(imageFiles); // убедись, что в CategoryResponse есть поле imageFiles
         }
 
-        List<ProductResponse> productResponses = category.getProducts().stream()
-                .filter(product -> product.getDeletedAt() == null)
-                .map(this::convertToProductResponse)
-                .toList();
+        // Преобразуем продукты, исключая удалённые
+        if (category.getProducts() != null) {
+            List<ProductResponse> productResponses = category.getProducts().stream()
+                    .filter(product -> product.getDeletedAt() == null)
+                    .map(this::convertToProductResponse)
+                    .toList();
 
-        response.setProducts(productResponses);
+            response.setProducts(productResponses);
+        }
 
         return response;
     }
-
-
 
     private ProductResponse convertToProductResponse(Product product) {
         ProductResponse response = new ProductResponse();
@@ -99,18 +103,23 @@ public class CategoryController {
         response.setCategoryName(product.getCategory().getName());
         response.setBrandId(product.getBrand().getId());
 
-        if (product.getImages() != null && !product.getImages().isEmpty()) {
-            List<FileResponse> images = product.getImages().stream().map(image -> {
-                FileResponse fileResponse = new FileResponse();
-                fileResponse.setUniqueName(image.getUniqueName());
-                fileResponse.setOriginalName(image.getOriginalName());
-                fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
-                fileResponse.setFileType(image.getFileType());
-                return fileResponse;
-            }).toList();
+        if (product.getProductImages() != null && !product.getProductImages().isEmpty()) {
+            List<FileResponse> images = product.getProductImages().stream()
+                    .map(productImage -> {
+                        FileEntity image = productImage.getImage();
+                        FileResponse fileResponse = new FileResponse();
+                        fileResponse.setUniqueName(image.getUniqueName());
+                        fileResponse.setOriginalName(image.getOriginalName());
+                        fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
+                        fileResponse.setFileType(image.getFileType());
+                        return fileResponse;
+                    })
+                    .toList();
+
             response.setImages(images);
         }
 
         return response;
     }
+
 }

@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.example.marketplace_backend.enums.Role;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -22,22 +24,31 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(name = "phone_number", nullable = false)
+    private String phoneNumber;
+
+    private String address;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
     @JsonBackReference
     private String provider;
+
     @JsonBackReference
     private String password;
-    @Column(name = "phone_number")
-    private String phoneNumber;
 
-    @Column(name = "created_at")
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 

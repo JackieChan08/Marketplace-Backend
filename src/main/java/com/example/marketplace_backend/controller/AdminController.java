@@ -1,6 +1,8 @@
 package com.example.marketplace_backend.controller;
 
 import com.example.marketplace_backend.Model.*;
+import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
+import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
 import com.example.marketplace_backend.Repositories.BrandRepository;
 import com.example.marketplace_backend.Repositories.CategoryRepository;
 import com.example.marketplace_backend.Service.Impl.*;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -34,7 +37,6 @@ public class AdminController {
     private final CategoryRepository categoryRepository;
 
     // Products
-
     @GetMapping("/products/list")
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.findAll();
@@ -44,7 +46,7 @@ public class AdminController {
     @PostMapping(value = "/products/create", consumes = {"multipart/form-data"})
     public ResponseEntity<Product> createProductWithImages(
             @RequestParam String name,
-            @RequestParam double price,
+            @RequestParam BigDecimal price,
             @RequestParam("descriprions") List<Description> descriptions,
             @RequestParam UUID categoryId,
             @RequestParam UUID brandId,
@@ -56,27 +58,34 @@ public class AdminController {
         product.setPrice(price);
         product.setDescriptions(descriptions);
         product.setDeletedAt(null);
+        product.setCreatedAt(LocalDateTime.now());
 
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Категория не найдена"));
         product.setCategory(category);
 
         Brand brand = brandRepository.findById(brandId)
-                .orElseThrow(() -> new RuntimeException("Подкатегория не найдена"));
+                .orElseThrow(() -> new RuntimeException("Бренд не найден"));
         product.setBrand(brand);
-        product.setCreatedAt(LocalDateTime.now());
 
-        List<FileEntity> savedImages = new ArrayList<>();
-        for (MultipartFile image : images) {
-            FileEntity savedImage = fileUploadService.saveImage(image);
-            savedImages.add(savedImage);
+        product = productService.save(product);
+
+        List<ProductImage> productImages = new ArrayList<>();
+        for (MultipartFile imageFile : images) {
+            FileEntity savedImage = fileUploadService.saveImage(imageFile);
+            ProductImage productImage = ProductImage.builder()
+                    .product(product)
+                    .image(savedImage)
+                    .build();
+            productImages.add(productImage);
         }
-        product.setImages(savedImages);
 
-        productService.save(product);
+        product.setProductImages(productImages);
+
+        product = productService.save(product);
+
         return ResponseEntity.ok(product);
     }
-
 
     @PostMapping(value = "/products/edit/{id}", consumes = {"multipart/form-data"})
     public ResponseEntity<Product> editProduct(
@@ -90,7 +99,7 @@ public class AdminController {
     ) throws Exception {
         ProductRequest dto = ProductRequest.builder()
                 .name(name)
-                .price(price != null ? price : 0)
+                .price(BigDecimal.valueOf(price != null ? price : 0))
                 .descriptions(descriptions)
                 .categoryId(categoryId)
                 .brandId(brandId)
@@ -141,26 +150,37 @@ public class AdminController {
         categoryService.save(category);
         return ResponseEntity.ok(category);
     }
+
     @PostMapping(value = "/categories/create", consumes = {"multipart/form-data"})
     public ResponseEntity<Category> createCategoryWithImages(
             @RequestParam String name,
-            @RequestParam("images") List<MultipartFile> images) throws Exception {
+            @RequestParam("images") List<MultipartFile> images
+    ) throws Exception {
 
         Category category = new Category();
         category.setName(name);
         category.setDeletedAt(null);
         category.setCreatedAt(LocalDateTime.now());
 
-        List<FileEntity> savedImages = new ArrayList<>();
+        category = categoryService.save(category);
+
+        List<CategoryImage> categoryImages = new ArrayList<>();
         for (MultipartFile image : images) {
             FileEntity savedImage = fileUploadService.saveImage(image);
-            savedImages.add(savedImage);
+            CategoryImage categoryImage = CategoryImage.builder()
+                    .category(category)
+                    .image(savedImage)
+                    .build();
+            categoryImages.add(categoryImage);
         }
-        category.setImages(savedImages);
 
-        categoryService.save(category);
+        category.setCategoryImages(categoryImages);
+
+        category = categoryService.save(category);
+
         return ResponseEntity.ok(category);
     }
+
 
 
     @PostMapping(value = "/categories/edit/{id}", consumes = {"multipart/form-data"})
@@ -176,26 +196,31 @@ public class AdminController {
         }
 
         if (images != null && !images.isEmpty()) {
-            List<FileEntity> savedImages = images.stream()
+            List<CategoryImage> newCategoryImages = images.stream()
                     .map(image -> {
                         try {
-                            return fileUploadService.saveImage(image);
+                            FileEntity savedImage = fileUploadService.saveImage(image);
+                            return CategoryImage.builder()
+                                    .category(category)
+                                    .image(savedImage)
+                                    .build();
                         } catch (IOException e) {
-                            throw new RuntimeException(e);
+                            throw new RuntimeException("Ошибка при сохранении изображения", e);
                         }
                     })
                     .toList();
 
-            if (category.getImages() != null) {
-                category.getImages().addAll(savedImages);
+            if (category.getCategoryImages() != null) {
+                category.getCategoryImages().addAll(newCategoryImages);
             } else {
-                category.setImages(savedImages);
+                category.setCategoryImages(newCategoryImages);
             }
         }
 
         categoryService.save(category);
         return ResponseEntity.ok(category);
     }
+
 
 //
 //    // subcategory
@@ -266,7 +291,6 @@ public class AdminController {
 //    }
 
     // Orders
-
     @GetMapping("/orders/wholesale")
     public ResponseEntity<List<Order>> getWholesaleOrders() {
         return ResponseEntity.ok(orderService.getAllWholesaleOrders());
