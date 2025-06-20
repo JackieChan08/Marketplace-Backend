@@ -4,13 +4,6 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
-    <include file="changeLogs/29_05_2025.xml" relativeToChangelogFile="true"/>
-    <include file="changeLogs/02_06_2025.xml" relativeToChangelogFile="true"/>
-    <include file="changeLogs/05_06_2025.xml" relativeToChangelogFile="true"/>
-    <include file="changeLogs/11_06_2025.xml" relativeToChangelogFile="true"/>
-    <include file="changeLogs/13_06_2025.xml" relativeToChangelogFile="true"/>
-    <include file="changeLogs/17_06_2025.xml" relativeToChangelogFile="true"/>
-    <include file="changeLogs/18_06_2025.xml" relativeToChangelogFile="true"/>
     <include file="changeLogs/20_06_2025.xml" relativeToChangelogFile="true"/>
 
 
