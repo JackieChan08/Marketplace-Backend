@@ -1,0 +1,14 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <changeSet id="update-products-name-index" author="JekiChan08" runOnChange="true">
+        <sql splitStatements="true" stripComments="true">
+            CREATE EXTENSION IF NOT EXISTS pg_trgm;
+            CREATE INDEX IF NOT EXISTS idx_products_name_trgm ON products USING gin (name gin_trgm_ops);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

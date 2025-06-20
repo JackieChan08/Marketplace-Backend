@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.controller;
 
+import com.example.marketplace_backend.Service.Impl.FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -7,6 +8,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,4 +51,19 @@ public class FileController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .body(resource);
     }
+
+
+
+    private final FileUploadService fileUploadService;
+
+    @DeleteMapping("/uploads/{filename:.+}")
+    public ResponseEntity<?> deleteFile(@PathVariable String filename) {
+        boolean deleted = fileUploadService.deleteImage(filename);
+        if (deleted) {
+            return ResponseEntity.ok().body("File deleted");
+        } else {
+            return ResponseEntity.status(500).body("Exception for deleting file");
+        }
+    }
+
 }
