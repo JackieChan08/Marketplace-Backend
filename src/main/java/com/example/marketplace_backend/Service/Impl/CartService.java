@@ -54,7 +54,7 @@ public class CartService {
         Cart cart = getCart(userId);
 
         Optional<CartItem> existingItem = cart.getCartItems().stream()
-                .filter(item -> item.getProductId().equals(productId))
+                .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst();
 
         BigDecimal productPrice = getProductPrice(productId);
@@ -65,7 +65,7 @@ public class CartService {
         } else {
             CartItem newItem = new CartItem();
             newItem.setCart(cart);
-            newItem.getProductId().setId(productId);
+            newItem.getProduct().setId(productId);
             newItem.setQuantity(quantity);
             newItem.setPrice(productPrice);
             cart.getCartItems().add(newItem);
@@ -81,7 +81,7 @@ public class CartService {
     @Transactional
     public void removeItemFromCart(UUID userId, UUID productId) {
         Cart cart = getCart(userId);
-        cart.getCartItems().removeIf(item -> item.getProductId().equals(productId));
+        cart.getCartItems().removeIf(item -> item.getProduct().getId().equals(productId));
         cartRepository.save(cart);
     }
 
@@ -102,8 +102,8 @@ public class CartService {
         List<CartItemResponse> items = cart.getCartItems().stream().map(item -> {
             BigDecimal totalPrice = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
             return CartItemResponse.builder()
-                    .productId(item.getProductId().getId())
-                    .productName(productService.getById(item.getProductId().getId()).getName())
+                    .productId(item.getProduct().getId())
+                    .productName(productService.getById(item.getProduct().getId()).getName())
                     .quantity(item.getQuantity())
                     .pricePerItem(item.getPrice())
                     .totalPrice(totalPrice)

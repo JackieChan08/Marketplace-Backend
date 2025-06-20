@@ -52,7 +52,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         for (CartItem cartItem : cart.getCartItems()) {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
-            orderItem.setProduct(productRepository.findById(cartItem.getProductId().getId())
+            orderItem.setProduct(productRepository.findById(cartItem.getProduct().getId())
                     .orElseThrow(() -> new RuntimeException("Product not found")));
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setPrice(cartItem.getPrice());
