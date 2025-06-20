@@ -34,7 +34,7 @@ public class CartItem {
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    private Product productId;
+    private Product product;
 
     @CreationTimestamp
     @Column(name = "added_at", nullable = false)
