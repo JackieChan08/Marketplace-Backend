@@ -138,4 +138,13 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     public List<Product> findAll() {
         return productRepository.findAll();
     }
+
+    @Override
+    public void delete(UUID id) {
+        List<ProductImage>  productImages = productImageRepository.findByProductId(id);
+        for (ProductImage productImage : productImages) {
+            fileUploadService.deleteImage(productImage.getImage().getUniqueName());
+        }
+        productRepository.deleteById(id);
+    }
 }

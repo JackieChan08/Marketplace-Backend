@@ -51,4 +51,21 @@ public class FileUploadService {
         return fileRepository.save(fileEntity);
     }
 
+    public boolean deleteImage(String uniqueName) {
+        try {
+            Path filePath = Paths.get(uploadsDir).resolve(uniqueName).normalize();
+
+            Files.deleteIfExists(filePath);
+
+            Optional<FileEntity> fileEntity = fileRepository.findByOriginalName(uniqueName);
+            fileEntity.ifPresent(fileRepository::delete);
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 }
