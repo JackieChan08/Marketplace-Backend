@@ -135,9 +135,6 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         return productRepository.save(product);
     }
 
-    public List<Product> findAll() {
-        return productRepository.findAll();
-    }
 
     @Override
     public void delete(UUID id) {

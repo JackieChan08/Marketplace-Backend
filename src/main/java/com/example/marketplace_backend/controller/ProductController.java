@@ -2,6 +2,8 @@ package com.example.marketplace_backend.controller;
 
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Product;
+import com.example.marketplace_backend.Model.User;
+import com.example.marketplace_backend.Repositories.ProductRepository;
 import com.example.marketplace_backend.Repositories.UserRepository;
 import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
 import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
@@ -12,6 +14,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +33,7 @@ public class ProductController {
     private final ProductServiceImpl productService;
     private final CategoryServiceImpl categoryService;
     private final UserServiceImpl userService;
+    private final ProductRepository productRepository;
     @Value("${app.base-url}")
     private String baseUrl;
 
@@ -42,14 +48,13 @@ public class ProductController {
         return ResponseEntity.ok(productResponse);
     }
 
-
-
     @GetMapping("/list")
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        List<Product> products = productService.findAllActive();
-        if (products.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<List<ProductResponse>> getProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = (Pageable) PageRequest.of(page, size);
+        Page<Product> products = productRepository.findAll((org.springframework.data.domain.Pageable) pageable);
 
         List<ProductResponse> responses = products.stream()
                 .map(this::convertToProductResponse)
@@ -57,6 +62,22 @@ public class ProductController {
 
         return ResponseEntity.ok(responses);
     }
+
+
+
+//    @GetMapping("/list")
+//    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+//        List<Product> products = productService.findAllActive();
+//        if (products.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//        }
+//
+//        List<ProductResponse> responses = products.stream()
+//                .map(this::convertToProductResponse)
+//                .toList();
+//
+//        return ResponseEntity.ok(responses);
+//    }
 
     @GetMapping("/list/search")
     public ResponseEntity<List<ProductResponse>> findByNameContaining(

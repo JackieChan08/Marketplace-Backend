@@ -3,13 +3,15 @@ package com.example.marketplace_backend.Service.Impl;
 import com.example.marketplace_backend.Repositories.RefreshTokenRepository;
 import com.example.marketplace_backend.Repositories.UserRepository;
 import com.example.marketplace_backend.controller.Requests.Jwt.RegisterRequest;
+import com.example.marketplace_backend.controller.Requests.models.UserResponse;
 import com.example.marketplace_backend.controller.Responses.Jwt.JwtResponse;
 import com.example.marketplace_backend.enums.Role;
 import com.example.marketplace_backend.Model.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -66,6 +68,20 @@ public class UserServiceImpl extends BaseServiceImpl<User, UUID>{
     }
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
+    }
+
+    public Page<UserResponse> searchUsers(String query, Pageable pageable) {
+        Page<User> users = userRepository.searchUsers(query, pageable);
+        return users.map(this::convertToResponse);
+    }
+
+    private UserResponse convertToResponse(User user) {
+        return new UserResponse(
+                user.getId(),
+                user.getEmail(),
+                user.getName(),
+                user.getRole()
+        );
     }
 
 }
