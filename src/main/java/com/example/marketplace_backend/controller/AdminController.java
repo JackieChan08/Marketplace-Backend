@@ -321,6 +321,11 @@ public class AdminController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/users/search")
+    public ResponseEntity<List<User>> searchUsers(@RequestParam("query") String query) {
+        return ResponseEntity.ok(userService.searchUsers(query));
+    }
+
     private UserResponse convertToResponse(User user) {
         return new UserResponse(
                 user.getId(),

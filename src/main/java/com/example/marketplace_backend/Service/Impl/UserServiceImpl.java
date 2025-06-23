@@ -68,4 +68,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UUID>{
         return userRepository.findByEmail(email).orElse(null);
     }
 
+    public List<User> searchUsers(String query) {
+        return userRepository.searchUsers(query);
+    }
 }

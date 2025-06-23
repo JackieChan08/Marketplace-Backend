@@ -18,4 +18,12 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query("SELECT o FROM Order o WHERE o.user = :user ")
     List<Order> ordersByUser(@Param("user") User user);
+
+    @Query("""
+        SELECT u FROM User u
+        WHERE LOWER(u.name) LIKE LOWER(CONCAT('%', :query, '%'))
+           OR LOWER(u.email) LIKE LOWER(CONCAT('%', :query, '%'))
+           OR LOWER(u.phoneNumber) LIKE LOWER(CONCAT('%', :query, '%'))
+    """)
+    List<User> searchUsers(@Param("query") String query);
 }
