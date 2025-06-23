@@ -15,4 +15,105 @@
         </sql>
     </changeSet>
 
+    <changeSet id="create-subcategories-table" author="aiteginbaratov">
+        <createTable tableName="subcategories">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp(6)"/>
+            <column name="updated_at" type="timestamp(6)"/>
+            <column name="deleted_at" type="timestamp(6)"/>
+            <column name="category_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="subcategories"
+                baseColumnNames="category_id"
+                referencedTableName="categories"
+                referencedColumnNames="id"
+                constraintName="fk_subcategory_category"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="create-subcategory-image-table" author="aiteginbaratov">
+        <createTable tableName="subcategory_images">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="subcategory_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_id" type="UUID">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="subcategory_images"
+                baseColumnNames="subcategory_id"
+                referencedTableName="subcategories"
+                referencedColumnNames="id"
+                constraintName="fk_subcategory_image_subcategory"/>
+
+        <addForeignKeyConstraint
+                baseTableName="subcategory_images"
+                baseColumnNames="image_id"
+                referencedTableName="files"
+                referencedColumnNames="id"
+                constraintName="fk_subcategory_image_file"/>
+    </changeSet>
+
+    <changeSet id="change-products" author="aiteginbaratov">
+        <dropForeignKeyConstraint
+                baseTableName="products"
+                constraintName="fk_products_category"/>
+
+        <dropColumn tableName="products" columnName="category_id"/>
+
+        <addColumn tableName="products">
+            <column name="subcategory_id" type="uuid"/>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseTableName="products"
+                baseColumnNames="subcategory_id"
+                referencedTableName="subcategories"
+                referencedColumnNames="id"
+                constraintName="fk_products_subcategory"
+                onDelete="SET NULL"/>
+    </changeSet>
+
+    <changeSet id="create-user-image-table" author="aiteginbaratov">
+        <createTable tableName="user_images">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_id" type="UUID">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="user_images"
+                baseColumnNames="user_id"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                constraintName="fk_user_image_user"/>
+
+        <addForeignKeyConstraint
+                baseTableName="user_images"
+                baseColumnNames="image_id"
+                referencedTableName="files"
+                referencedColumnNames="id"
+                constraintName="fk_user_image_file"/>
+    </changeSet>
+
 </databaseChangeLog>
