@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -39,6 +38,7 @@ public class AdminController {
     private final FileUploadService fileUploadService;
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
+    private final SubcategoryServiceImpl subcategoryServiceImpl;
 
     // Products
 //    @GetMapping("/products/list")
@@ -225,74 +225,57 @@ public class AdminController {
         return ResponseEntity.ok(category);
     }
 
+    // subcategory
+    @PostMapping("/subcategories/create")
+    public ResponseEntity<Subcategory> createSubcategory(
+            @RequestParam String name,
+            @RequestParam UUID categoryId) {
 
-//
-//    // subcategory
-//
-//
-//    @PostMapping("/subcategories/create")
-//    public ResponseEntity<Subcategory> createSubcategoryWithImage(
-//            @RequestParam String name,
-//            @RequestParam String description,
-//            @RequestParam Long categoryId,
-//            @RequestParam(required = false) Long subcategoryId) throws Exception {
-//
-//        Subcategory subcategory = new Subcategory();
-//        subcategory.setName(name);
-//        subcategory.setDescription(description);
-//
-//        subcategory.setCategory(categoryService.getById(categoryId));
-//
-//        if (subcategoryId != null) {
-//            subcategory.setSubcategory(subcategoryService.getById(subcategoryId));
-//        }
-//
-//        subcategoryService.save(subcategory);
-//        return ResponseEntity.ok(subcategory);
-//    }
-//
-//    @PostMapping(value = "/subcategories/edit/{id}", consumes = {"multipart/form-data"})
-//    public ResponseEntity<Subcategory> editSubcategory(
-//            @PathVariable Long id,
-//            @RequestParam(required = false) String name,
-//            @RequestParam(required = false) String description,
-//            @RequestParam(required = false) Long categoryId,
-//            @RequestParam(required = false) Long subcategoryId) throws IOException {
-//        Subcategory subcategory = subcategoryService.getById(id);
-//
-//        if (name != null && !name.isEmpty()) {
-//            subcategory.setName(name);
-//        }
-//        if (description != null && !description.isEmpty()) {
-//            subcategory.setDescription(description);
-//        }
-//        if (categoryId != null) {
-//            subcategory.setCategory(categoryService.getById(categoryId));
-//        }
-//        if (subcategoryId != null) {
-//            subcategory.setSubcategory(subcategoryService.getById(subcategoryId));
-//        }
-//
-//
-//        subcategoryService.save(subcategory);
-//        return ResponseEntity.ok(subcategory);
-//    }
-//
-//    @DeleteMapping("/subcategories/{id}")
-//    public ResponseEntity<Void> deleteSubcategory(@PathVariable Long id) {
-//        Subcategory subcategory = subcategoryService.getById(id);
-//        subcategory.setDeleted(true);
-//        subcategoryService.save(subcategory);
-//        return ResponseEntity.noContent().build();
-//    }
-//
-//    @PostMapping("/subcategories/restore/{id}")
-//    public ResponseEntity<Subcategory> restoreSubcategory(@PathVariable Long id) {
-//        Subcategory subcategory = subcategoryService.getById(id);
-//        subcategory.setDeleted(false);
-//        subcategoryService.save(subcategory);
-//        return ResponseEntity.ok(subcategory);
-//    }
+        Subcategory subcategory = Subcategory.builder()
+                .name(name)
+                .category(categoryService.getById(categoryId))
+                .build();
+
+        Subcategory saved = subcategoryServiceImpl.save(subcategory);
+        return ResponseEntity.ok(saved);
+    }
+
+    @PostMapping(value = "/subcategories/edit/{id}", consumes = {"multipart/form-data"})
+    public ResponseEntity<Subcategory> editSubcategory(
+            @PathVariable UUID id,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) UUID categoryId) {
+
+        Subcategory subcategory = subcategoryServiceImpl.getById(id);
+
+        if (name != null && !name.isEmpty()) {
+            subcategory.setName(name);
+        }
+
+        if (categoryId != null) {
+            subcategory.setCategory(categoryService.getById(categoryId));
+        }
+
+        Subcategory updated = subcategoryServiceImpl.save(subcategory);
+        return ResponseEntity.ok(updated);
+    }
+
+
+    @DeleteMapping("/subcategories/{id}")
+    public ResponseEntity<Void> deleteSubcategory(@PathVariable UUID id) {
+        Subcategory subcategory = subcategoryServiceImpl.getById(id);
+        subcategoryServiceImpl.delete(subcategory);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/subcategories/restore/{id}")
+    public ResponseEntity<Subcategory> restoreSubcategory(@PathVariable UUID id) {
+        Subcategory subcategory = subcategoryServiceImpl.getDeletedById(id);
+        subcategory.setDeletedAt(null);
+        Subcategory restored = subcategoryServiceImpl.save(subcategory);
+        return ResponseEntity.ok(restored);
+    }
+
 
     // Orders
     @GetMapping("/orders")

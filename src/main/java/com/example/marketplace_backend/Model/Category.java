@@ -1,12 +1,15 @@
 package com.example.marketplace_backend.Model;
 
 import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
+import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,9 +22,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-//Использовать в случае если нужен soft delete
-//@SQLDelete(sql = "UPDATE categories SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
-//@Where(clause = "deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE categories SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -45,7 +47,6 @@ public class Category {
     @JsonManagedReference
     private List<CategoryImage> categoryImages;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<Product> products;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Subcategory> subсategories;
 }

@@ -82,14 +82,14 @@ public class CategoryController {
         }
 
         // Преобразуем продукты, исключая удалённые
-        if (category.getProducts() != null) {
-            List<ProductResponse> productResponses = category.getProducts().stream()
-                    .filter(product -> product.getDeletedAt() == null)
-                    .map(this::convertToProductResponse)
-                    .toList();
+        List<ProductResponse> productResponses = category.getSubсategories().stream()
+                .flatMap(subcategory -> subcategory.getProducts().stream())
+                .filter(product -> product.getDeletedAt() == null)
+                .map(this::convertToProductResponse)
+                .toList();
 
-            response.setProducts(productResponses);
-        }
+        response.setProducts(productResponses);
+
 
         return response;
     }

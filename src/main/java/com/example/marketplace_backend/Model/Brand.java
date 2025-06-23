@@ -31,7 +31,7 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String name;
 
     @CreationTimestamp
