@@ -9,15 +9,19 @@ import com.example.marketplace_backend.Service.Impl.*;
 import com.example.marketplace_backend.controller.Requests.models.ProductRequest;
 import com.example.marketplace_backend.controller.Requests.models.UserResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Base64;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -37,17 +41,17 @@ public class AdminController {
     private final CategoryRepository categoryRepository;
 
     // Products
-    @GetMapping("/products/list")
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.findAll();
-        return ResponseEntity.ok(products);
-    }
+//    @GetMapping("/products/list")
+//    public ResponseEntity<List<Product>> getAllProducts() {
+//        List<Product> products = productService.findAll();
+//        return ResponseEntity.ok(products);
+//    }
 
     @PostMapping(value = "/products/create", consumes = {"multipart/form-data"})
     public ResponseEntity<Product> createProductWithImages(
             @RequestParam String name,
             @RequestParam BigDecimal price,
-            @RequestParam("descriprions") List<Description> descriptions,
+            @RequestParam("descriptions") List<Description> descriptions,
             @RequestParam UUID categoryId,
             @RequestParam UUID brandId,
             @RequestParam("images") List<MultipartFile> images
@@ -314,25 +318,18 @@ public class AdminController {
     }
 
     //User
-    @GetMapping("/users/list")
-    public List<UserResponse> getAllUsers() {
-        return userService.getAll().stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
-    }
 
     @GetMapping("/users/search")
-    public ResponseEntity<List<User>> searchUsers(@RequestParam("query") String query) {
-        return ResponseEntity.ok(userService.searchUsers(query));
+    public ResponseEntity<Page<UserResponse>> searchUsers(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(userService.searchUsers(query, pageable));
     }
 
-    private UserResponse convertToResponse(User user) {
-        return new UserResponse(
-                user.getId(),
-                user.getEmail(),
-                user.getName(),
-                user.getRole()
-        );
-    }
+
+
 
 }
