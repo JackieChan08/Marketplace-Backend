@@ -3,6 +3,7 @@ package com.example.marketplace_backend.controller;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Product;
+import com.example.marketplace_backend.Repositories.CategoryRepository;
 import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
 import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
 import com.example.marketplace_backend.controller.Responses.*;
@@ -10,12 +11,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +29,7 @@ public class CategoryController {
 
     private final ProductServiceImpl productService;
     private final CategoryServiceImpl categoryService;
+    private final CategoryRepository categoryRepository;
     @Value("${app.base-url}")
     private String baseUrl;
 
@@ -46,29 +48,27 @@ public class CategoryController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<CategoryResponse>> getCategories() {
-        List<Category> categories = categoryService.findAllActive();
-        if (categories.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<Page<CategoryResponse>> getCategories(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Category> categories = categoryService.findAll(pageable);
 
-        List<CategoryResponse> responses = categories.stream()
-                .map(this::convertToCategoryResponse)
-                .toList();
-
+        Page<CategoryResponse> responses = categories.map(this::convertToCategoryResponse);
         return ResponseEntity.ok(responses);
     }
+
 
     private CategoryResponse convertToCategoryResponse(Category category) {
         CategoryResponse response = new CategoryResponse();
         response.setId(category.getId());
         response.setName(category.getName());
 
-        // Преобразуем изображения категории из categoryImages
         if (category.getCategoryImages() != null && !category.getCategoryImages().isEmpty()) {
             List<FileResponse> imageFiles = category.getCategoryImages().stream()
                     .map(categoryImage -> {
-                        FileEntity image = categoryImage.getImage(); // предполагается, что у CategoryImage есть поле image
+                        FileEntity image = categoryImage.getImage();
                         FileResponse fileResponse = new FileResponse();
                         fileResponse.setUniqueName(image.getUniqueName());
                         fileResponse.setOriginalName(image.getOriginalName());
@@ -78,10 +78,9 @@ public class CategoryController {
                     })
                     .toList();
 
-            response.setImageFiles(imageFiles); // убедись, что в CategoryResponse есть поле imageFiles
+            response.setImageFiles(imageFiles);
         }
 
-        // Преобразуем продукты, исключая удалённые
         List<ProductResponse> productResponses = category.getSubсategories().stream()
                 .flatMap(subcategory -> subcategory.getProducts().stream())
                 .filter(product -> product.getDeletedAt() == null)
