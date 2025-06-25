@@ -49,19 +49,17 @@ public class ProductController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<ProductResponse>> getProducts(
+    public ResponseEntity<Page<ProductResponse>> getProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Pageable pageable = (Pageable) PageRequest.of(page, size);
-        Page<Product> products = productRepository.findAll((org.springframework.data.domain.Pageable) pageable);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productService.findAll(pageable);
 
-        List<ProductResponse> responses = products.stream()
-                .map(this::convertToProductResponse)
-                .toList();
-
+        Page<ProductResponse> responses = products.map(this::convertToProductResponse);
         return ResponseEntity.ok(responses);
     }
+
 
 
 
@@ -80,21 +78,18 @@ public class ProductController {
 //    }
 
     @GetMapping("/list/search")
-    public ResponseEntity<List<ProductResponse>> findByNameContaining(
-            @Parameter(description = "Поисковый запрос", required = true, example = "Пицца")
-            @RequestParam String query
+    public ResponseEntity<Page<ProductResponse>> findByNameContaining(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
-        List<Product> products = productService.findByNameContaining(query);
-        if (products.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productService.findByNameContaining(query, pageable);
 
-        List<ProductResponse> responses = products.stream()
-                .map(this::convertToProductResponse)
-                .toList();
-
+        Page<ProductResponse> responses = products.map(this::convertToProductResponse);
         return ResponseEntity.ok(responses);
     }
+
 
     private ProductResponse convertToProductResponse(Product product) {
         ProductResponse response = new ProductResponse();

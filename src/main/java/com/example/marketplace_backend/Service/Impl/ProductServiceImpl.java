@@ -10,10 +10,12 @@ import com.example.marketplace_backend.Repositories.ProductImageRepository;
 import com.example.marketplace_backend.Repositories.ProductRepository;
 import com.example.marketplace_backend.controller.Requests.models.ProductRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.security.Timestamp;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -104,8 +106,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         return productRepository.findByName(name);
     }
 
-    public List<Product> findByNameContaining(String name) {
-        return productRepository.findByNameContaining(name);
+    public Page<Product> findByNameContaining(String name, Pageable pageable) {
+        return productRepository.findByNameContaining(name, pageable);
     }
     public List<Product> findByCategory(Category category){
         return productRepository.findByCategory(category);
@@ -144,4 +146,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         }
         productRepository.deleteById(id);
     }
+
+    public Page<Product> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
+
 }

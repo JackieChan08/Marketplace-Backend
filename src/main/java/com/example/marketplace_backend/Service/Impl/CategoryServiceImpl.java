@@ -8,6 +8,8 @@ import com.example.marketplace_backend.Repositories.CategoryImageRepository;
 import com.example.marketplace_backend.Repositories.CategoryRepository;
 import com.example.marketplace_backend.Repositories.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -62,4 +64,9 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
         }
         categoryRepository.deleteById(id);
     }
+
+    public Page<Category> findAll(Pageable pageable) {
+        return categoryRepository.findAll(pageable);
+    }
+
 }
