@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.controller;
 
 import com.example.marketplace_backend.Model.*;
+import com.example.marketplace_backend.Model.Intermediate_objects.BrandImage;
 import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
 import com.example.marketplace_backend.Repositories.BrandRepository;
@@ -96,7 +97,7 @@ public class AdminController {
             @PathVariable UUID id,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Double price,
-            @RequestParam("descriprions") List<Description> descriptions,
+            @RequestParam("descriptions") List<Description> descriptions,
             @RequestParam(required = false) UUID categoryId,
             @RequestParam(required = false) UUID brandId,
             @RequestParam(name = "images", required = false) List<MultipartFile> images
@@ -312,7 +313,100 @@ public class AdminController {
         return ResponseEntity.ok(userService.searchUsers(query, pageable));
     }
 
+    //Brand
+    @GetMapping("/brands")
+    public ResponseEntity<List<Brand>> getAllBrands() {
+        return ResponseEntity.ok(brandService.findAllActive());
+    }
 
+    @DeleteMapping("brands/hard-delete/{id}")
+    public ResponseEntity<Void> hardDeleteBrand(@PathVariable UUID id) {
+        Brand brand = brandService.getById(id);
+        brandRepository.delete(brand);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/brands/{id}")
+    public ResponseEntity<Void> softDeleteBrand(@PathVariable UUID id) {
+        Brand brand = brandService.getById(id);
+        brand.setDeletedAt(LocalDateTime.now());
+        productService.deActiveProductByBrand(brand);
+        brandService.save(brand);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("brands/restore/{id}")
+    public ResponseEntity<Void> restoreBrand(@PathVariable UUID id) {
+        Brand brand = brandService.getById(id);
+        brand.setDeletedAt(null);
+        brandService.save(brand);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping(value = "/brands/create", consumes = {"multipart/form-data"})
+    public ResponseEntity<Brand> createBrandWithImages(
+            @RequestParam String name,
+            @RequestParam("images") List<MultipartFile> images
+    ) throws Exception {
+        Brand brand = new Brand();
+        brand.setName(name);
+        brand.setDeletedAt(null);
+        brand.setCreatedAt(LocalDateTime.now());
+
+        brand = brandService.save(brand);
+
+        List<BrandImage> brandImages = new ArrayList<>();
+        for(MultipartFile image: images) {
+            FileEntity savedImage = fileUploadService.saveImage(image);
+            BrandImage brandImage = BrandImage.builder()
+                    .brand(brand)
+                    .image(savedImage)
+                    .build();
+            brandImages.add(brandImage);
+        }
+
+        brand.setBrandImages(brandImages);
+        brand = brandService.save(brand);
+        return ResponseEntity.ok(brand);
+    }
+
+    @PostMapping(value = "brands/edit/{id}", consumes = {"multipart/form-data"})
+    public ResponseEntity<Brand> editBrand (
+            @PathVariable UUID id,
+            @RequestParam(required = false) String name,
+            @RequestParam(name = "images", required = false) List<MultipartFile> images
+    ) throws Exception {
+        Brand brand = brandService.getById(id);
+
+        if (name != null && !name.isEmpty()) {
+            brand.setName(name);
+        }
+
+        if (images != null && !images.isEmpty()) {
+            List<BrandImage> newBrandImages = images.stream()
+                    .map(image -> {
+                        try {
+                            FileEntity savedImage = fileUploadService.saveImage(image);
+                            return BrandImage.builder()
+                                    .brand(brand)
+                                    .image(savedImage)
+                                    .build();
+                        } catch (IOException e) {
+                            throw new RuntimeException("Ошибка при сохранении изображения", e);
+                        }
+                    })
+                    .toList();
+
+            if (brand.getBrandImages() != null) {
+                brand.getBrandImages().addAll(newBrandImages);
+            } else {
+                brand.setBrandImages(newBrandImages);
+            }
+        }
+
+        brandService.save(brand);
+        return ResponseEntity.ok(brand);
+    }
 
 
 }
