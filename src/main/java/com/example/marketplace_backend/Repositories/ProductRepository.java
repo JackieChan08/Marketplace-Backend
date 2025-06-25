@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.Repositories;
 
+import com.example.marketplace_backend.Model.Brand;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.Product;
 import org.springframework.data.domain.Page;
@@ -10,8 +11,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 @Repository
@@ -20,13 +19,23 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%'))")
     Page<Product> findByNameContaining(@Param("name") String name, Pageable pageable);
 
+    @Query("SELECT p FROM Product p WHERE p.category = :category and p.deletedAt IS NULL")
+    List<Product> findByCategoryAndDeletedAtIsNull(@Param("category") Category category);
 
-    @Query("SELECT p FROM Product p WHERE p.category = :category and p.deletedAt != null")
-    List<Product> findByCategory(@Param("category") Category category);
+    @Query("SELECT p FROM Product p WHERE p.category = :category and p.deletedAt IS NOT NULL")
+    List<Product> findByCategoryAndDeletedAtIsNotNull(@Param("category") Category category);
 
-    @Query("SELECT p FROM Product p WHERE p.deletedAt = null ")
+    @Query("SELECT p FROM Product p WHERE p.deletedAt IS NULL")
     List<Product> findAllActive();
-    @Query("SELECT p FROM Product p WHERE p.deletedAt != null ")
+
+    @Query("SELECT p FROM Product p WHERE p.deletedAt IS NOT NULL")
     List<Product> findAllDeActive();
+
+    @Query("SELECT p FROM Product p WHERE p.brand = :brand and p.deletedAt IS NOT NULL")
+    List<Product> findAllDeActiveByBrand(@Param("brand") Brand brand);
+
+    @Query("SELECT p FROM Product p WHERE p.brand = :brand and p.deletedAt IS NULL")
+    List<Product> findByBrandAndDeletedAtIsNull(@Param("brand") Brand brand);
+
 
 }

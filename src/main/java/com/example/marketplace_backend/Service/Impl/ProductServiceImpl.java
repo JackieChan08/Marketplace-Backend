@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.Service.Impl;
 
+import com.example.marketplace_backend.Model.Brand;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Product;
@@ -14,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -110,22 +110,33 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         return productRepository.findByNameContaining(name, pageable);
     }
     public List<Product> findByCategory(Category category){
-        return productRepository.findByCategory(category);
+        return productRepository.findByCategoryAndDeletedAtIsNull(category);
     };
+
     public void deActiveProductByCategory(Category category){
-        List<Product> products = productRepository.findByCategory(category);
+        List<Product> products = productRepository.findByCategoryAndDeletedAtIsNull(category);
         for(Product product : products){
             product.setDeletedAt(LocalDateTime.now());
             productRepository.save(product);
         }
     }
+
     public void activeProductByCategory(Category category){
-        List<Product> products = productRepository.findByCategory(category);
+        List<Product> products = productRepository.findByCategoryAndDeletedAtIsNotNull(category);
         for(Product product : products){
             product.setDeletedAt(null);
             productRepository.save(product);
         }
     }
+
+    public void deActiveProductByBrand(Brand brand){
+        List<Product> products = productRepository.findByBrandAndDeletedAtIsNull(brand);
+        for(Product product : products){
+            product.setDeletedAt(LocalDateTime.now());
+            productRepository.save(product);
+        }
+    }
+
     public List<Product> findAllDeActive() {
         return productRepository.findAllDeActive();
     }
@@ -150,5 +161,6 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     public Page<Product> findAll(Pageable pageable) {
         return productRepository.findAll(pageable);
     }
+
 
 }
