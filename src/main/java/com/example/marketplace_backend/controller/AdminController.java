@@ -8,7 +8,7 @@ import com.example.marketplace_backend.Repositories.BrandRepository;
 import com.example.marketplace_backend.Repositories.CategoryRepository;
 import com.example.marketplace_backend.Service.Impl.*;
 import com.example.marketplace_backend.controller.Requests.models.ProductRequest;
-import com.example.marketplace_backend.controller.Requests.models.UserResponse;
+import com.example.marketplace_backend.controller.Responses.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +24,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 
 @RestController

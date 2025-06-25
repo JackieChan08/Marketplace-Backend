@@ -3,6 +3,8 @@ package com.example.marketplace_backend.Repositories;
 import com.example.marketplace_backend.Model.Brand;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,7 +17,7 @@ import java.util.UUID;
 public interface ProductRepository extends JpaRepository<Product, UUID> {
     Product findByName(String name);
     @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%'))")
-    List<Product> findByNameContaining(@Param("name") String query);
+    Page<Product> findByNameContaining(@Param("name") String name, Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.category = :category and p.deletedAt IS NULL")
     List<Product> findByCategoryAndDeletedAtIsNull(@Param("category") Category category);
