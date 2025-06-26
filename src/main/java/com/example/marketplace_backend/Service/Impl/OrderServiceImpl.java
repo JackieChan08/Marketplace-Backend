@@ -45,6 +45,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         order.setPhoneNumber(request.getPhoneNumber());
         order.setStatus("collecting");
         order.setComment(request.getComment());
+        order.setWholesale(request.getIsWholesale());
 
         List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
@@ -98,6 +99,14 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         order.setAddress(address);
         return orderRepository.save(order);
+    }
+
+    public List<Order> getAllWholesaleOrders() {
+        return orderRepository.findAllWholesaleOrders();
+    }
+
+    public List<Order> getAllRetailOrders() {
+        return orderRepository.findAllRetailOrders();
     }
 
 }
