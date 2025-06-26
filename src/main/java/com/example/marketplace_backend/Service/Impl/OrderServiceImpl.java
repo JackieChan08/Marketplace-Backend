@@ -101,4 +101,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         return orderRepository.save(order);
     }
 
+    public List<Order> getAllWholesaleOrders() {
+        return orderRepository.findAllWholesaleOrders();
+    }
+
+    public List<Order> getAllRetailOrders() {
+        return orderRepository.findAllRetailOrders();
+    }
+
 }
