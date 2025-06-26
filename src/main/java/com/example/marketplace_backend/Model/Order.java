@@ -57,5 +57,8 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<OrderItem> orderItems;
+
+    @Column(name = "is_wholesale")
+    private boolean isWholesale;// true — опт, false — розница
 }
 

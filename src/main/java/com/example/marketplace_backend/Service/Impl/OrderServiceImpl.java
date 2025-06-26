@@ -45,6 +45,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         order.setPhoneNumber(request.getPhoneNumber());
         order.setStatus("collecting");
         order.setComment(request.getComment());
+        order.setWholesale(request.getIsWholesale());
 
         List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
