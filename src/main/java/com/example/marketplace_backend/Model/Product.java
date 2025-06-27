@@ -22,7 +22,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SQLDelete(sql = "UPDATE products SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class Product {
     @Id
@@ -40,11 +39,6 @@ public class Product {
 
     @OneToMany
     private List<Description> descriptions;
-
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "category_id")
-    private Category category;
 
     @ManyToOne
     @JsonBackReference
@@ -73,6 +67,7 @@ public class Product {
     private LocalDateTime deletedAt;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "subcategory_id")
     private Subcategory subcategory;
 }

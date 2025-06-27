@@ -1,14 +1,8 @@
 package com.example.marketplace_backend.Service.Impl;
 
-import com.example.marketplace_backend.Model.Brand;
-import com.example.marketplace_backend.Model.Category;
-import com.example.marketplace_backend.Model.FileEntity;
-import com.example.marketplace_backend.Model.Product;
+import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
-import com.example.marketplace_backend.Repositories.BrandRepository;
-import com.example.marketplace_backend.Repositories.CategoryRepository;
-import com.example.marketplace_backend.Repositories.ProductImageRepository;
-import com.example.marketplace_backend.Repositories.ProductRepository;
+import com.example.marketplace_backend.Repositories.*;
 import com.example.marketplace_backend.controller.Requests.models.ProductRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,22 +17,22 @@ import java.util.UUID;
 @Service
 public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
     private final FileUploadService fileUploadService;
     private final ProductImageRepository productImageRepository;
     private final BrandRepository brandRepository;
+    private final SubcategoryRepository subcategoryRepository;
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository,
-                              CategoryRepository categoryRepository,
+                              SubcategoryRepository subcategoryRepository,
                               FileUploadService fileUploadService,
                               ProductImageRepository productImageRepository, BrandRepository brandRepository) {
         super(productRepository);
         this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
         this.fileUploadService = fileUploadService;
         this.productImageRepository = productImageRepository;
         this.brandRepository = brandRepository;
+        this.subcategoryRepository = subcategoryRepository;
     }
 
     public Product createProduct(ProductRequest dto) throws Exception {
@@ -46,7 +40,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         product.setName(dto.getName());
         product.setPrice(dto.getPrice());
         product.setDescriptions(dto.getDescriptions());
-        product.setCategory(categoryRepository.findById(dto.getCategoryId())
+        product.setSubcategory(subcategoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found")));
         product.setBrand(brandRepository.findById(dto.getBrandId())
                 .orElseThrow(() -> new RuntimeException("Brand not found")));
@@ -75,7 +69,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         if (dto.getPrice() != null) product.setPrice(dto.getPrice());
         if (dto.getDescriptions() != null) product.setDescriptions(dto.getDescriptions());
         if (dto.getCategoryId() != null) {
-            product.setCategory(categoryRepository.findById(dto.getCategoryId())
+            product.setSubcategory(subcategoryRepository.findById(dto.getCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category not found")));
         }
         if (dto.getBrandId() != null) {
@@ -109,20 +103,20 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     public Page<Product> findByNameContaining(String name, Pageable pageable) {
         return productRepository.findByNameContaining(name, pageable);
     }
-    public List<Product> findByCategory(Category category){
-        return productRepository.findByCategoryAndDeletedAtIsNull(category);
+    public List<Product> findBySubcategory(Subcategory subcategory){
+        return productRepository.findBySubcategoryAndDeletedAtIsNull(subcategory);
     };
 
-    public void deActiveProductByCategory(Category category){
-        List<Product> products = productRepository.findByCategoryAndDeletedAtIsNull(category);
+    public void deActiveProductBySubcategory(Subcategory subcategory){
+        List<Product> products = productRepository.findBySubcategoryAndDeletedAtIsNull(subcategory);
         for(Product product : products){
             product.setDeletedAt(LocalDateTime.now());
             productRepository.save(product);
         }
     }
 
-    public void activeProductByCategory(Category category){
-        List<Product> products = productRepository.findByCategoryAndDeletedAtIsNotNull(category);
+    public void activeProductByCategory(Subcategory subcategory){
+        List<Product> products = productRepository.findBySubcategoryAndDeletedAtIsNotNull(subcategory);
         for(Product product : products){
             product.setDeletedAt(null);
             productRepository.save(product);

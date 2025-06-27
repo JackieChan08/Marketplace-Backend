@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -17,10 +18,8 @@ public interface BrandRepository extends JpaRepository<Brand, UUID> {
     @Query("SELECT b FROM Brand b WHERE b.deletedAt IS NULL")
     List<Brand> findAllActive();
 
-    List<Brand> findAllByDeletedAtIsNull();
-
-    @Query("SELECT b FROM Brand b WHERE b.id = :id AND b.deletedAt IS NULL")
-    Optional<Brand> findActiveById(UUID id);
+    @Query("SELECT b FROM Brand b WHERE b.deletedAt IS NOT NULL")
+    List<Brand> findAllDeActive();
 
     // бренды с продуктами
     @Query("SELECT b FROM Brand b LEFT JOIN FETCH b.products WHERE b.deletedAt IS NULL")
@@ -30,5 +29,10 @@ public interface BrandRepository extends JpaRepository<Brand, UUID> {
     @Transactional
     @Query("DELETE FROM Brand b WHERE b.deletedAt IS NOT NULL AND b.deletedAt < :expirationDate")
     void purgeOldBrands(LocalDateTime expirationDate);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Brand b SET b.deletedAt = :deletedAt WHERE b.id = :id")
+    void softDeleteById(@Param("id") UUID id, @Param("deletedAt") LocalDateTime deletedAt);
 }
 

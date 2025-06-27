@@ -19,8 +19,10 @@ public class ProductResponse {
     private UUID id;
     private String name;
     private List<Description> descriptions;
-    private String categoryName;
     private UUID categoryId;
+    private String categoryName;
+    private String subcategoryName;
+    private UUID subcategoryId;
     private List<FileResponse> images;
     private double price;
     private double discountedPrice;

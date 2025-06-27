@@ -2,6 +2,7 @@ package com.example.marketplace_backend.controller;
 
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Product;
+import com.example.marketplace_backend.Model.Subcategory;
 import com.example.marketplace_backend.Model.User;
 import com.example.marketplace_backend.Repositories.ProductRepository;
 import com.example.marketplace_backend.Repositories.UserRepository;
@@ -96,14 +97,30 @@ public class ProductController {
         response.setId(product.getId());
         response.setName(product.getName());
         response.setDescriptions(product.getDescriptions());
-        response.setCategoryId(product.getCategory().getId());
-        response.setCategoryName(product.getCategory().getName());
-        response.setBrandId(product.getBrand().getId());
 
+        // Получаем подкатегорию
+        Subcategory subcategory = product.getSubcategory();
+        if (subcategory != null) {
+            response.setSubcategoryId(subcategory.getId());
+            response.setSubcategoryName(subcategory.getName());
+
+            // Получаем категорию через подкатегорию
+            if (subcategory.getCategory() != null) {
+                response.setCategoryId(subcategory.getCategory().getId());
+                response.setCategoryName(subcategory.getCategory().getName());
+            }
+        }
+
+        // Бренд
+        if (product.getBrand() != null) {
+            response.setBrandId(product.getBrand().getId());
+        }
+
+        // Изображения
         if (product.getProductImages() != null && !product.getProductImages().isEmpty()) {
             List<FileResponse> images = product.getProductImages().stream()
                     .map(productImage -> {
-                        FileEntity image = productImage.getImage(); // ✅ получаем FileEntity из ProductImage
+                        FileEntity image = productImage.getImage();
                         FileResponse fileResponse = new FileResponse();
                         fileResponse.setUniqueName(image.getUniqueName());
                         fileResponse.setOriginalName(image.getOriginalName());
@@ -118,6 +135,7 @@ public class ProductController {
 
         return response;
     }
+
 
 
 

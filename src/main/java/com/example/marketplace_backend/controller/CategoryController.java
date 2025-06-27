@@ -81,14 +81,15 @@ public class CategoryController {
             response.setImageFiles(imageFiles);
         }
 
-        List<ProductResponse> productResponses = category.getSubсategories().stream()
+        // Получение всех продуктов через подкатегории этой категории
+        List<ProductResponse> productResponses = category.getSubcategories().stream() // ← исправлено имя метода
+                .filter(subcategory -> subcategory.getDeletedAt() == null) // пропустить удалённые подкатегории
                 .flatMap(subcategory -> subcategory.getProducts().stream())
                 .filter(product -> product.getDeletedAt() == null)
                 .map(this::convertToProductResponse)
                 .toList();
 
         response.setProducts(productResponses);
-
 
         return response;
     }
@@ -98,8 +99,6 @@ public class CategoryController {
         response.setId(product.getId());
         response.setName(product.getName());
         response.setDescriptions(product.getDescriptions());
-        response.setCategoryId(product.getCategory().getId());
-        response.setCategoryName(product.getCategory().getName());
         response.setBrandId(product.getBrand().getId());
 
         if (product.getProductImages() != null && !product.getProductImages().isEmpty()) {
