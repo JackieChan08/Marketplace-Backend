@@ -22,7 +22,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SQLDelete(sql = "UPDATE categories SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class Category {
     @Id
@@ -48,6 +47,6 @@ public class Category {
     private List<CategoryImage> categoryImages;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
-    private List<Subcategory> subсategories;
+    @JsonManagedReference
+    private List<Subcategory> subcategories;
 }

@@ -10,7 +10,6 @@ import java.util.UUID;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, UUID> {
-
     @Query("SELECT o FROM Order o  ORDER BY o.createdAt DESC")
     List<Order> findAllOrders();
 }
