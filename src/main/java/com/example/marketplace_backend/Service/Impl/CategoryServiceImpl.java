@@ -1,7 +1,9 @@
 package com.example.marketplace_backend.Service.Impl;
 
 
+import com.example.marketplace_backend.DTO.Requests.models.CategoryRequest;
 import com.example.marketplace_backend.Model.Category;
+import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
 import com.example.marketplace_backend.Repositories.CategoryImageRepository;
@@ -12,8 +14,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -119,5 +124,87 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
     @Transactional(readOnly = true)
     public long countDeActiveCategories() {
         return findAllDeActive().size();
+    }
+
+    public Category createCategory(CategoryRequest request) throws IOException {
+
+        Category category = new Category();
+        category.setName(request.getName());
+        category.setDeletedAt(null);
+        category.setCreatedAt(LocalDateTime.now());
+
+        category = save(category);
+
+        List<CategoryImage> categoryImages = new ArrayList<>();
+        for (MultipartFile image : request.getImages()) {
+            FileEntity savedImage = fileUploadService.saveImage(image);
+            CategoryImage categoryImage = CategoryImage.builder()
+                    .category(category)
+                    .image(savedImage)
+                    .build();
+            categoryImages.add(categoryImage);
+        }
+
+        category.setCategoryImages(categoryImages);
+
+        category = save(category);
+        return category;
+
+    }
+
+    public Category updateCategory(UUID id,CategoryRequest request) throws IOException {
+
+        Category category = getById(id);
+
+        if (request.getName() != null && !request.getName().isEmpty()) {
+            category.setName(request.getName());
+        }
+
+        if (request.getImages() != null && !request.getImages().isEmpty()) {
+            List<CategoryImage> newCategoryImages = request.getImages().stream()
+                    .map(image -> {
+                        try {
+                            FileEntity savedImage = fileUploadService.saveImage(image);
+                            return CategoryImage.builder()
+                                    .category(category)
+                                    .image(savedImage)
+                                    .build();
+                        } catch (IOException e) {
+                            throw new RuntimeException("Ошибка при сохранении изображения", e);
+                        }
+                    })
+                    .toList();
+
+            if (category.getCategoryImages() != null) {
+                category.getCategoryImages().addAll(newCategoryImages);
+            } else {
+                category.setCategoryImages(newCategoryImages);
+            }
+        }
+
+        return save(category);
+    }
+
+
+    public boolean deleteCategoryImage(UUID categoryId, UUID imageId) {
+        Optional<Category> categoryOpt = categoryRepository.findById(categoryId);
+        if (categoryOpt.isEmpty()) {
+            return false;
+        }
+
+        Category category = categoryOpt.get();
+
+        boolean removed = false;
+        if (category.getCategoryImages() != null) {
+            removed = category.getCategoryImages().removeIf(img ->
+                    img.getImage() != null && img.getImage().getId().equals(imageId)
+            );
+        }
+
+        if (removed) {
+            categoryRepository.save(category);
+        }
+
+        return removed;
     }
 }

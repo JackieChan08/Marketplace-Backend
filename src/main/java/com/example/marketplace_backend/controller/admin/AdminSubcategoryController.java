@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.controller.admin;
 
+import com.example.marketplace_backend.DTO.Requests.models.SubcategoryRequest;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Intermediate_objects.SubcategoryImage;
@@ -95,39 +96,10 @@ public class AdminSubcategoryController {
 
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     public ResponseEntity<Subcategory> createSubcategoryWithImages(
-            @RequestParam String name,
-            @RequestParam UUID categoryId,
-            @RequestParam("images") List<MultipartFile> images
-    ) throws Exception {
+            @RequestParam SubcategoryRequest request
+            ) throws Exception {
 
-        Optional<Category> categoryOpt = categoryService.findById(categoryId);
-        if (categoryOpt.isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        Subcategory subcategory = new Subcategory();
-        subcategory.setName(name);
-        subcategory.setCategory(categoryOpt.get());
-        subcategory.setDeletedAt(null);
-        subcategory.setCreatedAt(LocalDateTime.now());
-
-        subcategory = subcategoryService.save(subcategory);
-
-        List<SubcategoryImage> subcategoryImages = new ArrayList<>();
-        for (MultipartFile image : images) {
-            FileEntity savedImage = fileUploadService.saveImage(image);
-            SubcategoryImage subcategoryImage = SubcategoryImage.builder()
-                    .subcategory(subcategory)
-                    .image(savedImage)
-                    .build();
-            subcategoryImages.add(subcategoryImage);
-        }
-
-        subcategory.setSubcategoryImages(subcategoryImages);
-
-        subcategory = subcategoryService.save(subcategory);
-
-        return ResponseEntity.ok(subcategory);
+        return subcategoryService.createSubcategory(request);
     }
 
     @DeleteMapping("/{id}/permanent")
@@ -154,64 +126,20 @@ public class AdminSubcategoryController {
     @PostMapping(value = "/edit/{id}", consumes = {"multipart/form-data"})
     public ResponseEntity<Subcategory> editSubcategory(
             @PathVariable UUID id,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) UUID categoryId,
-            @RequestParam(name = "images", required = false) List<MultipartFile> images
+            @RequestParam() SubcategoryRequest request
     ) throws IOException {
-        Subcategory subcategory = subcategoryService.getById(id);
-
-        if (name != null && !name.isEmpty()) {
-            subcategory.setName(name);
-        }
-
-        if (categoryId != null) {
-            Optional<Category> categoryOpt = categoryService.findById(categoryId);
-            categoryOpt.ifPresent(subcategory::setCategory);
-        }
-
-        if (images != null && !images.isEmpty()) {
-            List<SubcategoryImage> newSubcategoryImages = images.stream()
-                    .map(image -> {
-                        try {
-                            FileEntity savedImage = fileUploadService.saveImage(image);
-                            return SubcategoryImage.builder()
-                                    .subcategory(subcategory)
-                                    .image(savedImage)
-                                    .build();
-                        } catch (IOException e) {
-                            throw new RuntimeException("Ошибка при сохранении изображения", e);
-                        }
-                    })
-                    .toList();
-
-            if (subcategory.getSubcategoryImages() != null) {
-                subcategory.getSubcategoryImages().addAll(newSubcategoryImages);
-            } else {
-                subcategory.setSubcategoryImages(newSubcategoryImages);
-            }
-        }
-
-        subcategoryService.save(subcategory);
-        return ResponseEntity.ok(subcategory);
+        return subcategoryService.updateSubcategory(id, request);
     }
-
     @DeleteMapping("/{subcategoryId}/images/{imageId}")
     public ResponseEntity<Void> deleteSubcategoryImage(
             @PathVariable UUID subcategoryId,
             @PathVariable UUID imageId
     ) {
         try {
-            Optional<Subcategory> subcategoryOpt = subcategoryService.findById(subcategoryId);
-            if (subcategoryOpt.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
+            boolean deleted = subcategoryService.deleteSubcategoryImage(subcategoryId, imageId);
 
-            Subcategory subcategory = subcategoryOpt.get();
-            if (subcategory.getSubcategoryImages() != null) {
-                subcategory.getSubcategoryImages().removeIf(img ->
-                        img.getImage() != null && img.getImage().getId().equals(imageId)
-                );
-                subcategoryService.save(subcategory);
+            if (!deleted) {
+                return ResponseEntity.notFound().build();
             }
 
             return ResponseEntity.noContent().build();
@@ -219,6 +147,7 @@ public class AdminSubcategoryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
 
 }

@@ -1,15 +1,13 @@
 package com.example.marketplace_backend.controller.admin;
 
+import com.example.marketplace_backend.DTO.Requests.models.BrandRequest;
 import com.example.marketplace_backend.Model.Brand;
-import com.example.marketplace_backend.Model.FileEntity;
-import com.example.marketplace_backend.Model.Intermediate_objects.BrandImage;
 import com.example.marketplace_backend.Service.Impl.BrandServiceImpl;
 import com.example.marketplace_backend.Service.Impl.FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -72,30 +70,9 @@ public class AdminBrandController {
 
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     public ResponseEntity<Brand> createBrandWithImages(
-            @RequestParam String name,
-            @RequestParam("images") List<MultipartFile> images
-    ) throws Exception {
-
-        Brand brand = new Brand();
-        brand.setName(name);
-        brand.setDeletedAt(null);
-        brand.setCreatedAt(LocalDateTime.now());
-
-        brand = brandService.save(brand);
-
-        List<BrandImage> brandImages = new ArrayList<>();
-        for (MultipartFile image : images) {
-            FileEntity savedImage = fileUploadService.saveImage(image);
-            BrandImage brandImage = BrandImage.builder()
-                    .brand(brand)
-                    .image(savedImage)
-                    .build();
-            brandImages.add(brandImage);
-        }
-
-        brand.setBrandImages(brandImages);
-
-        brand = brandService.save(brand);
+            @RequestParam BrandRequest request
+            ) throws Exception {
+        Brand brand = brandService.createBrand(request);
 
         return ResponseEntity.ok(brand);
     }
@@ -124,38 +101,9 @@ public class AdminBrandController {
     @PostMapping(value = "/edit/{id}", consumes = {"multipart/form-data"})
     public ResponseEntity<Brand> editBrand(
             @PathVariable UUID id,
-            @RequestParam(required = false) String name,
-            @RequestParam(name = "images", required = false) List<MultipartFile> images
+            @RequestParam() BrandRequest request
     ) throws IOException {
-        Brand brand = brandService.getById(id);
-
-        if (name != null && !name.isEmpty()) {
-            brand.setName(name);
-        }
-
-        if (images != null && !images.isEmpty()) {
-            List<BrandImage> newBrandImages = images.stream()
-                    .map(image -> {
-                        try {
-                            FileEntity savedImage = fileUploadService.saveImage(image);
-                            return BrandImage.builder()
-                                    .brand(brand)
-                                    .image(savedImage)
-                                    .build();
-                        } catch (IOException e) {
-                            throw new RuntimeException("Ошибка при сохранении изображения", e);
-                        }
-                    })
-                    .toList();
-
-            if (brand.getBrandImages() != null) {
-                brand.getBrandImages().addAll(newBrandImages);
-            } else {
-                brand.setBrandImages(newBrandImages);
-            }
-        }
-
-        brandService.save(brand);
+        Brand brand = brandService.editBrand(id, request);
         return ResponseEntity.ok(brand);
     }
 
@@ -183,5 +131,7 @@ public class AdminBrandController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+
 
 }

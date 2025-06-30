@@ -1,6 +1,8 @@
 package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.Model.*;
+import com.example.marketplace_backend.Model.Intermediate_objects.CartItem;
+import com.example.marketplace_backend.Model.Intermediate_objects.OrderItem;
 import com.example.marketplace_backend.Repositories.*;
 import com.example.marketplace_backend.DTO.Requests.models.OrderRequest;
 import org.springframework.stereotype.Service;

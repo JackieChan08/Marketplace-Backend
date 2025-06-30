@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.Model;
 
+import com.example.marketplace_backend.Model.Intermediate_objects.OrderItem;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;

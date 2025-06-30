@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.controller.admin;
 
+import com.example.marketplace_backend.DTO.Requests.models.CategoryRequest;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
@@ -77,32 +78,9 @@ public class AdminCategoryController {
 
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     public ResponseEntity<Category> createCategoryWithImages(
-            @RequestParam String name,
-            @RequestParam("images") List<MultipartFile> images
-    ) throws Exception {
-
-        Category category = new Category();
-        category.setName(name);
-        category.setDeletedAt(null);
-        category.setCreatedAt(LocalDateTime.now());
-
-        category = categoryService.save(category);
-
-        List<CategoryImage> categoryImages = new ArrayList<>();
-        for (MultipartFile image : images) {
-            FileEntity savedImage = fileUploadService.saveImage(image);
-            CategoryImage categoryImage = CategoryImage.builder()
-                    .category(category)
-                    .image(savedImage)
-                    .build();
-            categoryImages.add(categoryImage);
-        }
-
-        category.setCategoryImages(categoryImages);
-
-        category = categoryService.save(category);
-
-        return ResponseEntity.ok(category);
+            @RequestParam CategoryRequest request
+            ) throws Exception {
+        return ResponseEntity.ok(categoryService.createCategory(request));
     }
 
 
@@ -130,39 +108,9 @@ public class AdminCategoryController {
     @PostMapping(value = "/edit/{id}", consumes = {"multipart/form-data"})
     public ResponseEntity<Category> editCategory(
             @PathVariable UUID id,
-            @RequestParam(required = false) String name,
-            @RequestParam(name = "images", required = false) List<MultipartFile> images
+            @RequestParam(required = false) CategoryRequest request
     ) throws IOException {
-        Category category = categoryService.getById(id);
-
-        if (name != null && !name.isEmpty()) {
-            category.setName(name);
-        }
-
-        if (images != null && !images.isEmpty()) {
-            List<CategoryImage> newCategoryImages = images.stream()
-                    .map(image -> {
-                        try {
-                            FileEntity savedImage = fileUploadService.saveImage(image);
-                            return CategoryImage.builder()
-                                    .category(category)
-                                    .image(savedImage)
-                                    .build();
-                        } catch (IOException e) {
-                            throw new RuntimeException("Ошибка при сохранении изображения", e);
-                        }
-                    })
-                    .toList();
-
-            if (category.getCategoryImages() != null) {
-                category.getCategoryImages().addAll(newCategoryImages);
-            } else {
-                category.setCategoryImages(newCategoryImages);
-            }
-        }
-
-        categoryService.save(category);
-        return ResponseEntity.ok(category);
+        return ResponseEntity.ok(categoryService.updateCategory(id, request));
     }
 
     @DeleteMapping("/{categoryId}/images/{imageId}")
@@ -171,17 +119,10 @@ public class AdminCategoryController {
             @PathVariable UUID imageId
     ) {
         try {
-            Optional<Category> categoryOpt = categoryService.findById(categoryId);
-            if (categoryOpt.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
+            boolean deleted = categoryService.deleteCategoryImage(categoryId, imageId);
 
-            Category category = categoryOpt.get();
-            if (category.getCategoryImages() != null) {
-                category.getCategoryImages().removeIf(img ->
-                        img.getImage() != null && img.getImage().getId().equals(imageId)
-                );
-                categoryService.save(category);
+            if (!deleted) {
+                return ResponseEntity.notFound().build();
             }
 
             return ResponseEntity.noContent().build();
@@ -189,4 +130,5 @@ public class AdminCategoryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 }

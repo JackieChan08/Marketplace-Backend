@@ -1,29 +1,18 @@
 package com.example.marketplace_backend.controller.admin;
 
-import com.example.marketplace_backend.Model.*;
-import com.example.marketplace_backend.Model.Intermediate_objects.BrandImage;
-import com.example.marketplace_backend.Model.Intermediate_objects.SubcategoryImage;
 import com.example.marketplace_backend.Repositories.BrandRepository;
 import com.example.marketplace_backend.Repositories.SubcategoryRepository;
 import com.example.marketplace_backend.Service.Impl.*;
 import com.example.marketplace_backend.DTO.Responses.UserResponse;
-import com.example.marketplace_backend.Model.ProductParameters;
-import com.example.marketplace_backend.Model.ProductSubParameters;
 import com.example.marketplace_backend.Service.Impl.ProductParametersServiceImpl;
 import com.example.marketplace_backend.Service.Impl.ProductSubParametersServiceImpl;
+import com.example.marketplace_backend.Service.Impl.auth.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.*;
 
 
 @RestController
@@ -53,8 +42,5 @@ public class AdminController {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(userService.searchUsers(query, pageable));
     }
-
-
-    //ProductSubParameter ---------------------------------------------------------------------------
 
 }

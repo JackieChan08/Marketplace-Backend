@@ -1,10 +1,10 @@
 package com.example.marketplace_backend.controller;
 
 import com.example.marketplace_backend.Model.Cart;
-import com.example.marketplace_backend.Model.CartItem;
+import com.example.marketplace_backend.Model.Intermediate_objects.CartItem;
 import com.example.marketplace_backend.Service.Impl.CartService;
 import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
-import com.example.marketplace_backend.Service.Impl.UserServiceImpl;
+import com.example.marketplace_backend.Service.Impl.auth.UserServiceImpl;
 import com.example.marketplace_backend.DTO.Requests.models.CartRequest;
 import com.example.marketplace_backend.DTO.Responses.CartResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
