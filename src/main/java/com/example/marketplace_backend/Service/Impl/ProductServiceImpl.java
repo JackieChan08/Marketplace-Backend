@@ -1,10 +1,13 @@
 package com.example.marketplace_backend.Service.Impl;
 
+import com.example.marketplace_backend.DTO.Responses.FileResponse;
+import com.example.marketplace_backend.DTO.Responses.ProductResponse;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
 import com.example.marketplace_backend.Repositories.*;
 import com.example.marketplace_backend.DTO.Requests.models.ProductRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     private final ProductImageRepository productImageRepository;
     private final BrandRepository brandRepository;
     private final SubcategoryRepository subcategoryRepository;
+
+    @Value("${app.base-url}")
+    private static String baseUrl;
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository,
@@ -40,7 +46,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         product.setName(dto.getName());
         product.setPrice(dto.getPrice());
         product.setDescriptions(dto.getDescriptions());
-        product.setSubcategory(subcategoryRepository.findById(dto.getCategoryId())
+        product.setSubcategory(subcategoryRepository.findById(dto.getSubCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found")));
         product.setBrand(brandRepository.findById(dto.getBrandId())
                 .orElseThrow(() -> new RuntimeException("Brand not found")));
@@ -68,8 +74,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         if (dto.getName() != null) product.setName(dto.getName());
         if (dto.getPrice() != null) product.setPrice(dto.getPrice());
         if (dto.getDescriptions() != null) product.setDescriptions(dto.getDescriptions());
-        if (dto.getCategoryId() != null) {
-            product.setSubcategory(subcategoryRepository.findById(dto.getCategoryId())
+        if (dto.getSubCategoryId() != null) {
+            product.setSubcategory(subcategoryRepository.findById(dto.getSubCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category not found")));
         }
         if (dto.getBrandId() != null) {
@@ -157,4 +163,48 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     }
 
 
+
+    public static ProductResponse convertToProductResponse(Product product) {
+        ProductResponse response = new ProductResponse();
+        response.setId(product.getId());
+        response.setName(product.getName());
+        response.setDescriptions(product.getDescriptions());
+
+        // Получаем подкатегорию
+        Subcategory subcategory = product.getSubcategory();
+        if (subcategory != null) {
+            response.setSubcategoryId(subcategory.getId());
+            response.setSubcategoryName(subcategory.getName());
+
+            // Получаем категорию через подкатегорию
+            if (subcategory.getCategory() != null) {
+                response.setCategoryId(subcategory.getCategory().getId());
+                response.setCategoryName(subcategory.getCategory().getName());
+            }
+        }
+
+        // Бренд
+        if (product.getBrand() != null) {
+            response.setBrandId(product.getBrand().getId());
+        }
+
+        // Изображения
+        if (product.getProductImages() != null && !product.getProductImages().isEmpty()) {
+            List<FileResponse> images = product.getProductImages().stream()
+                    .map(productImage -> {
+                        FileEntity image = productImage.getImage();
+                        FileResponse fileResponse = new FileResponse();
+                        fileResponse.setUniqueName(image.getUniqueName());
+                        fileResponse.setOriginalName(image.getOriginalName());
+                        fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
+                        fileResponse.setFileType(image.getFileType());
+                        return fileResponse;
+                    })
+                    .toList();
+
+            response.setImages(images);
+        }
+
+        return response;
+    }
 }

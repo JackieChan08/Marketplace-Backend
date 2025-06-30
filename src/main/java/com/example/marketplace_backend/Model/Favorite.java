@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.Model;
 
+import com.example.marketplace_backend.Model.Intermediate_objects.FavoriteItem;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

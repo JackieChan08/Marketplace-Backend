@@ -1,6 +1,6 @@
 package com.example.marketplace_backend.Repositories;
 
-import com.example.marketplace_backend.Model.FavoriteItem;
+import com.example.marketplace_backend.Model.Intermediate_objects.FavoriteItem;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
