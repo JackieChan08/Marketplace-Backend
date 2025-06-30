@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.controller.Requests.Jwt;
+package com.example.marketplace_backend.DTO.Requests.Jwt;
 
 import lombok.Data;
 

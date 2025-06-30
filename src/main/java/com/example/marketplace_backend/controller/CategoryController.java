@@ -1,12 +1,14 @@
 package com.example.marketplace_backend.controller;
 
+import com.example.marketplace_backend.DTO.Responses.CategoryResponse;
+import com.example.marketplace_backend.DTO.Responses.FileResponse;
+import com.example.marketplace_backend.DTO.Responses.ProductResponse;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Product;
 import com.example.marketplace_backend.Repositories.CategoryRepository;
 import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
 import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
-import com.example.marketplace_backend.controller.Responses.*;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

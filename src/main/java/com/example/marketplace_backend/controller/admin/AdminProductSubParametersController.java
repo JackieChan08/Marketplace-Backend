@@ -1,0 +1,135 @@
+package com.example.marketplace_backend.controller.admin;
+
+import com.example.marketplace_backend.Model.ProductSubParameters;
+import com.example.marketplace_backend.Repositories.BrandRepository;
+import com.example.marketplace_backend.Repositories.SubcategoryRepository;
+import com.example.marketplace_backend.Service.Impl.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/admin/product-sub-parameters")
+public class AdminProductSubParametersController {
+    private final ProductSubParametersServiceImpl productSubParametersService;
+
+    @GetMapping("")
+    public ResponseEntity<List<ProductSubParameters>> getAllProductSubParameters() {
+        return ResponseEntity.ok(productSubParametersService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductSubParameters> getProductSubParameterById(@PathVariable UUID id) {
+        Optional<ProductSubParameters> subParameter = productSubParametersService.findById(id);
+        return subParameter.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/parameter/{parameterId}")
+    public ResponseEntity<List<ProductSubParameters>> getProductSubParametersByParameterId(@PathVariable UUID parameterId) {
+        if (!productSubParametersService.productParameterExists(parameterId)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(productSubParametersService.findByProductParameterId(parameterId));
+    }
+
+    @GetMapping("/stats/parameter/{parameterId}")
+    public ResponseEntity<Map<String, Long>> getProductSubParametersStats(@PathVariable UUID parameterId) {
+        if (!productSubParametersService.productParameterExists(parameterId)) {
+            return ResponseEntity.notFound().build();
+        }
+        Map<String, Long> stats = new HashMap<>();
+        List<ProductSubParameters> subParams = productSubParametersService.findByProductParameterId(parameterId);
+        stats.put("subParametersCount", (long) subParams.size());
+        return ResponseEntity.ok(stats);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ProductSubParameters> findProductSubParameterByNameAndParameterId(
+            @RequestParam String name,
+            @RequestParam UUID parameterId) {
+
+        if (!productSubParametersService.productParameterExists(parameterId)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Optional<ProductSubParameters> subParameter = productSubParametersService.findByNameAndProductParameterId(name, parameterId);
+        return subParameter.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<ProductSubParameters> createProductSubParameter(@RequestBody ProductSubParameters productSubParameters) {
+        try {
+            ProductSubParameters created = productSubParametersService.create(productSubParameters);
+            return ResponseEntity.ok(created);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/create/batch")
+    public ResponseEntity<List<ProductSubParameters>> createProductSubParametersBatch(@RequestBody List<ProductSubParameters> productSubParameters) {
+        try {
+            List<ProductSubParameters> created = productSubParametersService.createBatch(productSubParameters);
+            return ResponseEntity.ok(created);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/edit/{id}")
+    public ResponseEntity<ProductSubParameters> editProductSubParameter(
+            @PathVariable UUID id,
+            @RequestBody ProductSubParameters updatedSubParameters) {
+        try {
+            ProductSubParameters updated = productSubParametersService.update(id, updatedSubParameters);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/edit/{id}/value")
+    public ResponseEntity<ProductSubParameters> editProductSubParameterValue(
+            @PathVariable UUID id,
+            @RequestParam String value) {
+        try {
+            ProductSubParameters updated = productSubParametersService.updateValue(id, value);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProductSubParameter(@PathVariable UUID id) {
+        try {
+            productSubParametersService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/parameter/{parameterId}")
+    public ResponseEntity<Void> deleteAllProductSubParametersByParameterId(@PathVariable UUID parameterId) {
+        try {
+            if (!productSubParametersService.productParameterExists(parameterId)) {
+                return ResponseEntity.notFound().build();
+            }
+            productSubParametersService.deleteByProductParameterId(parameterId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+}

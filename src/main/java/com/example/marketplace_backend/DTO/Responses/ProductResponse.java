@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.controller.Responses;
+package com.example.marketplace_backend.DTO.Responses;
 
 
 import com.example.marketplace_backend.Model.Description;

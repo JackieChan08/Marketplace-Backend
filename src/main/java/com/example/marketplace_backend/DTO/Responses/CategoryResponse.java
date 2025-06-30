@@ -1,8 +1,6 @@
-package com.example.marketplace_backend.controller.Responses;
+package com.example.marketplace_backend.DTO.Responses;
 
 
-import com.example.marketplace_backend.Model.Description;
-import com.example.marketplace_backend.Model.FileEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

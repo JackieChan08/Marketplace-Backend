@@ -2,10 +2,7 @@ package com.example.marketplace_backend.controller;
 
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Service.Impl.*;
-import com.example.marketplace_backend.Repositories.*;
-import com.example.marketplace_backend.controller.Requests.models.OrderRequest;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
+import com.example.marketplace_backend.DTO.Requests.models.OrderRequest;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -15,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @Tag(name = "Order Controller", description = "Управление заказами")

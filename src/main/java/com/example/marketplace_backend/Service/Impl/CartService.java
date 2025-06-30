@@ -2,9 +2,8 @@ package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Repositories.*;
-import com.example.marketplace_backend.controller.Responses.CartItemResponse;
-import com.example.marketplace_backend.controller.Responses.CartResponse;
-import lombok.RequiredArgsConstructor;
+import com.example.marketplace_backend.DTO.Responses.CartItemResponse;
+import com.example.marketplace_backend.DTO.Responses.CartResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
