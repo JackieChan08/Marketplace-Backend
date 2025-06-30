@@ -3,7 +3,7 @@ package com.example.marketplace_backend.Service.Impl;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
 import com.example.marketplace_backend.Repositories.*;
-import com.example.marketplace_backend.controller.Requests.models.ProductRequest;
+import com.example.marketplace_backend.DTO.Requests.models.ProductRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

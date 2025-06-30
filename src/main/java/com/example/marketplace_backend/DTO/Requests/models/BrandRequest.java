@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.controller.Requests.models;
+package com.example.marketplace_backend.DTO.Requests.models;
 
 import lombok.Data;
 

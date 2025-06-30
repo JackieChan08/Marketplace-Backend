@@ -2,15 +2,13 @@ package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Repositories.*;
-import com.example.marketplace_backend.controller.Requests.models.OrderRequest;
+import com.example.marketplace_backend.DTO.Requests.models.OrderRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 

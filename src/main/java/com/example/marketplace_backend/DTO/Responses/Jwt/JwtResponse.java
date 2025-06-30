@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.controller.Responses.Jwt;
+package com.example.marketplace_backend.DTO.Responses.Jwt;
 
 
 import lombok.AllArgsConstructor;

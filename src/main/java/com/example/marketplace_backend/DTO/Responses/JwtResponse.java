@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.controller.Responses;
+package com.example.marketplace_backend.DTO.Responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
