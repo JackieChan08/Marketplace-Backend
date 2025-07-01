@@ -70,7 +70,7 @@ public class AdminBrandController {
 
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     public ResponseEntity<Brand> createBrandWithImages(
-            @RequestParam BrandRequest request
+            @ModelAttribute BrandRequest request
             ) throws Exception {
         Brand brand = brandService.createBrand(request);
 
@@ -100,8 +100,7 @@ public class AdminBrandController {
 
     @PostMapping(value = "/edit/{id}", consumes = {"multipart/form-data"})
     public ResponseEntity<Brand> editBrand(
-            @PathVariable UUID id,
-            @RequestParam() BrandRequest request
+            @PathVariable UUID id, @ModelAttribute BrandRequest request
     ) throws IOException {
         Brand brand = brandService.editBrand(id, request);
         return ResponseEntity.ok(brand);

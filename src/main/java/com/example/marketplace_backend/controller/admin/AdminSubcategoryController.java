@@ -27,27 +27,10 @@ public class AdminSubcategoryController {
     private final FileUploadService  fileUploadService;
     private final CategoryServiceImpl categoryService;
 
-    @GetMapping()
-    public ResponseEntity<List<Subcategory>> getAllSubcategories() {
-        return ResponseEntity.ok(subcategoryService.findAllActive());
-    }
 
     @GetMapping("/inactive")
     public ResponseEntity<List<Subcategory>> getInactiveSubcategories() {
         return ResponseEntity.ok(subcategoryService.findAllDeActive());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Subcategory> getSubcategoryById(@PathVariable UUID id) {
-        Optional<Subcategory> subcategory = subcategoryService.findById(id);
-        return subcategory.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<Subcategory>> getSubcategoriesByCategory(@PathVariable UUID categoryId) {
-        Optional<Category> categoryOpt = categoryService.findById(categoryId);
-        return categoryOpt.map(category -> ResponseEntity.ok(subcategoryService.findByCategoryActive(category))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/category/{categoryId}/inactive")

@@ -15,25 +15,6 @@ import java.util.*;
 public class AdminProductSubParametersController {
     private final ProductSubParametersServiceImpl productSubParametersService;
 
-    @GetMapping("")
-    public ResponseEntity<List<ProductSubParameters>> getAllProductSubParameters() {
-        return ResponseEntity.ok(productSubParametersService.findAll());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductSubParameters> getProductSubParameterById(@PathVariable UUID id) {
-        Optional<ProductSubParameters> subParameter = productSubParametersService.findById(id);
-        return subParameter.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/parameter/{parameterId}")
-    public ResponseEntity<List<ProductSubParameters>> getProductSubParametersByParameterId(@PathVariable UUID parameterId) {
-        if (!productSubParametersService.productParameterExists(parameterId)) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(productSubParametersService.findByProductParameterId(parameterId));
-    }
 
     @GetMapping("/stats/parameter/{parameterId}")
     public ResponseEntity<Map<String, Long>> getProductSubParametersStats(@PathVariable UUID parameterId) {
@@ -46,19 +27,6 @@ public class AdminProductSubParametersController {
         return ResponseEntity.ok(stats);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<ProductSubParameters> findProductSubParameterByNameAndParameterId(
-            @RequestParam String name,
-            @RequestParam UUID parameterId) {
-
-        if (!productSubParametersService.productParameterExists(parameterId)) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Optional<ProductSubParameters> subParameter = productSubParametersService.findByNameAndProductParameterId(name, parameterId);
-        return subParameter.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
 
     @PostMapping("/create")
     public ResponseEntity<ProductSubParameters> createProductSubParameter(@RequestBody ProductSubParameters productSubParameters) {

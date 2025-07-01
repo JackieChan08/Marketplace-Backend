@@ -78,7 +78,7 @@ public class AdminCategoryController {
 
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     public ResponseEntity<Category> createCategoryWithImages(
-            @RequestParam CategoryRequest request
+            @ModelAttribute CategoryRequest request
             ) throws Exception {
         return ResponseEntity.ok(categoryService.createCategory(request));
     }
@@ -108,7 +108,7 @@ public class AdminCategoryController {
     @PostMapping(value = "/edit/{id}", consumes = {"multipart/form-data"})
     public ResponseEntity<Category> editCategory(
             @PathVariable UUID id,
-            @RequestParam(required = false) CategoryRequest request
+            @ModelAttribute CategoryRequest request
     ) throws IOException {
         return ResponseEntity.ok(categoryService.updateCategory(id, request));
     }
