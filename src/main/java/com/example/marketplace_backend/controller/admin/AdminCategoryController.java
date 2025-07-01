@@ -78,8 +78,8 @@ public class AdminCategoryController {
 
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     public ResponseEntity<Category> createCategoryWithImages(
-            @RequestParam CategoryRequest request
-            ) throws Exception {
+            @ModelAttribute CategoryRequest request
+    ) throws Exception {
         return ResponseEntity.ok(categoryService.createCategory(request));
     }
 
@@ -95,10 +95,9 @@ public class AdminCategoryController {
     }
 
     @DeleteMapping("/purge")
-    public ResponseEntity<Void> purgeOldCategories(@RequestParam int daysOld) {
+    public ResponseEntity<Void> purgeOldCategories() {
         try {
-            LocalDateTime expirationDate = LocalDateTime.now().minusDays(daysOld);
-            categoryService.purgeOldCategories(expirationDate);
+            categoryService.purgeOldCategories();
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

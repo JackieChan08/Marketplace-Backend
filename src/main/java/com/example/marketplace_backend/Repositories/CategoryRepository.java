@@ -27,13 +27,8 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
     @Query("SELECT c FROM Category c WHERE c.deletedAt IS NOT NULL")
     List<Category> findAllDeActive();
 
-    @Query("SELECT c FROM Category c JOIN c.subcategories s WHERE s = :subcategory AND c.deletedAt IS NULL")
+    @Query("SELECT c FROM Category c JOIN c.subcategories s WHERE s = :subcategory")
     List<Category> findBySubcategory(@Param("subcategory") Subcategory subcategory);
-
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM Category c WHERE c.deletedAt IS NOT NULL AND c.deletedAt < :expirationDate")
-    void purgeOldCategories(LocalDateTime expirationDate);
 
     @Modifying
     @Transactional

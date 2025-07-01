@@ -22,7 +22,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Where(clause = "deleted_at IS NULL")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
