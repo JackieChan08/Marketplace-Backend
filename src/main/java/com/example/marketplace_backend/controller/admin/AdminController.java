@@ -6,6 +6,7 @@ import com.example.marketplace_backend.Service.Impl.*;
 import com.example.marketplace_backend.DTO.Responses.models.UserResponse;
 import com.example.marketplace_backend.Service.Impl.ProductParametersServiceImpl;
 import com.example.marketplace_backend.Service.Impl.ProductSubParametersServiceImpl;
+import com.example.marketplace_backend.Service.Impl.auth.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

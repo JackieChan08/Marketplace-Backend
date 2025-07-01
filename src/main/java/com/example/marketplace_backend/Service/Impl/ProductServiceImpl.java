@@ -1,7 +1,7 @@
 package com.example.marketplace_backend.Service.Impl;
 
-import com.example.marketplace_backend.DTO.Responses.FileResponse;
-import com.example.marketplace_backend.DTO.Responses.ProductResponse;
+import com.example.marketplace_backend.DTO.Responses.models.FileResponse;
+import com.example.marketplace_backend.DTO.Responses.models.ProductResponse;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
 import com.example.marketplace_backend.Repositories.*;
