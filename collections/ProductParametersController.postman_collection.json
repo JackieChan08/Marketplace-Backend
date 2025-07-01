@@ -1,0 +1,106 @@
+{
+	"info": {
+		"_postman_id": "185cd555-7ecf-4379-b379-8a071834d2b4",
+		"name": "ProductParametersController",
+		"description": "Public endpoints for product parameters",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40388756",
+		"_collection_link": "https://test99-0330.postman.co/workspace/test~7488d7e6-fe20-496e-ad1d-0a4b9129da6b/collection/40388756-185cd555-7ecf-4379-b379-8a071834d2b4?action=share&source=collection_link&creator=40388756"
+	},
+	"item": [
+		{
+			"name": "Get All Product Parameters",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/product-parameters",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"product-parameters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Product Parameter by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/product-parameters/{{parameterId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"product-parameters",
+						"{{parameterId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Parameters by Product ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/product-parameters/product/{{productId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"product-parameters",
+						"product",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Parameter by Name and Product ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/product-parameters/search?name=Цвет&productId={{productId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"product-parameters",
+						"search"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Цвет"
+						},
+						{
+							"key": "productId",
+							"value": "{{productId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

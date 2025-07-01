@@ -1,0 +1,106 @@
+{
+	"info": {
+		"_postman_id": "09aa7bc7-963c-4c41-9ac8-2534e8ab0433",
+		"name": "ProductSubParametersController",
+		"description": "Public API endpoints for ProductSubParameters",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40388756",
+		"_collection_link": "https://test99-0330.postman.co/workspace/test~7488d7e6-fe20-496e-ad1d-0a4b9129da6b/collection/40388756-09aa7bc7-963c-4c41-9ac8-2534e8ab0433?action=share&source=collection_link&creator=40388756"
+	},
+	"item": [
+		{
+			"name": "Get All Product SubParameters",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/product-sub-parameters",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"product-sub-parameters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get SubParameter by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/product-sub-parameters/{{subParamId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"product-sub-parameters",
+						"{{subParamId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get SubParameters by Parameter ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/product-sub-parameters/parameter/{{parameterId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"product-sub-parameters",
+						"parameter",
+						"{{parameterId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search SubParameter by Name and Parameter ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/product-sub-parameters/search?name=Цвет&parameterId={{parameterId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"product-sub-parameters",
+						"search"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Цвет"
+						},
+						{
+							"key": "parameterId",
+							"value": "{{parameterId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
