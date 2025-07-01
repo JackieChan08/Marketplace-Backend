@@ -3,7 +3,7 @@ package com.example.marketplace_backend.Service.Impl.auth;
 import com.example.marketplace_backend.Repositories.RefreshTokenRepository;
 import com.example.marketplace_backend.Repositories.UserRepository;
 import com.example.marketplace_backend.DTO.Requests.Jwt.RegisterRequest;
-import com.example.marketplace_backend.DTO.Responses.UserResponse;
+import com.example.marketplace_backend.DTO.Responses.models.UserResponse;
 import com.example.marketplace_backend.DTO.Responses.Jwt.JwtResponse;
 import com.example.marketplace_backend.Service.Impl.BaseServiceImpl;
 import com.example.marketplace_backend.Service.Impl.JwtService;

@@ -1,7 +1,7 @@
 package com.example.marketplace_backend.Service.Impl;
 
-import com.example.marketplace_backend.DTO.Responses.FileResponse;
-import com.example.marketplace_backend.DTO.Responses.ProductResponse;
+import com.example.marketplace_backend.DTO.Responses.models.FileResponse;
+import com.example.marketplace_backend.DTO.Responses.models.ProductResponse;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
 import com.example.marketplace_backend.Repositories.*;
@@ -50,6 +50,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                 .orElseThrow(() -> new RuntimeException("Category not found")));
         product.setBrand(brandRepository.findById(dto.getBrandId())
                 .orElseThrow(() -> new RuntimeException("Brand not found")));
+        product.setAvailability(dto.isAvailability());
 
         Product savedProduct = productRepository.save(product);
 
@@ -73,6 +74,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
 
         if (dto.getName() != null) product.setName(dto.getName());
         if (dto.getPrice() != null) product.setPrice(dto.getPrice());
+        if (dto.isAvailability()) product.setAvailability(true);
         if (dto.getDescriptions() != null) product.setDescriptions(dto.getDescriptions());
         if (dto.getSubCategoryId() != null) {
             product.setSubcategory(subcategoryRepository.findById(dto.getSubCategoryId())

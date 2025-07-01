@@ -3,6 +3,7 @@ package com.example.marketplace_backend.Model;
 
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -37,16 +38,17 @@ public class Product {
     @Column(name = "discounted_price", precision = 15, scale = 2)
     private BigDecimal discountedPrice;
 
-    @OneToMany
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("product-description")
     private List<Description> descriptions;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference("product-brand")
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
+    @JsonBackReference("product-images")
     private List<ProductImage> productImages;
 //    @JoinTable(
 //            name = "product_images",
@@ -70,4 +72,7 @@ public class Product {
     @JsonBackReference
     @JoinColumn(name = "subcategory_id")
     private Subcategory subcategory;
+
+    @Column(name = "availability")
+    private boolean availability; //true - в наличии, false - не в наличии
 }

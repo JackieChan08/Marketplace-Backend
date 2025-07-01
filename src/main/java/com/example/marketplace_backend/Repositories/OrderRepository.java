@@ -3,6 +3,7 @@ package com.example.marketplace_backend.Repositories;
 import com.example.marketplace_backend.Model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,4 +19,10 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     @Query("SELECT o FROM Order o WHERE o.isWholesale = false ORDER BY o.createdAt DESC")
     List<Order> findAllRetailOrders();
+
+    @Query("SELECT o FROM Order o WHERE o.orderStatuses.id = :statusId")
+    List<Order> findByOrderStatusesId(@Param("statusId") UUID statusId);
+
+    @Query("SELECT o FROM Order o WHERE o.orderStatuses.name = :statusName")
+    List<Order> findByOrderStatusesName(@Param("statusName") String statusName);
 }

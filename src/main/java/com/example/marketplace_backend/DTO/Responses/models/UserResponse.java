@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.DTO.Responses;
+package com.example.marketplace_backend.DTO.Responses.models;
 
 
 import com.example.marketplace_backend.enums.Role;

@@ -3,7 +3,7 @@ package com.example.marketplace_backend.controller.admin;
 import com.example.marketplace_backend.Repositories.BrandRepository;
 import com.example.marketplace_backend.Repositories.SubcategoryRepository;
 import com.example.marketplace_backend.Service.Impl.*;
-import com.example.marketplace_backend.DTO.Responses.UserResponse;
+import com.example.marketplace_backend.DTO.Responses.models.UserResponse;
 import com.example.marketplace_backend.Service.Impl.ProductParametersServiceImpl;
 import com.example.marketplace_backend.Service.Impl.ProductSubParametersServiceImpl;
 import com.example.marketplace_backend.Service.Impl.auth.UserServiceImpl;
@@ -42,5 +42,4 @@ public class AdminController {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(userService.searchUsers(query, pageable));
     }
-
 }

@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Files table -->
+    <changeSet id="1" author="JekiChan08">
+        <createTable tableName="files">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="original_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unique_name" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="file_type" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_path" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="upload_time" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Users table -->
+    <changeSet id="2" author="JekiChan08">
+        <createTable tableName="users">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="varchar(255)"/>
+            <column name="address" type="varchar(255)"/>
+            <column name="role" type="varchar(50)"/>
+            <column name="provider" type="varchar(255)"/>
+            <column name="password" type="varchar(255)"/>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Brand table -->
+    <changeSet id="3" author="JekiChan08">
+        <createTable tableName="brand">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints unique="true"/>
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp"/>
+            <column name="deleted_at" type="timestamp"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Categories table -->
+    <changeSet id="4" author="JekiChan08">
+        <createTable tableName="categories">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp"/>
+            <column name="deleted_at" type="timestamp"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Subcategories table -->
+    <changeSet id="5" author="JekiChan08">
+        <createTable tableName="subcategories">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp"/>
+            <column name="deleted_at" type="timestamp"/>
+            <column name="category_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="subcategories"
+                                 baseColumnNames="category_id"
+                                 referencedTableName="categories"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_subcategories_category"/>
+    </changeSet>
+
+    <!-- Order statuses table -->
+    <changeSet id="6" author="JekiChan08">
+        <createTable tableName="order_statuses">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="color" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Products table -->
+    <changeSet id="7" author="JekiChan08">
+        <createTable tableName="products">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="decimal(15,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="discounted_price" type="decimal(15,2)"/>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp"/>
+            <column name="deleted_at" type="timestamp"/>
+            <column name="availability" type="boolean"/>
+            <column name="brand_id" type="uuid"/>
+            <column name="subcategory_id" type="uuid"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="products"
+                                 baseColumnNames="brand_id"
+                                 referencedTableName="brand"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_products_brand"/>
+        <addForeignKeyConstraint baseTableName="products"
+                                 baseColumnNames="subcategory_id"
+                                 referencedTableName="subcategories"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_products_subcategory"/>
+    </changeSet>
+
+    <!-- Description table -->
+    <changeSet id="8" author="JekiChan08">
+        <createTable tableName="description">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp"/>
+            <column name="product_id" type="uuid"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="description"
+                                 baseColumnNames="product_id"
+                                 referencedTableName="products"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_description_product"/>
+    </changeSet>
+
+    <!-- Product parameters table -->
+    <changeSet id="9" author="JekiChan08">
+        <createTable tableName="product_parameters">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="product_parameters"
+                                 baseColumnNames="product_id"
+                                 referencedTableName="products"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_product_parameters_product"/>
+    </changeSet>
+
+    <!-- Product sub parameters table -->
+    <changeSet id="10" author="JekiChan08">
+        <createTable tableName="product_sub_parameters">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_parameter_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="product_sub_parameters"
+                                 baseColumnNames="product_parameter_id"
+                                 referencedTableName="product_parameters"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_product_sub_parameters_parameter"/>
+    </changeSet>
+
+    <!-- User image table -->
+    <changeSet id="11" author="JekiChan08">
+        <createTable tableName="user_image">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="uuid"/>
+            <column name="image_id" type="uuid"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="user_image"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_user_image_user"/>
+        <addForeignKeyConstraint baseTableName="user_image"
+                                 baseColumnNames="image_id"
+                                 referencedTableName="files"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_user_image_files"/>
+    </changeSet>
+
+    <!-- Brand images table -->
+    <changeSet id="12" author="JekiChan08">
+        <createTable tableName="brand_images">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="brand_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="brand_images"
+                                 baseColumnNames="brand_id"
+                                 referencedTableName="brand"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_brand_images_brand"/>
+        <addForeignKeyConstraint baseTableName="brand_images"
+                                 baseColumnNames="image_id"
+                                 referencedTableName="files"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_brand_images_files"/>
+    </changeSet>
+
+    <!-- Category image table -->
+    <changeSet id="13" author="JekiChan08">
+        <createTable tableName="category_image">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="category_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="category_image"
+                                 baseColumnNames="category_id"
+                                 referencedTableName="categories"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_category_image_category"/>
+        <addForeignKeyConstraint baseTableName="category_image"
+                                 baseColumnNames="image_id"
+                                 referencedTableName="files"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_category_image_files"/>
+    </changeSet>
+
+    <!-- Subcategory images table -->
+    <changeSet id="14" author="JekiChan08">
+        <createTable tableName="subcategory_images">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="subcategory_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_id" type="uuid"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="subcategory_images"
+                                 baseColumnNames="subcategory_id"
+                                 referencedTableName="subcategories"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_subcategory_images_subcategory"/>
+        <addForeignKeyConstraint baseTableName="subcategory_images"
+                                 baseColumnNames="image_id"
+                                 referencedTableName="files"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_subcategory_images_files"/>
+    </changeSet>
+
+    <!-- Product images table -->
+    <changeSet id="15" author="JekiChan08">
+        <createTable tableName="product_images">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="product_images"
+                                 baseColumnNames="product_id"
+                                 referencedTableName="products"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_product_images_product"/>
+        <addForeignKeyConstraint baseTableName="product_images"
+                                 baseColumnNames="image_id"
+                                 referencedTableName="files"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_product_images_files"/>
+    </changeSet>
+
+    <!-- Carts table -->
+    <changeSet id="16" author="JekiChan08">
+        <createTable tableName="carts">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp"/>
+            <column name="user_id" type="uuid">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="carts"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_carts_user"/>
+    </changeSet>
+
+    <!-- Cart items table -->
+    <changeSet id="17" author="JekiChan08">
+        <createTable tableName="cart_items">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="decimal(15,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="added_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cart_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="cart_items"
+                                 baseColumnNames="cart_id"
+                                 referencedTableName="carts"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_cart_items_cart"/>
+        <addForeignKeyConstraint baseTableName="cart_items"
+                                 baseColumnNames="product_id"
+                                 referencedTableName="products"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_cart_items_product"/>
+    </changeSet>
+
+    <!-- Favorites table -->
+    <changeSet id="18" author="JekiChan08">
+        <createTable tableName="favorites">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp"/>
+            <column name="user_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="favorites"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_favorites_user"/>
+    </changeSet>
+
+    <!-- Favorite item table -->
+    <changeSet id="19" author="JekiChan08">
+        <createTable tableName="favorite_item">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="decimal(15,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="added_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="favorite_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="favorite_item"
+                                 baseColumnNames="favorite_id"
+                                 referencedTableName="favorites"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_favorite_item_favorite"/>
+        <addForeignKeyConstraint baseTableName="favorite_item"
+                                 baseColumnNames="product_id"
+                                 referencedTableName="products"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_favorite_item_product"/>
+    </changeSet>
+
+    <!-- Orders table -->
+    <changeSet id="20" author="JekiChan08">
+        <createTable tableName="orders">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="address" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" type="text"/>
+            <column name="total_price" type="decimal(15,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp"/>
+            <column name="is_wholesale" type="boolean"/>
+            <column name="user_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_statuses" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="orders"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_orders_user"/>
+        <addForeignKeyConstraint baseTableName="orders"
+                                 baseColumnNames="order_statuses"
+                                 referencedTableName="order_statuses"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_orders_order_statuses"/>
+    </changeSet>
+
+    <!-- Order items table -->
+    <changeSet id="21" author="JekiChan08">
+        <createTable tableName="order_items">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="decimal(15,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="order_items"
+                                 baseColumnNames="order_id"
+                                 referencedTableName="orders"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_order_items_order"/>
+        <addForeignKeyConstraint baseTableName="order_items"
+                                 baseColumnNames="product_id"
+                                 referencedTableName="products"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_order_items_product"/>
+    </changeSet>
+
+    <!-- Refresh tokens table -->
+    <changeSet id="22" author="JekiChan08">
+        <createTable tableName="refresh_tokens">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="token" type="text">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiry_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="uuid"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="refresh_tokens"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_refresh_tokens_user"/>
+    </changeSet>
+
+    <changeSet id="update-products-name-index" author="JekiChan08">
+        <sql splitStatements="true" stripComments="true">
+            CREATE EXTENSION IF NOT EXISTS pg_trgm;
+            CREATE INDEX IF NOT EXISTS idx_products_name_trgm ON products USING gin (name gin_trgm_ops);
+        </sql>
+    </changeSet>
+
+    <changeSet id="add-user-indexes" author="JekiChan08">
+    <sql splitStatements="true" stripComments="true">
+        CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+        CREATE INDEX IF NOT EXISTS idx_users_name_trgm ON users USING gin (name gin_trgm_ops);
+        CREATE INDEX IF NOT EXISTS idx_users_email_trgm ON users USING gin (email gin_trgm_ops);
+        CREATE INDEX IF NOT EXISTS idx_users_phone_trgm ON users USING gin (phone_number gin_trgm_ops);
+    </sql>
+    </changeSet>
+
+    <changeSet id="Admin" author="JekiChan08">
+        <loadData tableName="users" file="data/users.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -3,6 +3,7 @@ package com.example.marketplace_backend.Model.Intermediate_objects;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Product;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,7 +22,7 @@ public class ProductImage {
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    @JsonBackReference
+    @JsonManagedReference("product-images")
     private Product product;
 
     @ManyToOne

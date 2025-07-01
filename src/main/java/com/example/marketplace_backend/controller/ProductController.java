@@ -6,9 +6,9 @@ import com.example.marketplace_backend.Model.Subcategory;
 import com.example.marketplace_backend.Repositories.ProductRepository;
 import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
 import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
+import com.example.marketplace_backend.DTO.Responses.models.FileResponse;
+import com.example.marketplace_backend.DTO.Responses.models.ProductResponse;
 import com.example.marketplace_backend.Service.Impl.auth.UserServiceImpl;
-import com.example.marketplace_backend.DTO.Responses.FileResponse;
-import com.example.marketplace_backend.DTO.Responses.ProductResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,6 +57,23 @@ public class ProductController {
         Page<ProductResponse> responses = products.map(this::convertToProductResponse);
         return ResponseEntity.ok(responses);
     }
+
+
+
+
+//    @GetMapping("/list")
+//    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+//        List<Product> products = productService.findAllActive();
+//        if (products.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//        }
+//
+//        List<ProductResponse> responses = products.stream()
+//                .map(this::convertToProductResponse)
+//                .toList();
+//
+//        return ResponseEntity.ok(responses);
+//    }
 
     @GetMapping("/list/search")
     public ResponseEntity<Page<ProductResponse>> findByNameContaining(
