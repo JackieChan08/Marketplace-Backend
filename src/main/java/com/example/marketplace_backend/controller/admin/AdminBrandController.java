@@ -88,10 +88,9 @@ public class AdminBrandController {
     }
 
     @DeleteMapping("/purge")
-    public ResponseEntity<Void> purgeOldBrands(@RequestParam int daysOld) {
+    public ResponseEntity<Void> purgeOldBrands() {
         try {
-            LocalDateTime expirationDate = LocalDateTime.now().minusDays(daysOld);
-            brandService.purgeOldBrands(expirationDate);
+            brandService.purgeOldBrands();
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

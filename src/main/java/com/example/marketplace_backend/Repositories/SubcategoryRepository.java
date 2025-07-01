@@ -18,22 +18,22 @@ import java.util.UUID;
 
 @Repository
 public interface SubcategoryRepository extends JpaRepository<Subcategory, UUID> {
-    @Query("SELECT s FROM Subcategory s WHERE s.id = :id AND s.deletedAt IS NOT NULL")
-    Optional<Subcategory> findAllDeActive(@Param("id") UUID id);
 
-    @Query("SELECT s FROM Subcategory s WHERE s.id = :id AND s.deletedAt IS NULL")
-    Optional<Subcategory> findAllActive(@Param("id") UUID id);
+    Subcategory findByIdAndDeletedAtIsNull(UUID id);
+
+    Subcategory findByIdAndDeletedAtIsNotNull(UUID id);
+
+    @Query("SELECT s FROM Subcategory s WHERE s.deletedAt IS NOT NULL")
+    List<Subcategory> findAllDeActive();
+
+    @Query("SELECT s FROM Subcategory s WHERE s.deletedAt IS NULL")
+    List<Subcategory> findAllActive();
 
     @Query("SELECT s FROM Subcategory s WHERE s.category = :category AND s.deletedAt IS NULL")
     List<Subcategory> findByCategoryActive(Category category);
 
     @Query("SELECT s FROM Subcategory s WHERE s.category = :category AND s.deletedAt IS NOT NULL")
     List<Subcategory> findByCategoryDeActive(Category category);
-
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM Subcategory s WHERE s.deletedAt IS NOT NULL AND s.deletedAt < :expirationDate")
-    void purgeOldSubcategories(LocalDateTime expirationDate);
 
     @Modifying
     @Transactional

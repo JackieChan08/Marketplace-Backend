@@ -87,8 +87,9 @@ public class BrandServiceImpl extends BaseServiceImpl<Brand, UUID>{
     }
 
     @Transactional
-    public void purgeOldBrands(LocalDateTime expirationDate) {
-        brandRepository.purgeOldBrands(expirationDate);
+    public void purgeOldBrands() {
+        List<Brand> brandsToDelete = brandRepository.findAllDeActive();
+        brandRepository.deleteAll(brandsToDelete);
     }
 
     @Override
