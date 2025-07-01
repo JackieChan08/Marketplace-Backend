@@ -96,10 +96,9 @@ public class AdminSubcategoryController {
     }
 
     @DeleteMapping("/purge")
-    public ResponseEntity<Void> purgeOldSubcategories(@RequestParam int daysOld) {
+    public ResponseEntity<Void> purgeOldSubcategories() {
         try {
-            LocalDateTime expirationDate = LocalDateTime.now().minusDays(daysOld);
-            subcategoryService.purgeOldSubcategories(expirationDate);
+            subcategoryService.purgeOldSubcategories();
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

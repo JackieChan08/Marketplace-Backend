@@ -27,11 +27,6 @@ public interface BrandRepository extends JpaRepository<Brand, UUID> {
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM Brand b WHERE b.deletedAt IS NOT NULL AND b.deletedAt < :expirationDate")
-    void purgeOldBrands(LocalDateTime expirationDate);
-
-    @Modifying
-    @Transactional
     @Query("UPDATE Brand b SET b.deletedAt = :deletedAt WHERE b.id = :id")
     void softDeleteById(@Param("id") UUID id, @Param("deletedAt") LocalDateTime deletedAt);
 }

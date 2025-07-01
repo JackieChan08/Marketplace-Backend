@@ -56,13 +56,13 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Subcategory> findActiveById(UUID id) {
-        return subcategoryRepository.findAllActive(id);
+    public Subcategory findActiveById(UUID id) {
+        return subcategoryRepository.findByIdAndDeletedAtIsNull(id);
     }
 
     @Transactional(readOnly = true)
-    public Optional<Subcategory> findDeActiveById(UUID id) {
-        return subcategoryRepository.findAllDeActive(id);
+    public Subcategory findDeActiveById(UUID id) {
+        return subcategoryRepository.findByIdAndDeletedAtIsNotNull(id);
     }
 
     @Transactional(readOnly = true)
@@ -112,8 +112,9 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
     }
 
     @Transactional
-    public void purgeOldSubcategories(LocalDateTime expirationDate) {
-        subcategoryRepository.purgeOldSubcategories(expirationDate);
+    public void purgeOldSubcategories() {
+        List<Subcategory> subcategoriesToDelete = subcategoryRepository.findAllDeActive();
+        subcategoryRepository.deleteAll(subcategoriesToDelete);
     }
 
     @Override
