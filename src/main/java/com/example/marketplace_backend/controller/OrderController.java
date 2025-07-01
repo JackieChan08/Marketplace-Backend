@@ -3,6 +3,7 @@ package com.example.marketplace_backend.controller;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Service.Impl.*;
 import com.example.marketplace_backend.DTO.Requests.models.OrderRequest;
+import com.example.marketplace_backend.Service.Impl.auth.UserServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 import org.springframework.http.HttpStatus;

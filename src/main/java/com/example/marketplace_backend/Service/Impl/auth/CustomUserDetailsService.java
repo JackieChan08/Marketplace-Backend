@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.Service.Impl;
+package com.example.marketplace_backend.Service.Impl.auth;
 
 
 import com.example.marketplace_backend.Model.User;

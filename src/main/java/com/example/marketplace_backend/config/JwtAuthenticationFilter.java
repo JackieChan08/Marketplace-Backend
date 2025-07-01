@@ -1,7 +1,7 @@
 package com.example.marketplace_backend.config;
 
 
-import com.example.marketplace_backend.Service.Impl.CustomUserDetailsService;
+import com.example.marketplace_backend.Service.Impl.auth.CustomUserDetailsService;
 import com.example.marketplace_backend.Service.Impl.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

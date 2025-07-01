@@ -1,5 +1,7 @@
-package com.example.marketplace_backend.Model;
+package com.example.marketplace_backend.Model.Intermediate_objects;
 
+import com.example.marketplace_backend.Model.Order;
+import com.example.marketplace_backend.Model.Product;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

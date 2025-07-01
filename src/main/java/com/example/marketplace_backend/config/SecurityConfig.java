@@ -1,8 +1,8 @@
 package com.example.marketplace_backend.config;
 
 
-import com.example.marketplace_backend.Service.Impl.CustomOAuth2UserService;
-import com.example.marketplace_backend.Service.Impl.CustomUserDetailsService;
+import com.example.marketplace_backend.Service.Impl.auth.CustomOAuth2UserService;
+import com.example.marketplace_backend.Service.Impl.auth.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

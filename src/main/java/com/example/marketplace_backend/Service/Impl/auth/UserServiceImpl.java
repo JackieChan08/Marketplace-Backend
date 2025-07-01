@@ -1,10 +1,12 @@
-package com.example.marketplace_backend.Service.Impl;
+package com.example.marketplace_backend.Service.Impl.auth;
 
 import com.example.marketplace_backend.Repositories.RefreshTokenRepository;
 import com.example.marketplace_backend.Repositories.UserRepository;
 import com.example.marketplace_backend.DTO.Requests.Jwt.RegisterRequest;
 import com.example.marketplace_backend.DTO.Responses.models.UserResponse;
 import com.example.marketplace_backend.DTO.Responses.Jwt.JwtResponse;
+import com.example.marketplace_backend.Service.Impl.BaseServiceImpl;
+import com.example.marketplace_backend.Service.Impl.JwtService;
 import com.example.marketplace_backend.enums.Role;
 import com.example.marketplace_backend.Model.*;
 import jakarta.transaction.Transactional;
@@ -19,7 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class UserServiceImpl extends BaseServiceImpl<User, UUID>{
+public class UserServiceImpl extends BaseServiceImpl<User, UUID> {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;

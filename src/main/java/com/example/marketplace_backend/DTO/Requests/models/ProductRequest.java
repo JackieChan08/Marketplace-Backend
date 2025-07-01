@@ -18,7 +18,7 @@ import java.util.UUID;
 public class ProductRequest {
     private String name;
     private BigDecimal price;
-    private UUID categoryId;
+    private UUID subCategoryId;
     private List<MultipartFile> images;
     private List<Description> descriptions;
     private UUID brandId;

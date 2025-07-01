@@ -1,6 +1,8 @@
 package com.example.marketplace_backend.Service.Impl;
 
+import com.example.marketplace_backend.DTO.Requests.models.BrandRequest;
 import com.example.marketplace_backend.Model.Brand;
+import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Intermediate_objects.BrandImage;
 import com.example.marketplace_backend.Repositories.BrandImageRepository;
 import com.example.marketplace_backend.Repositories.BrandRepository;
@@ -10,8 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -112,5 +117,63 @@ public class BrandServiceImpl extends BaseServiceImpl<Brand, UUID>{
     @Transactional(readOnly = true)
     public long countDeActiveBrands() {
         return findAllDeActive().size();
+    }
+
+    public Brand createBrand(BrandRequest request) throws IOException {
+
+        Brand brand = new Brand();
+        brand.setName(request.getName());
+        brand.setDeletedAt(null);
+        brand.setCreatedAt(LocalDateTime.now());
+
+        brand = save(brand);
+
+        List<BrandImage> brandImages = new ArrayList<>();
+        for (MultipartFile image : request.getImages()) {
+            FileEntity savedImage = fileUploadService.saveImage(image);
+            BrandImage brandImage = BrandImage.builder()
+                    .brand(brand)
+                    .image(savedImage)
+                    .build();
+            brandImages.add(brandImage);
+        }
+
+        brand.setBrandImages(brandImages);
+
+        brand = save(brand);
+        return brand;
+    }
+
+    public Brand editBrand(UUID id, BrandRequest request) throws IOException {
+        Brand brand = getById(id);
+
+        if (request.getName() != null && !request.getName().isEmpty()) {
+            brand.setName(request.getName());
+        }
+
+        if (request.getImages() != null && !request.getImages().isEmpty()) {
+            List<BrandImage> newBrandImages = request.getImages().stream()
+                    .map(image -> {
+                        try {
+                            FileEntity savedImage = fileUploadService.saveImage(image);
+                            return BrandImage.builder()
+                                    .brand(brand)
+                                    .image(savedImage)
+                                    .build();
+                        } catch (IOException e) {
+                            throw new RuntimeException("Ошибка при сохранении изображения", e);
+                        }
+                    })
+                    .toList();
+
+            if (brand.getBrandImages() != null) {
+                brand.getBrandImages().addAll(newBrandImages);
+            } else {
+                brand.setBrandImages(newBrandImages);
+            }
+        }
+
+        save(brand);
+        return brand;
     }
 }

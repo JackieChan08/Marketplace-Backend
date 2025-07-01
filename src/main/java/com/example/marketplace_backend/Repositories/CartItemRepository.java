@@ -1,6 +1,6 @@
 package com.example.marketplace_backend.Repositories;
 
-import com.example.marketplace_backend.Model.CartItem;
+import com.example.marketplace_backend.Model.Intermediate_objects.CartItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

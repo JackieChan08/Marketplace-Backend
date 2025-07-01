@@ -1,10 +1,10 @@
-package com.example.marketplace_backend.Model;
+package com.example.marketplace_backend.Model.Intermediate_objects;
 
+import com.example.marketplace_backend.Model.Cart;
+import com.example.marketplace_backend.Model.Product;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
@@ -12,12 +12,13 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "favorite_item")
-@Data
+@Table(name = "cart_items")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class FavoriteItem {
+public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -28,15 +29,16 @@ public class FavoriteItem {
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal price;
 
-    @CreationTimestamp
-    @Column(name = "added_at", nullable = false)
-    private LocalDateTime addedAt;
-
     @ManyToOne
-    @JoinColumn(name = "favorite_id", nullable = false)
-    private Favorite favorite;
+    @JsonBackReference
+    @JoinColumn(name = "cart_id", nullable = false)
+    private Cart cart;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    @CreationTimestamp
+    @Column(name = "added_at", nullable = false)
+    private LocalDateTime createdAt;
 }
