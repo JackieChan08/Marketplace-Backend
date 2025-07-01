@@ -25,7 +25,7 @@ public class AdminProductController {
 
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     public ResponseEntity<Product> createProductWithImages(
-            @RequestParam ProductRequest request
+            @ModelAttribute ProductRequest request
     ) throws Exception {
         Product savedProduct = productService.createProduct(request);
         return ResponseEntity.ok(savedProduct);
@@ -34,7 +34,7 @@ public class AdminProductController {
     @PostMapping(value = "/edit/{id}", consumes = {"multipart/form-data"})
     public ResponseEntity<Product> editProduct(
             @PathVariable UUID id,
-            @RequestParam() ProductRequest request
+            @ModelAttribute ProductRequest request
     ) throws Exception {
 
         return ResponseEntity.ok(productService.editProduct(id, request));
