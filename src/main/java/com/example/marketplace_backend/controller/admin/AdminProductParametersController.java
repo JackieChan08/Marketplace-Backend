@@ -19,27 +19,6 @@ public class AdminProductParametersController {
     private final ProductParametersServiceImpl  productParametersService;
 
 
-
-    @GetMapping()
-    public ResponseEntity<List<ProductParameters>> getAllProductParameters() {
-        return ResponseEntity.ok(productParametersService.findAll());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductParameters> getProductParameterById(@PathVariable UUID id) {
-        Optional<ProductParameters> parameter = productParametersService.findById(id);
-        return parameter.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/product/{productId}")
-    public ResponseEntity<List<ProductParameters>> getProductParametersByProductId(@PathVariable UUID productId) {
-        if (!productParametersService.productExists(productId)) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(productParametersService.findByProductId(productId));
-    }
-
     @GetMapping("/stats/product/{productId}")
     public ResponseEntity<Map<String, Long>> getProductParametersStats(@PathVariable UUID productId) {
         if (!productParametersService.productExists(productId)) {
@@ -48,20 +27,6 @@ public class AdminProductParametersController {
         Map<String, Long> stats = new HashMap<>();
         stats.put("parametersCount", productParametersService.countByProductId(productId));
         return ResponseEntity.ok(stats);
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<ProductParameters> findProductParameterByNameAndProductId(
-            @RequestParam String name,
-            @RequestParam UUID productId) {
-
-        if (!productParametersService.productExists(productId)) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Optional<ProductParameters> parameter = productParametersService.findByNameAndProductId(name, productId);
-        return parameter.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/create")

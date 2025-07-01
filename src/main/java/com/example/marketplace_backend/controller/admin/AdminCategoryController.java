@@ -107,7 +107,7 @@ public class AdminCategoryController {
     @PostMapping(value = "/edit/{id}", consumes = {"multipart/form-data"})
     public ResponseEntity<Category> editCategory(
             @PathVariable UUID id,
-            @RequestParam(required = false) CategoryRequest request
+            @ModelAttribute CategoryRequest request
     ) throws IOException {
         return ResponseEntity.ok(categoryService.updateCategory(id, request));
     }
