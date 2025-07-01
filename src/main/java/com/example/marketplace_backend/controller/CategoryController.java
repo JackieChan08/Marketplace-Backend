@@ -1,8 +1,8 @@
 package com.example.marketplace_backend.controller;
 
-import com.example.marketplace_backend.DTO.Responses.CategoryResponse;
-import com.example.marketplace_backend.DTO.Responses.FileResponse;
-import com.example.marketplace_backend.DTO.Responses.ProductResponse;
+import com.example.marketplace_backend.DTO.Responses.models.CategoryResponse;
+import com.example.marketplace_backend.DTO.Responses.models.FileResponse;
+import com.example.marketplace_backend.DTO.Responses.models.ProductResponse;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Product;

@@ -26,9 +26,6 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "status")
-    private String status;
-
     @Column(name = "address", nullable = false)
     private String address;
 
@@ -53,6 +50,10 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "order_statuses", nullable = false)
+    private OrderStatuses orderStatuses;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

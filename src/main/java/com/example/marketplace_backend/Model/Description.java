@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.Model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,4 +38,9 @@ public class Description {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JsonBackReference("product-description")
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

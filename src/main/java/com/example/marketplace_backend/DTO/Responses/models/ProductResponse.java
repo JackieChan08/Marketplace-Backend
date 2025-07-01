@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.DTO.Responses;
+package com.example.marketplace_backend.DTO.Responses.models;
 
 
 import com.example.marketplace_backend.Model.Description;
@@ -27,4 +27,5 @@ public class ProductResponse {
     private double price;
     private double discountedPrice;
     private UUID brandId;
+    private boolean availability;
 }

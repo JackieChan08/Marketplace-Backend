@@ -11,20 +11,26 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-
 public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final OrderStatusRepository orderStatusRepository;
     private final CartService cartService;
 
-    public OrderServiceImpl(OrderRepository orderRepository, CartRepository cartRepository, UserRepository userRepository, ProductRepository productRepository, CartService cartService) {
+    public OrderServiceImpl(OrderRepository orderRepository,
+                            CartRepository cartRepository,
+                            UserRepository userRepository,
+                            ProductRepository productRepository,
+                            OrderStatusRepository orderStatusRepository,
+                            CartService cartService) {
         super(orderRepository);
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
+        this.orderStatusRepository = orderStatusRepository;
         this.cartService = cartService;
     }
 
@@ -36,12 +42,16 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
             throw new RuntimeException("Cart is empty");
         }
 
+        // Получаем дефолтный статус (например, "Pending" или "Created")
+        OrderStatuses defaultStatus = orderStatusRepository.findByName("Pending")
+                .orElseThrow(() -> new RuntimeException("Default order status 'Pending' not found"));
+
         Order order = new Order();
         order.setUser(userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found")));
         order.setAddress(request.getAddress());
         order.setPhoneNumber(request.getPhoneNumber());
-        order.setStatus("collecting");
+        order.setOrderStatuses(defaultStatus);
         order.setComment(request.getComment());
         order.setWholesale(request.getIsWholesale());
 
@@ -78,10 +88,25 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         return orderRepository.findAllOrders();
     }
 
-    public Order updateOrderStatus(UUID orderId, String status) {
+    public Order updateOrderStatus(UUID orderId, UUID statusId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
-        order.setStatus(status);
+
+        OrderStatuses orderStatus = orderStatusRepository.findById(statusId)
+                .orElseThrow(() -> new RuntimeException("Order status not found"));
+
+        order.setOrderStatuses(orderStatus);
+        return orderRepository.save(order);
+    }
+
+    public Order updateOrderStatusByName(UUID orderId, String statusName) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        OrderStatuses orderStatus = orderStatusRepository.findByName(statusName)
+                .orElseThrow(() -> new RuntimeException("Order status not found: " + statusName));
+
+        order.setOrderStatuses(orderStatus);
         return orderRepository.save(order);
     }
 
@@ -107,4 +132,13 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         return orderRepository.findAllRetailOrders();
     }
 
+    public List<Order> getOrdersByStatus(UUID statusId) {
+        return orderRepository.findByOrderStatusesId(statusId);
+    }
+
+    public List<Order> getOrdersByStatusName(String statusName) {
+        OrderStatuses orderStatus = orderStatusRepository.findByName(statusName)
+                .orElseThrow(() -> new RuntimeException("Order status not found: " + statusName));
+        return orderRepository.findByOrderStatusesId(orderStatus.getId());
+    }
 }

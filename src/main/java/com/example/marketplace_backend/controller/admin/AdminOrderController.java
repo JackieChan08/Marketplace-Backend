@@ -13,7 +13,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/orders")
 public class AdminOrderController {
-    private final OrderServiceImpl  orderService;
+    private final OrderServiceImpl orderService;
 
     @GetMapping("/wholesale")
     public ResponseEntity<List<Order>> getWholesaleOrders() {
@@ -27,8 +27,14 @@ public class AdminOrderController {
 
     @PutMapping("/{orderId}/status")
     public ResponseEntity<Order> updateStatus(@PathVariable UUID orderId,
-                                              @RequestParam String status) {
-        return ResponseEntity.ok(orderService.updateOrderStatus(orderId, status));
+                                              @RequestParam UUID statusId) {
+        return ResponseEntity.ok(orderService.updateOrderStatus(orderId, statusId));
+    }
+
+    @PutMapping("/{orderId}/status-by-name")
+    public ResponseEntity<Order> updateStatusByName(@PathVariable UUID orderId,
+                                                    @RequestParam String statusName) {
+        return ResponseEntity.ok(orderService.updateOrderStatusByName(orderId, statusName));
     }
 
     @PutMapping("/{orderId}/comment")
@@ -36,9 +42,20 @@ public class AdminOrderController {
                                                @RequestParam String comment) {
         return ResponseEntity.ok(orderService.updateOrderComment(orderId, comment));
     }
+
     @PutMapping("/{orderId}/address")
     public ResponseEntity<Order> updateAddress(@PathVariable UUID orderId,
                                                @RequestParam String address) {
         return ResponseEntity.ok(orderService.updateOrderAddress(orderId, address));
+    }
+
+    @GetMapping("/by-status/{statusId}")
+    public ResponseEntity<List<Order>> getOrdersByStatus(@PathVariable UUID statusId) {
+        return ResponseEntity.ok(orderService.getOrdersByStatus(statusId));
+    }
+
+    @GetMapping("/by-status-name")
+    public ResponseEntity<List<Order>> getOrdersByStatusName(@RequestParam String statusName) {
+        return ResponseEntity.ok(orderService.getOrdersByStatusName(statusName));
     }
 }

@@ -6,7 +6,7 @@ import com.example.marketplace_backend.Service.Impl.CartService;
 import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
 import com.example.marketplace_backend.Service.Impl.UserServiceImpl;
 import com.example.marketplace_backend.DTO.Requests.models.CartRequest;
-import com.example.marketplace_backend.DTO.Responses.CartResponse;
+import com.example.marketplace_backend.DTO.Responses.models.CartResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

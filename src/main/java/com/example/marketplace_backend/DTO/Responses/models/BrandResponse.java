@@ -1,5 +1,4 @@
-package com.example.marketplace_backend.DTO.Responses;
-
+package com.example.marketplace_backend.DTO.Responses.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,12 +9,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryResponse {
+@Builder
+public class BrandResponse {
     private UUID id;
     private String name;
-    List<FileResponse> imageFiles;
+    private List<FileResponse> images;
     private List<ProductResponse> products;
 }

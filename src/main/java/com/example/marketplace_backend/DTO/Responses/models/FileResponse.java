@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.DTO.Responses;
+package com.example.marketplace_backend.DTO.Responses.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

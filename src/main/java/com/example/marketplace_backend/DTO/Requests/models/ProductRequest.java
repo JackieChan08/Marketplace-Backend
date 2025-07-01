@@ -22,4 +22,5 @@ public class ProductRequest {
     private List<MultipartFile> images;
     private List<Description> descriptions;
     private UUID brandId;
+    private boolean availability;
 }

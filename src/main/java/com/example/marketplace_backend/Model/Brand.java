@@ -43,6 +43,7 @@ public class Brand {
     private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference("product-brand")
     private List<Product> products;
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, orphanRemoval = true)
