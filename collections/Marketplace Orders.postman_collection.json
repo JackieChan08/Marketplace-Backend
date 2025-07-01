@@ -1,0 +1,183 @@
+{
+	"info": {
+		"_postman_id": "040bdd30-79fc-4bc4-810a-2f6c42049764",
+		"name": "Marketplace Orders",
+		"description": "Order management requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40388756",
+		"_collection_link": "https://test99-0330.postman.co/workspace/test~7488d7e6-fe20-496e-ad1d-0a4b9129da6b/collection/40388756-040bdd30-79fc-4bc4-810a-2f6c42049764?action=share&source=collection_link&creator=40388756"
+	},
+	"item": [
+		{
+			"name": "Get all orders (Admin) wholesale",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/orders/wholesale",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"orders",
+						"wholesale"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all orders (Admin) retail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/orders/retail",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"orders",
+						"retail"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update order status",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/orders/1/status?status=shipped",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"orders",
+						"1",
+						"status"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "shipped"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update order comment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/orders/1/comment?comment=Please deliver fast",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"orders",
+						"1",
+						"comment"
+					],
+					"query": [
+						{
+							"key": "comment",
+							"value": "Please deliver fast"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update order address",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/orders/1/address?address=New Street 12",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"orders",
+						"1",
+						"address"
+					],
+					"query": [
+						{
+							"key": "address",
+							"value": "New Street 12"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

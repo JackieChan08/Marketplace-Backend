@@ -1,0 +1,198 @@
+{
+	"info": {
+		"_postman_id": "d2b374e1-f3b6-479a-89fa-550e73f8cb91",
+		"name": "AdminProductController",
+		"description": "Postman requests for AdminProductController endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40388756",
+		"_collection_link": "https://test99-0330.postman.co/workspace/test~7488d7e6-fe20-496e-ad1d-0a4b9129da6b/collection/40388756-d2b374e1-f3b6-479a-89fa-550e73f8cb91?action=share&source=collection_link&creator=40388756"
+	},
+	"item": [
+		{
+			"name": "Create Product with Images",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "iPhone 15",
+							"type": "text"
+						},
+						{
+							"key": "price",
+							"value": "999.99",
+							"type": "text"
+						},
+						{
+							"key": "subCategoryId",
+							"value": "REPLACE_SUBCATEGORY_UUID",
+							"type": "text"
+						},
+						{
+							"key": "brandId",
+							"value": "REPLACE_BRAND_UUID",
+							"type": "text"
+						},
+						{
+							"key": "images",
+							"type": "file",
+							"src": "postman-cloud:///1f045091-e868-4540-8715-181032e474e2"
+						},
+						{
+							"key": "images",
+							"type": "file",
+							"src": "postman-cloud:///1f041e80-6867-4aa0-9e50-eb8e3841acfe"
+						},
+						{
+							"key": "descriptions[0].title",
+							"value": "Дисплей",
+							"type": "text"
+						},
+						{
+							"key": "descriptions[0].text",
+							"value": "6.1 OLED Super Retina",
+							"type": "text"
+						},
+						{
+							"key": "descriptions[1].title",
+							"value": "Процессор",
+							"type": "text"
+						},
+						{
+							"key": "descriptions[1].text",
+							"value": "Apple A17 Bionic",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/admin/products/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"admin",
+						"products",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Product with Images",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "iPhone 15 Pro",
+							"type": "text"
+						},
+						{
+							"key": "price",
+							"value": "1199.99",
+							"type": "text"
+						},
+						{
+							"key": "subCategoryId",
+							"value": "REPLACE_SUBCATEGORY_UUID",
+							"type": "text"
+						},
+						{
+							"key": "brandId",
+							"value": "REPLACE_BRAND_UUID",
+							"type": "text"
+						},
+						{
+							"key": "images",
+							"type": "file",
+							"src": "/path/to/new_image.jpg"
+						},
+						{
+							"key": "descriptions[0].title",
+							"value": "Камера",
+							"type": "text"
+						},
+						{
+							"key": "descriptions[0].content",
+							"value": "48MP + 12MP",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/admin/products/edit/{{productId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"admin",
+						"products",
+						"edit",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Soft Delete Product",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/admin/products/soft-delete/{{productId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"admin",
+						"products",
+						"soft-delete",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Restore Product",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/admin/products/restore/{{productId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"admin",
+						"products",
+						"restore",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
