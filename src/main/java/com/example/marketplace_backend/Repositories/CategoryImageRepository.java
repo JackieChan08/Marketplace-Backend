@@ -11,4 +11,6 @@ import java.util.UUID;
 @Repository
 public interface CategoryImageRepository extends JpaRepository<CategoryImage, UUID> {
     List<CategoryImage> findByCategoryId(UUID categoryId);
+    void deleteAllByCategoryId(UUID categoryId);
+
 }

@@ -94,8 +94,9 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
     }
 
     @Transactional
-    public void purgeOldCategories(LocalDateTime expirationDate) {
-        categoryRepository.purgeOldCategories(expirationDate);
+    public void purgeOldCategories() {
+        List<Category> categoriesToDelete = categoryRepository.findAllDeActive();
+        categoryRepository.deleteAll(categoriesToDelete);
     }
 
     @Override
