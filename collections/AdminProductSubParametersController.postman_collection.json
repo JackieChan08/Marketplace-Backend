@@ -1,11 +1,10 @@
 {
 	"info": {
-		"_postman_id": "49e21025-e48a-4df7-be21-7e93ec4e58bd",
+		"_postman_id": "9c1d5b5a-65a9-4e90-a12b-f3a368e0af2b",
 		"name": "AdminProductSubParametersController",
 		"description": "Postman requests for managing Product SubParameters (admin panel)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "40388756",
-		"_collection_link": "https://test99-0330.postman.co/workspace/test~7488d7e6-fe20-496e-ad1d-0a4b9129da6b/collection/40388756-49e21025-e48a-4df7-be21-7e93ec4e58bd?action=share&source=collection_link&creator=40388756"
+		"_exporter_id": "38769339"
 	},
 	"item": [
 		{

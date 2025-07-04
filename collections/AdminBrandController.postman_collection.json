@@ -224,16 +224,12 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/admin/brands/restore/{{brandId}}",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/{{brandUrl}}/restore/{{brandId}}",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8080",
 					"path": [
-						"api",
-						"admin",
-						"brands",
+						"{{brandUrl}}",
 						"restore",
 						"{{brandId}}"
 					]
@@ -289,16 +285,12 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/admin/brands/{{brandId}}/permanent",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/{{brandUrl}}/{{brandId}}/permanent",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8080",
 					"path": [
-						"api",
-						"admin",
-						"brands",
+						"{{brandUrl}}",
 						"{{brandId}}",
 						"permanent"
 					]
@@ -309,19 +301,25 @@
 		{
 			"name": "Delete Image from Brand",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXN0ZXJnZWtpMDZAZ21haWwuY29tIiwiaWF0IjoxNzUxMzYwMDA0LCJleHAiOjE3NTM5NTIwMDR9.MmbDvtSvM4PpeaNKAlu_F66vndZgxQ1TZ10GVsSLZQbY7UqnhlOyH14d22RRVkLpnJqA57M3CCLjyNAm-9zhjg",
+							"type": "string"
+						}
+					]
+				},
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/admin/brands/{{brandId}}/images/{{imageId}}",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/{{brandUrl}}/{{brandId}}/images/{{imageId}}",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8080",
 					"path": [
-						"api",
-						"admin",
-						"brands",
+						"{{brandUrl}}",
 						"{{brandId}}",
 						"images",
 						"{{imageId}}"
@@ -333,26 +331,26 @@
 		{
 			"name": "Purge Soft Deleted Brands",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXN0ZXJnZWtpMDZAZ21haWwuY29tIiwiaWF0IjoxNzUxMzYwMDA0LCJleHAiOjE3NTM5NTIwMDR9.MmbDvtSvM4PpeaNKAlu_F66vndZgxQ1TZ10GVsSLZQbY7UqnhlOyH14d22RRVkLpnJqA57M3CCLjyNAm-9zhjg",
+							"type": "string"
+						}
+					]
+				},
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/admin/brands/purge?daysOld=30",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/{{brandUrl}}/purge",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8080",
 					"path": [
-						"api",
-						"admin",
-						"brands",
+						"{{brandUrl}}",
 						"purge"
-					],
-					"query": [
-						{
-							"key": "daysOld",
-							"value": "30"
-						}
 					]
 				}
 			},

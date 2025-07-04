@@ -11,10 +11,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -39,6 +41,119 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         this.productImageRepository = productImageRepository;
         this.brandRepository = brandRepository;
         this.subcategoryRepository = subcategoryRepository;
+    }
+
+    public List<Product> findAllDeActive() {
+        return productRepository.findAllDeActive();
+    }
+
+    public List<Product> findAllActive() {
+        return productRepository.findAllActive();
+    }
+
+    public Product findByName(String name) {
+        return productRepository.findByName(name);
+    }
+
+    public boolean existsByName(String name) {
+        return productRepository.findByName(name) != null;
+    }
+
+    public long countActiveProducts() {
+        return productRepository.findAllActive().size();
+    }
+
+    public long countDeActiveProducts() {
+        return productRepository.findAllDeActive().size();
+    }
+
+    public Page<Product> findByNameContaining(String name, Pageable pageable) {
+        return productRepository.findByNameContaining(name, pageable);
+    }
+
+    public List<Product> findAllActiveBySubcategory(Subcategory subcategory){
+        return productRepository.findActiveBySubcategory(subcategory);
+    }
+
+    public List<Product> findAllDeActiveBySubcategory(Subcategory subcategory){
+        return productRepository.findDeActiveBySubcategory(subcategory);
+    }
+
+    public List<Product> findAllActiveByBrand(Brand brand){
+        return productRepository.findActiveByBrand(brand);
+    }
+
+    public List<Product> findAllDeActiveByBrand(Brand brand){
+        return productRepository.findDeActiveByBrand(brand);
+    }
+
+    public Page<Product> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
+
+    public void deActiveProductsBySubcategory(Subcategory subcategory){
+        List<Product> products = productRepository.findActiveBySubcategory(subcategory);
+        for(Product product : products){
+            product.setDeletedAt(LocalDateTime.now());
+            productRepository.save(product);
+        }
+    }
+
+    public void activeProductsByCategory(Subcategory subcategory){
+        List<Product> products = productRepository.findDeActiveBySubcategory(subcategory);
+        for(Product product : products){
+            product.setDeletedAt(null);
+            productRepository.save(product);
+        }
+    }
+
+    public void deActiveProductsByBrand(Brand brand){
+        List<Product> products = productRepository.findActiveByBrand(brand);
+        for(Product product : products){
+            product.setDeletedAt(LocalDateTime.now());
+            productRepository.save(product);
+        }
+    }
+
+    public void activeProductsByBrand(Brand brand){
+        List<Product> products = productRepository.findActiveByBrand(brand);
+        for(Product product : products){
+            product.setDeletedAt(LocalDateTime.now());
+            productRepository.save(product);
+        }
+    }
+
+    public Optional<Product> findById(UUID productId) {
+        return productRepository.findById(productId);
+    }
+
+    @Override
+    public Product save(Product product) {
+        if (product.getId() != null) {
+            product.setCreatedAt(LocalDateTime.now());
+        } else {
+            product.setUpdatedAt(LocalDateTime.now());
+        }
+        return productRepository.save(product);
+    }
+
+    public void softDelete(UUID id) {
+        productRepository.softDeleteById(id, LocalDateTime.now());
+    }
+
+    public void restore(UUID id) {
+        Optional<Product> productOptional = productRepository.findById(id);
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+            product.setDeletedAt(null);
+            product.setUpdatedAt(LocalDateTime.now());
+            productRepository.save(product);
+        }
+    }
+
+    public void purgeDeletedProducts() {
+        List<Product> productsToDelete = productRepository.findAllDeActive();
+        productRepository.deleteAll(productsToDelete);
     }
 
     public Product createProduct(ProductRequest dto) throws Exception {
@@ -103,68 +218,44 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         return updatedProduct;
     }
 
-
-    public Product findByName(String name) {
-        return productRepository.findByName(name);
-    }
-
-    public Page<Product> findByNameContaining(String name, Pageable pageable) {
-        return productRepository.findByNameContaining(name, pageable);
-    }
-    public List<Product> findBySubcategory(Subcategory subcategory){
-        return productRepository.findBySubcategoryAndDeletedAtIsNull(subcategory);
-    };
-
-    public void deActiveProductBySubcategory(Subcategory subcategory){
-        List<Product> products = productRepository.findBySubcategoryAndDeletedAtIsNull(subcategory);
-        for(Product product : products){
-            product.setDeletedAt(LocalDateTime.now());
-            productRepository.save(product);
-        }
-    }
-
-    public void activeProductByCategory(Subcategory subcategory){
-        List<Product> products = productRepository.findBySubcategoryAndDeletedAtIsNotNull(subcategory);
-        for(Product product : products){
-            product.setDeletedAt(null);
-            productRepository.save(product);
-        }
-    }
-
-    public void deActiveProductByBrand(Brand brand){
-        List<Product> products = productRepository.findByBrandAndDeletedAtIsNull(brand);
-        for(Product product : products){
-            product.setDeletedAt(LocalDateTime.now());
-            productRepository.save(product);
-        }
-    }
-
-    public List<Product> findAllDeActive() {
-        return productRepository.findAllDeActive();
-    }
-    public List<Product> findAllActive() {
-        return productRepository.findAllActive();
-    }
-
-    public Product createProduct(Product product) {
-        return productRepository.save(product);
-    }
-
-
     @Override
     public void delete(UUID id) {
-        List<ProductImage>  productImages = productImageRepository.findByProductId(id);
-        for (ProductImage productImage : productImages) {
-            fileUploadService.deleteImage(productImage.getImage().getUniqueName());
+        try {
+            List<ProductImage>  productImages = productImageRepository.findByProductId(id);
+
+            for (ProductImage productImage : productImages) {
+                if (productImage.getImage() != null && productImage.getImage().getUniqueName() != null) {
+                    fileUploadService.deleteImage(productImage.getImage().getUniqueName());
+                }
+            }
+
+            productRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка при удалении продукта с ID: " + id, e);
         }
-        productRepository.deleteById(id);
     }
 
-    public Page<Product> findAll(Pageable pageable) {
-        return productRepository.findAll(pageable);
+    public boolean deleteProductImage(UUID productId, UUID imageId) {
+        Optional<Product> productOpt = productRepository.findById(productId);
+
+        if (productOpt.isEmpty()) {
+            return false;
+        }
+
+        Product product = productOpt.get();
+
+        boolean removed = false;
+        if(product.getProductImages() != null) {
+            removed = product.getProductImages().removeIf(img ->
+                    img.getImage() != null && img.getProduct().getId().equals(productId));
+        }
+
+        if (removed) {
+            productRepository.save(product);
+        }
+
+        return removed;
     }
-
-
 
     public static ProductResponse convertToProductResponse(Product product) {
         ProductResponse response = new ProductResponse();

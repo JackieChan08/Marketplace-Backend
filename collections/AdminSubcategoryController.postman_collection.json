@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "60d5efab-d208-4274-ac3c-bae11aec91dd",
-		"name": "AdminSubcategoryContoller",
+		"name": "AdminSubcategoryController",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "38769339"
 	},
@@ -62,16 +62,60 @@
 		{
 			"name": "Get Stats By Category",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/{{subcategoryUrl}}/stats/category/{{categoryId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{subcategoryUrl}}",
+						"stats",
+						"category",
+						"{{categoryId}}"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "Get Inactive By Category",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/{{subcategoryUrl}}/category/{{categoryId}}/inactive",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{subcategoryUrl}}",
+						"category",
+						"{{categoryId}}",
+						"inactive"
+					]
+				}
 			},
 			"response": []
 		},
@@ -83,7 +127,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXN0ZXJnZWtpMDZAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMzU2MjUwLCJleHAiOjE3NTEzNTk4NTB9.TDRkaEcCryikroJigwn4Yb-zy4d3q4AvUOG4f3rA0OlwL0JlHGdGzrwC_ObpDnYlRYur5-iKWtObiz_UYW1l3g",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -95,25 +139,28 @@
 					"formdata": [
 						{
 							"key": "name",
-							"value": "Аксессуары",
+							"value": "Телефоны",
 							"type": "text"
 						},
 						{
 							"key": "images",
 							"type": "file",
-							"src": "/Users/aiteginbaratov/Downloads/hen-kaznelson-xFZwqsk03F0-unsplash.jpg"
+							"src": "postman-cloud:///1f056693-c75e-4700-92fb-a8933d757dcf"
+						},
+						{
+							"key": "categoryId",
+							"value": "{{categoryId}}",
+							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/admin/categories/create",
+					"raw": "{{baseUrl}}/{{subcategoryUrl}}/create",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
-						"admin",
-						"categories",
+						"{{subcategoryUrl}}",
 						"create"
 					]
 				}
@@ -232,8 +279,30 @@
 		{
 			"name": "Delete Image From Subcategory",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "DELETE",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/{{subcategoryUrl}}/{{subcategoryId}}/images/{{subcateogryImageId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{subcategoryUrl}}",
+						"{{subcategoryId}}",
+						"images",
+						"{{subcateogryImageId}}"
+					]
+				}
 			},
 			"response": []
 		},
@@ -257,14 +326,12 @@
 					"formdata": []
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/admin/categories/purge",
+					"raw": "{{baseUrl}}/{{subcategoryUrl}}/purge",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
-						"admin",
-						"categories",
+						"{{subcategoryUrl}}",
 						"purge"
 					]
 				}
