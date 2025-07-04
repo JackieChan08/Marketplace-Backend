@@ -1,11 +1,10 @@
 {
 	"info": {
-		"_postman_id": "ac0af90a-a801-4bd7-ac20-b725852d8566",
+		"_postman_id": "dcac4d10-650d-4e1f-910d-9e8430fc0ca5",
 		"name": "AdminOrderController",
 		"description": "Postman requests for AdminOrderController endpoints",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "40388756",
-		"_collection_link": "https://test99-0330.postman.co/workspace/test~7488d7e6-fe20-496e-ad1d-0a4b9129da6b/collection/40388756-ac0af90a-a801-4bd7-ac20-b725852d8566?action=share&source=collection_link&creator=40388756"
+		"_exporter_id": "38769339"
 	},
 	"item": [
 		{

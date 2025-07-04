@@ -2,6 +2,7 @@ package com.example.marketplace_backend.Model;
 
 import com.example.marketplace_backend.Model.Intermediate_objects.SubcategoryImage;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Where(clause = "deleted_at IS NULL")
 public class Subcategory {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -40,6 +40,7 @@ public class Subcategory {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @JsonIgnore
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
@@ -56,3 +57,5 @@ public class Subcategory {
     @OneToMany(mappedBy = "subcategory", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SubcategoryImage> subcategoryImages;
 }
+
+

@@ -28,7 +28,6 @@ public class SubcategoryImage {
     private Subcategory subcategory;
 
     @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "image_id")
+    @JoinColumn(name = "image_id", nullable = false)
     private FileEntity image;
 }

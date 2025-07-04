@@ -1,0 +1,259 @@
+{
+	"info": {
+		"_postman_id": "47cff3d0-31ac-45c4-9f77-d389bfac4aa1",
+		"name": "AdminCategoryController",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38769339"
+	},
+	"item": [
+		{
+			"name": "Get Category by ID",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Categories",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXN0ZXJnZWtpMDZAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMzU2MjUwLCJleHAiOjE3NTEzNTk4NTB9.TDRkaEcCryikroJigwn4Yb-zy4d3q4AvUOG4f3rA0OlwL0JlHGdGzrwC_ObpDnYlRYur5-iKWtObiz_UYW1l3g",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/categories",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Inactive Categories",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Get Categories Stats",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Create Category With Images",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXN0ZXJnZWtpMDZAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMzU2MjUwLCJleHAiOjE3NTEzNTk4NTB9.TDRkaEcCryikroJigwn4Yb-zy4d3q4AvUOG4f3rA0OlwL0JlHGdGzrwC_ObpDnYlRYur5-iKWtObiz_UYW1l3g",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Аксессуары",
+							"type": "text"
+						},
+						{
+							"key": "images",
+							"type": "file",
+							"src": "/Users/aiteginbaratov/Downloads/hen-kaznelson-xFZwqsk03F0-unsplash.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/categories/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"categories",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Category",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/{{categoryUrl}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{categoryUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Restore Category",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXN0ZXJnZWtpMDZAZ21haWwuY29tIiwiaWF0IjoxNzUxMzYwMDA0LCJleHAiOjE3NTM5NTIwMDR9.MmbDvtSvM4PpeaNKAlu_F66vndZgxQ1TZ10GVsSLZQbY7UqnhlOyH14d22RRVkLpnJqA57M3CCLjyNAm-9zhjg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/categories/restore/{{CategoryId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"categories",
+						"restore",
+						"{{CategoryId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Soft Delete Category",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXN0ZXJnZWtpMDZAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMzU2MjUwLCJleHAiOjE3NTEzNTk4NTB9.TDRkaEcCryikroJigwn4Yb-zy4d3q4AvUOG4f3rA0OlwL0JlHGdGzrwC_ObpDnYlRYur5-iKWtObiz_UYW1l3g",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/categories/{{CategoryId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"categories",
+						"{{CategoryId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Permanent Delete Category",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXN0ZXJnZWtpMDZAZ21haWwuY29tIiwiaWF0IjoxNzUxMzYwMDA0LCJleHAiOjE3NTM5NTIwMDR9.MmbDvtSvM4PpeaNKAlu_F66vndZgxQ1TZ10GVsSLZQbY7UqnhlOyH14d22RRVkLpnJqA57M3CCLjyNAm-9zhjg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/categories/{{CategoryId}}/permanent",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"categories",
+						"{{CategoryId}}",
+						"permanent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Image From Category",
+			"request": {
+				"method": "DELETE",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Purge Soft Deleted Categories",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXN0ZXJnZWtpMDZAZ21haWwuY29tIiwiaWF0IjoxNzUxMzYwMDA0LCJleHAiOjE3NTM5NTIwMDR9.MmbDvtSvM4PpeaNKAlu_F66vndZgxQ1TZ10GVsSLZQbY7UqnhlOyH14d22RRVkLpnJqA57M3CCLjyNAm-9zhjg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/categories/purge",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"categories",
+						"purge"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

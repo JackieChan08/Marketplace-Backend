@@ -27,6 +27,10 @@ public class AdminSubcategoryController {
     private final FileUploadService  fileUploadService;
     private final CategoryServiceImpl categoryService;
 
+    @GetMapping()
+    public ResponseEntity<List<Subcategory>> getAllSubcategories() {
+        return ResponseEntity.ok(subcategoryService.findAllActive());
+    }
 
     @GetMapping("/inactive")
     public ResponseEntity<List<Subcategory>> getInactiveSubcategories() {
@@ -37,6 +41,13 @@ public class AdminSubcategoryController {
     public ResponseEntity<List<Subcategory>> getInactiveSubcategoriesByCategory(@PathVariable UUID categoryId) {
         Optional<Category> categoryOpt = categoryService.findById(categoryId);
         return categoryOpt.map(category -> ResponseEntity.ok(subcategoryService.findByCategoryDeActive(category))).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping({"{id}"})
+    public ResponseEntity<Subcategory> getSubcategoryById(@PathVariable UUID id) {
+        Optional<Subcategory> subcategory = subcategoryService.findById(id);
+        return subcategory.map(ResponseEntity::ok).
+                orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/stats")
@@ -79,9 +90,8 @@ public class AdminSubcategoryController {
 
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     public ResponseEntity<Subcategory> createSubcategoryWithImages(
-            @RequestParam SubcategoryRequest request
+            @ModelAttribute SubcategoryRequest request
             ) throws Exception {
-
         return subcategoryService.createSubcategory(request);
     }
 
@@ -108,10 +118,11 @@ public class AdminSubcategoryController {
     @PostMapping(value = "/edit/{id}", consumes = {"multipart/form-data"})
     public ResponseEntity<Subcategory> editSubcategory(
             @PathVariable UUID id,
-            @RequestParam() SubcategoryRequest request
+            @ModelAttribute SubcategoryRequest request
     ) throws IOException {
         return subcategoryService.updateSubcategory(id, request);
     }
+
     @DeleteMapping("/{subcategoryId}/images/{imageId}")
     public ResponseEntity<Void> deleteSubcategoryImage(
             @PathVariable UUID subcategoryId,

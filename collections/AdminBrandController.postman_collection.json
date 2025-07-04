@@ -1,12 +1,43 @@
 {
 	"info": {
-		"_postman_id": "f28b16cc-d587-4f94-b4d3-d6b2f2eeb21b",
+		"_postman_id": "655933b6-6062-435b-aed8-8479e74510e5",
 		"name": "AdminBrandController",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "40388756",
-		"_collection_link": "https://test99-0330.postman.co/workspace/test~7488d7e6-fe20-496e-ad1d-0a4b9129da6b/collection/40388756-f28b16cc-d587-4f94-b4d3-d6b2f2eeb21b?action=share&source=collection_link&creator=40388756"
+		"_exporter_id": "38769339"
 	},
 	"item": [
+		{
+			"name": "Get Brand by ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXN0ZXJnZWtpMDZAZ21haWwuY29tIiwiaWF0IjoxNzUxMzYwMDA0LCJleHAiOjE3NTM5NTIwMDR9.MmbDvtSvM4PpeaNKAlu_F66vndZgxQ1TZ10GVsSLZQbY7UqnhlOyH14d22RRVkLpnJqA57M3CCLjyNAm-9zhjg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/admin/brands/{{brandId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"admin",
+						"brands",
+						"{{brandId}}"
+					]
+				}
+			},
+			"response": []
+		},
 		{
 			"name": "Get All Brands",
 			"request": {
@@ -178,6 +209,39 @@
 			"response": []
 		},
 		{
+			"name": "Restore Brand",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/admin/brands/restore/{{brandId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"admin",
+						"brands",
+						"restore",
+						"{{brandId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Soft Delete Brand",
 			"request": {
 				"auth": {
@@ -243,39 +307,6 @@
 			"response": []
 		},
 		{
-			"name": "Restore Brand",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/api/admin/brands/restore/{{brandId}}",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"admin",
-						"brands",
-						"restore",
-						"{{brandId}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Delete Image from Brand",
 			"request": {
 				"method": "DELETE",
@@ -300,7 +331,7 @@
 			"response": []
 		},
 		{
-			"name": "Purge Old Brands",
+			"name": "Purge Soft Deleted Brands",
 			"request": {
 				"method": "DELETE",
 				"header": [],
