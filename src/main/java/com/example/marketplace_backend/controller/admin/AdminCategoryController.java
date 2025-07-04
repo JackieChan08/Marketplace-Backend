@@ -21,7 +21,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/categories")
 public class AdminCategoryController {
-    private final CategoryServiceImpl  categoryService;
+    private final CategoryServiceImpl categoryService;
     private final FileUploadService fileUploadService;
 
     @GetMapping()
@@ -95,7 +95,7 @@ public class AdminCategoryController {
     }
 
     @DeleteMapping("/purge")
-    public ResponseEntity<Void> purgeOldCategories() {
+    public ResponseEntity<Void> purgeCategories() {
         try {
             categoryService.purgeOldCategories();
             return ResponseEntity.noContent().build();

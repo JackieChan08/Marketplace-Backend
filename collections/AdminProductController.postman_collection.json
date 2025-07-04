@@ -8,8 +8,129 @@
 	},
 	"item": [
 		{
+			"name": "Get Product by ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/{{productUrl}}/{{productId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{productUrl}}",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Products",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/{{productUrl}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{productUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Inactive Products",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/{{productUrl}}/inactive",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{productUrl}}",
+						"inactive"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Products Stats",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/{{productUrl}}/stats",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{productUrl}}",
+						"stats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Create Product with Images",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
@@ -17,33 +138,29 @@
 					"formdata": [
 						{
 							"key": "name",
-							"value": "iPhone 15",
+							"value": "iPhone 1111",
 							"type": "text"
 						},
 						{
 							"key": "price",
-							"value": "999.99",
+							"value": "11000",
 							"type": "text"
 						},
 						{
 							"key": "subCategoryId",
-							"value": "REPLACE_SUBCATEGORY_UUID",
+							"value": "d85e1b83-cc89-4489-ae55-166549cd8c7b",
 							"type": "text"
 						},
 						{
 							"key": "brandId",
-							"value": "REPLACE_BRAND_UUID",
+							"value": "eae8240e-59ee-4979-9d22-68649831f70f",
 							"type": "text"
 						},
 						{
 							"key": "images",
 							"type": "file",
-							"src": "postman-cloud:///1f045091-e868-4540-8715-181032e474e2"
-						},
-						{
-							"key": "images",
-							"type": "file",
-							"src": "postman-cloud:///1f041e80-6867-4aa0-9e50-eb8e3841acfe"
+							"src": "postman-cloud:///1f045091-e868-4540-8715-181032e474e2",
+							"disabled": true
 						},
 						{
 							"key": "descriptions[0].title",
@@ -62,22 +179,18 @@
 						},
 						{
 							"key": "descriptions[1].text",
-							"value": "Apple A17 Bionic",
+							"value": "Apple A11 Bionic",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/admin/products/create",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/{{productUrl}}/create",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8080",
 					"path": [
-						"api",
-						"admin",
-						"products",
+						"{{productUrl}}",
 						"create"
 					]
 				}
@@ -85,8 +198,18 @@
 			"response": []
 		},
 		{
-			"name": "Edit Product with Images",
+			"name": "Edit Product",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
@@ -94,7 +217,7 @@
 					"formdata": [
 						{
 							"key": "name",
-							"value": "iPhone 15 Pro",
+							"value": "iPhone 13-edit",
 							"type": "text"
 						},
 						{
@@ -104,66 +227,41 @@
 						},
 						{
 							"key": "subCategoryId",
-							"value": "REPLACE_SUBCATEGORY_UUID",
+							"value": "d85e1b83-cc89-4489-ae55-166549cd8c7b",
 							"type": "text"
 						},
 						{
 							"key": "brandId",
-							"value": "REPLACE_BRAND_UUID",
+							"value": "eae8240e-59ee-4979-9d22-68649831f70f",
 							"type": "text"
 						},
 						{
 							"key": "images",
 							"type": "file",
-							"src": "/path/to/new_image.jpg"
+							"src": "postman-cloud:///1f056693-c75e-4700-92fb-a8933d757dcf"
 						},
 						{
 							"key": "descriptions[0].title",
 							"value": "Камера",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
-							"key": "descriptions[0].content",
+							"key": "descriptions[0].text",
 							"value": "48MP + 12MP",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						}
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/admin/products/edit/{{productId}}",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/{{productUrl}}/edit/{{productId}}",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8080",
 					"path": [
-						"api",
-						"admin",
-						"products",
+						"{{productUrl}}",
 						"edit",
-						"{{productId}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Soft Delete Product",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/api/admin/products/soft-delete/{{productId}}",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"admin",
-						"products",
-						"soft-delete",
 						"{{productId}}"
 					]
 				}
@@ -173,23 +271,171 @@
 		{
 			"name": "Restore Product",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/admin/products/restore/{{productId}}",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/{{productUrl}}/restore/{{productId}}",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8080",
 					"path": [
-						"api",
-						"admin",
-						"products",
+						"{{productUrl}}",
 						"restore",
 						"{{productId}}"
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "Soft Delete Product",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/{{productUrl}}/{{productId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{productUrl}}",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Permanent Delete Product",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/{{productUrl}}/{{productId}}/permanent",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{productUrl}}",
+						"{{productId}}",
+						"permanent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Image From Product",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/{{productUrl}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{productUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Purge Soft Deleted Products",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/{{productUrl}}/purge",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{productUrl}}",
+						"purge"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request Copy 2",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "New Request Copy",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "New Request Copy",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "New Request Copy 2",
+			"request": {
+				"method": "GET",
+				"header": []
 			},
 			"response": []
 		}
