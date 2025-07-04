@@ -3,6 +3,7 @@ package com.example.marketplace_backend.Service.Impl;
 import com.example.marketplace_backend.DTO.Requests.models.SubcategoryRequest;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.FileEntity;
+import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
 import com.example.marketplace_backend.Model.Intermediate_objects.SubcategoryImage;
 import com.example.marketplace_backend.Model.Subcategory;
 import com.example.marketplace_backend.Repositories.CategoryRepository;
@@ -43,16 +44,12 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
 
     @Transactional(readOnly = true)
     public List<Subcategory> findAllActive() {
-        return subcategoryRepository.findAll().stream()
-                .filter(s -> s.getDeletedAt() == null)
-                .toList();
+        return subcategoryRepository.findAllActive();
     }
 
     @Transactional(readOnly = true)
     public List<Subcategory> findAllDeActive() {
-        return subcategoryRepository.findAll().stream()
-                .filter(s -> s.getDeletedAt() != null)
-                .toList();
+        return subcategoryRepository.findAllDeActive();
     }
 
     @Transactional(readOnly = true)
@@ -122,11 +119,15 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
         try {
             List<SubcategoryImage> subcategoryImages = subcategoryImageRepository.findBySubcategoryId(id);
 
+
+
             for (SubcategoryImage subcategoryImage : subcategoryImages) {
                 if (subcategoryImage.getImage() != null && subcategoryImage.getImage().getUniqueName() != null) {
                     fileUploadService.deleteImage(subcategoryImage.getImage().getUniqueName());
                 }
             }
+
+            subcategoryImageRepository.deleteAll(subcategoryImages);
 
             subcategoryRepository.deleteById(id);
 
@@ -164,7 +165,6 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
     }
 
     public ResponseEntity<Subcategory> createSubcategory(SubcategoryRequest request) throws IOException {
-
         Optional<Category> categoryOpt = categoryService.findById(request.getCategoryId());
         if (categoryOpt.isEmpty()) {
             return ResponseEntity.badRequest().build();

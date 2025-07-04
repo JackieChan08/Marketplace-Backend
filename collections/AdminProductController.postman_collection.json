@@ -1,11 +1,10 @@
 {
 	"info": {
-		"_postman_id": "d2b374e1-f3b6-479a-89fa-550e73f8cb91",
+		"_postman_id": "c51eea56-8e3f-46e1-854d-73005d69350c",
 		"name": "AdminProductController",
 		"description": "Postman requests for AdminProductController endpoints",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "40388756",
-		"_collection_link": "https://test99-0330.postman.co/workspace/test~7488d7e6-fe20-496e-ad1d-0a4b9129da6b/collection/40388756-d2b374e1-f3b6-479a-89fa-550e73f8cb91?action=share&source=collection_link&creator=40388756"
+		"_exporter_id": "38769339"
 	},
 	"item": [
 		{
