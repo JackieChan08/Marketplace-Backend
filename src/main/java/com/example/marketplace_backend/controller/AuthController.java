@@ -1,6 +1,5 @@
 package com.example.marketplace_backend.controller;
 
-
 import com.example.marketplace_backend.Model.RefreshToken;
 import com.example.marketplace_backend.Model.User;
 import com.example.marketplace_backend.Repositories.RefreshTokenRepository;
@@ -12,7 +11,7 @@ import com.example.marketplace_backend.DTO.Requests.Jwt.LoginRequest;
 import com.example.marketplace_backend.DTO.Requests.Jwt.OAuth2TokenRequest;
 import com.example.marketplace_backend.DTO.Requests.Jwt.RegisterRequest;
 import com.example.marketplace_backend.DTO.Responses.Jwt.JwtResponse;
-import jakarta.servlet.http.Cookie;
+
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,14 +39,11 @@ public class AuthController {
     private UserServiceImpl userService;
     private ExternalOAuth2ServiceImpl externalOAuth2Service;
 
-
     @PostMapping("/register")
     public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest request) {
         JwtResponse jwtResponse = userService.register(request);
         return ResponseEntity.ok(jwtResponse);
     }
-
-
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
@@ -70,18 +66,8 @@ public class AuthController {
             rt.setExpiryDate(Instant.now().plusMillis(2592000000L));
             refreshTokenRepository.save(rt);
 
-            Cookie accessCookie = new Cookie("accessToken", accessToken);
-            accessCookie.setHttpOnly(true);
-            accessCookie.setPath("/");
-            accessCookie.setMaxAge(3600);
-
-            Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-            refreshCookie.setHttpOnly(true);
-            refreshCookie.setPath("/");
-            refreshCookie.setMaxAge(2592000);
-
-            response.addCookie(accessCookie);
-            response.addCookie(refreshCookie);
+            setCookie(response, "accessToken", accessToken, 3600);
+            setCookie(response, "refreshToken", refreshToken, 2592000);
 
             return ResponseEntity.ok(Map.of(
                     "accessToken", accessToken,
@@ -99,7 +85,6 @@ public class AuthController {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found after OAuth2 login"));
-
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
 
@@ -111,18 +96,8 @@ public class AuthController {
         token.setExpiryDate(Instant.now().plusMillis(2592000000L));
         refreshTokenRepository.save(token);
 
-        Cookie accessCookie = new Cookie("accessToken", accessToken);
-        accessCookie.setHttpOnly(true);
-        accessCookie.setPath("/");
-        accessCookie.setMaxAge(3600);
-
-        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-        refreshCookie.setHttpOnly(true);
-        refreshCookie.setPath("/");
-        refreshCookie.setMaxAge(2592000);
-
-        response.addCookie(accessCookie);
-        response.addCookie(refreshCookie);
+        setCookie(response, "accessToken", accessToken, 3600);
+        setCookie(response, "refreshToken", refreshToken, 2592000);
 
         return ResponseEntity.ok(Map.of(
                 "accessToken", accessToken,
@@ -131,11 +106,9 @@ public class AuthController {
                 "name", user.getName()
         ));
     }
+
     @PostMapping("/oauth2/token")
-    public ResponseEntity<?> oauth2TokenLogin(
-            @RequestBody OAuth2TokenRequest request,
-            HttpServletResponse response
-    ) {
+    public ResponseEntity<?> oauth2TokenLogin(@RequestBody OAuth2TokenRequest request, HttpServletResponse response) {
         try {
             User user = externalOAuth2Service.processOAuth2Token(request.getToken(), request.getProvider());
 
@@ -150,18 +123,8 @@ public class AuthController {
             token.setExpiryDate(Instant.now().plusMillis(2592000000L));
             refreshTokenRepository.save(token);
 
-            Cookie accessCookie = new Cookie("accessToken", accessToken);
-            accessCookie.setHttpOnly(true);
-            accessCookie.setPath("/");
-            accessCookie.setMaxAge(3600);
-
-            Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-            refreshCookie.setHttpOnly(true);
-            refreshCookie.setPath("/");
-            refreshCookie.setMaxAge(2592000);
-
-            response.addCookie(accessCookie);
-            response.addCookie(refreshCookie);
+            setCookie(response, "accessToken", accessToken, 3600);
+            setCookie(response, "refreshToken", refreshToken, 2592000);
 
             return ResponseEntity.ok(Map.of(
                     "email", user.getEmail(),
@@ -181,20 +144,25 @@ public class AuthController {
             refreshTokenRepository.deleteByToken(refreshToken);
         }
 
-        clearCookie("accessToken", response);
-        clearCookie("refreshToken", response);
+        clearCookie(response, "accessToken");
+        clearCookie(response, "refreshToken");
 
         return ResponseEntity.ok("Logged out successfully");
     }
 
-    private void clearCookie(String name, HttpServletResponse response) {
-        Cookie cookie = new Cookie(name, null);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+    private void setCookie(HttpServletResponse response, String name, String value, int maxAgeSeconds) {
+        String cookie = String.format(
+                "%s=%s; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=%d",
+                name, value, maxAgeSeconds
+        );
+        response.addHeader("Set-Cookie", cookie);
     }
 
-
+    private void clearCookie(HttpServletResponse response, String name) {
+        String cookie = String.format(
+                "%s=; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=0",
+                name
+        );
+        response.addHeader("Set-Cookie", cookie);
+    }
 }

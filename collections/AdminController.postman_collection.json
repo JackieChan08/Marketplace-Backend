@@ -1,0 +1,1968 @@
+{
+	"info": {
+		"_postman_id": "97fbb357-f790-4aa9-918a-71153297af21",
+		"name": "AdminController",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38769339"
+	},
+	"item": [
+		{
+			"name": "AdminBrandController",
+			"item": [
+				{
+					"name": "Get Brand by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{brandUrl}}/{{brandId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{brandUrl}}",
+								"{{brandId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Brands",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{brandUrl}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{brandUrl}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Inactive Brands",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{brandUrl}}/inactive",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{brandUrl}}",
+								"inactive"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Brand Stats",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{brandUrl}}/stats",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{brandUrl}}",
+								"stats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Brand with Images",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Apple",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "postman-cloud:///1f041e80-6867-4aa0-9e50-eb8e3841acfe"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{brandUrl}}/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{brandUrl}}",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Brand",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Samsung",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "postman-cloud:///1f041de5-782f-4230-b31d-32bbff4bdb58"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{brandUrl}}/edit/{{brandId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{brandUrl}}",
+								"edit",
+								"{{brandId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Restore Brand",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{brandUrl}}/restore/{{brandId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{brandUrl}}",
+								"restore",
+								"{{brandId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Soft Delete Brand",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{brandUrl}}/{{brandId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{brandUrl}}",
+								"{{brandId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Permanent Delete Brand",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{brandUrl}}/{{brandId}}/permanent",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{brandUrl}}",
+								"{{brandId}}",
+								"permanent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Image from Brand",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{brandUrl}}/{{brandId}}/images/{{imageId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{brandUrl}}",
+								"{{brandId}}",
+								"images",
+								"{{imageId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Purge Soft Deleted Brands",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{brandUrl}}/purge",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{brandUrl}}",
+								"purge"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AdminCategoryController",
+			"item": [
+				{
+					"name": "Get Category by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{categoryUrl}}/{{categoryId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{categoryUrl}}",
+								"{{categoryId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Categories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{categoryUrl}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{categoryUrl}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Inactive Categories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{categoryUrl}}/inactive",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{categoryUrl}}",
+								"inactive"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Categories Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{categoryUrl}}/stats",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{categoryUrl}}",
+								"stats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Category With Images",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Аксессуары",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/Users/aiteginbaratov/Downloads/hen-kaznelson-xFZwqsk03F0-unsplash.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{categoryUrl}}/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{categoryUrl}}",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{categoryUrl}}/edit/{{categoryId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{categoryUrl}}",
+								"edit",
+								"{{categoryId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Restore Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{categoryUrl}}/restore/{{categoryId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{categoryUrl}}",
+								"restore",
+								"{{categoryId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Soft Delete Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{categoryUrl}}/{{categoryId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{categoryUrl}}",
+								"{{categoryId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Permanent Delete Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{categoryUrl}}/{{categoryId}}/permanent",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{categoryUrl}}",
+								"{{categoryId}}",
+								"permanent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Image From Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{categoryUrl}}/{{categoryId}}/image/{{categoryImageId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{categoryUrl}}",
+								"{{categoryId}}",
+								"image",
+								"{{categoryImageId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Purge Soft Deleted Categories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{categoryUrl}}/purge",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{categoryUrl}}",
+								"purge"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AdminOrderController",
+			"item": [
+				{
+					"name": "Get Wholesale Orders",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/orders/wholesale",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"orders",
+								"wholesale"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Retail Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/orders/retail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"orders",
+								"retail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order Status",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/orders/{{orderId}}/status?status=DELIVERED",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"orders",
+								"{{orderId}}",
+								"status"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "DELIVERED"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order Comment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/orders/{{orderId}}/comment?comment=Ожидает оплаты",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"orders",
+								"{{orderId}}",
+								"comment"
+							],
+							"query": [
+								{
+									"key": "comment",
+									"value": "Ожидает оплаты"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order Address",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/orders/{{orderId}}/address?address=Бишкек, улица Токтогула, 45",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"orders",
+								"{{orderId}}",
+								"address"
+							],
+							"query": [
+								{
+									"key": "address",
+									"value": "Бишкек, улица Токтогула, 45"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AdminProductController",
+			"item": [
+				{
+					"name": "Get Product by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{productUrl}}/{{productId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{productUrl}}",
+								"{{productId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{productUrl}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{productUrl}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Inactive Products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{productUrl}}/inactive",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{productUrl}}",
+								"inactive"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Products Stats",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{productUrl}}/stats",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{productUrl}}",
+								"stats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product with Images",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "iPhone 1111",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "11000",
+									"type": "text"
+								},
+								{
+									"key": "subCategoryId",
+									"value": "d85e1b83-cc89-4489-ae55-166549cd8c7b",
+									"type": "text"
+								},
+								{
+									"key": "brandId",
+									"value": "eae8240e-59ee-4979-9d22-68649831f70f",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "postman-cloud:///1f045091-e868-4540-8715-181032e474e2",
+									"disabled": true
+								},
+								{
+									"key": "descriptions[0].title",
+									"value": "Дисплей",
+									"type": "text"
+								},
+								{
+									"key": "descriptions[0].text",
+									"value": "6.1 OLED Super Retina",
+									"type": "text"
+								},
+								{
+									"key": "descriptions[1].title",
+									"value": "Процессор",
+									"type": "text"
+								},
+								{
+									"key": "descriptions[1].text",
+									"value": "Apple A11 Bionic",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{productUrl}}/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{productUrl}}",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "iPhone 13-edit",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "1199.99",
+									"type": "text"
+								},
+								{
+									"key": "subCategoryId",
+									"value": "d85e1b83-cc89-4489-ae55-166549cd8c7b",
+									"type": "text"
+								},
+								{
+									"key": "brandId",
+									"value": "eae8240e-59ee-4979-9d22-68649831f70f",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "postman-cloud:///1f056693-c75e-4700-92fb-a8933d757dcf"
+								},
+								{
+									"key": "descriptions[0].title",
+									"value": "Камера",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "descriptions[0].text",
+									"value": "48MP + 12MP",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{productUrl}}/edit/{{productId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{productUrl}}",
+								"edit",
+								"{{productId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Restore Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{productUrl}}/restore/{{productId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{productUrl}}",
+								"restore",
+								"{{productId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Soft Delete Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{productUrl}}/{{productId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{productUrl}}",
+								"{{productId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Permanent Delete Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{productUrl}}/{{productId}}/permanent",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{productUrl}}",
+								"{{productId}}",
+								"permanent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Image From Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{productUrl}}/{{productId}}/image///",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{productUrl}}",
+								"{{productId}}",
+								"image",
+								"",
+								"",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Purge Soft Deleted Products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{productUrl}}/purge",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{productUrl}}",
+								"purge"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AdminProductParametersController",
+			"item": [
+				{
+					"name": "Get Parameter Stats by Product ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/product-parameters/stats/product/{{productId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"product-parameters",
+								"stats",
+								"product",
+								"{{productId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product Parameter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Цвет\",\n  \"value\": \"Черный\",\n  \"product\": {\n    \"id\": \"{{productId}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/admin/product-parameters/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"product-parameters",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Product Parameter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Цвет\",\n  \"value\": \"Синий\",\n  \"product\": {\n    \"id\": \"{{productId}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/admin/product-parameters/edit/{{parameterId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"product-parameters",
+								"edit",
+								"{{parameterId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product Parameter by ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/product-parameters/{{parameterId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"product-parameters",
+								"{{parameterId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete All Parameters by Product ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/product-parameters/product/{{productId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"product-parameters",
+								"product",
+								"{{productId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AdminProductSubParametersController",
+			"item": [
+				{
+					"name": "Get Stats for SubParameters by Parameter ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/product-sub-parameters/stats/parameter/{{parameterId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"product-sub-parameters",
+								"stats",
+								"parameter",
+								"{{parameterId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Single SubParameter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Объем\",\n  \"value\": \"250 мл\",\n  \"productParameter\": {\n    \"id\": \"{{parameterId}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/admin/product-sub-parameters/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"product-sub-parameters",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Batch SubParameters",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  {\n    \"name\": \"Цвет\",\n    \"value\": \"Белый\",\n    \"productParameter\": { \"id\": \"{{parameterId}}\" }\n  },\n  {\n    \"name\": \"Цвет\",\n    \"value\": \"Черный\",\n    \"productParameter\": { \"id\": \"{{parameterId}}\" }\n  }\n]"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/admin/product-sub-parameters/create/batch",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"product-sub-parameters",
+								"create",
+								"batch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit SubParameter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Объем\",\n  \"value\": \"500 мл\",\n  \"productParameter\": {\n    \"id\": \"{{parameterId}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/admin/product-sub-parameters/edit/{{subParamId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"product-sub-parameters",
+								"edit",
+								"{{subParamId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit SubParameter Value Only",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/product-sub-parameters/edit/{{subParamId}}/value?value=750 мл",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"product-sub-parameters",
+								"edit",
+								"{{subParamId}}",
+								"value"
+							],
+							"query": [
+								{
+									"key": "value",
+									"value": "750 мл"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete SubParameter by ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/product-sub-parameters/{{subParamId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"product-sub-parameters",
+								"{{subParamId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete All SubParameters by Parameter ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/product-sub-parameters/parameter/{{parameterId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"product-sub-parameters",
+								"parameter",
+								"{{parameterId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AdminSubcategoryController",
+			"item": [
+				{
+					"name": "Get Subcategory by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{subcategoryUrl}}/{{subcateogryId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{subcategoryUrl}}",
+								"{{subcateogryId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Subcategories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXN0ZXJnZWtpMDZAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMzU2MjUwLCJleHAiOjE3NTEzNTk4NTB9.TDRkaEcCryikroJigwn4Yb-zy4d3q4AvUOG4f3rA0OlwL0JlHGdGzrwC_ObpDnYlRYur5-iKWtObiz_UYW1l3g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{subcategoryUrl}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{subcategoryUrl}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Inactive Subategories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{subcategoryUrl}}/inactive",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{subcategoryUrl}}",
+								"inactive"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Subcategories Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{subcategoryUrl}}/stats",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{subcategoryUrl}}",
+								"stats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Stats By Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{subcategoryUrl}}/stats/category/{{categoryId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{subcategoryUrl}}",
+								"stats",
+								"category",
+								"{{categoryId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Inactive By Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{subcategoryUrl}}/category/{{categoryId}}/inactive",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{subcategoryUrl}}",
+								"category",
+								"{{categoryId}}",
+								"inactive"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Subcategory With Images",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Телефоны",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "postman-cloud:///1f056693-c75e-4700-92fb-a8933d757dcf"
+								},
+								{
+									"key": "categoryId",
+									"value": "{{categoryId}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{subcategoryUrl}}/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{subcategoryUrl}}",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Subcategory",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{subcategoryUrl}}/edit/{{subcateogryId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{subcategoryUrl}}",
+								"edit",
+								"{{subcateogryId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Restore Subategory",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXN0ZXJnZWtpMDZAZ21haWwuY29tIiwiaWF0IjoxNzUxMzYwMDA0LCJleHAiOjE3NTM5NTIwMDR9.MmbDvtSvM4PpeaNKAlu_F66vndZgxQ1TZ10GVsSLZQbY7UqnhlOyH14d22RRVkLpnJqA57M3CCLjyNAm-9zhjg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{subcategoryUrl}}/restore/{{subcateogryId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{subcategoryUrl}}",
+								"restore",
+								"{{subcateogryId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Soft Delete Subcategory",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXN0ZXJnZWtpMDZAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMzU2MjUwLCJleHAiOjE3NTEzNTk4NTB9.TDRkaEcCryikroJigwn4Yb-zy4d3q4AvUOG4f3rA0OlwL0JlHGdGzrwC_ObpDnYlRYur5-iKWtObiz_UYW1l3g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{subcategoryUrl}}/{{subcateogryId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{subcategoryUrl}}",
+								"{{subcateogryId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Permanent Delete Subcategory",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXN0ZXJnZWtpMDZAZ21haWwuY29tIiwiaWF0IjoxNzUxMzYwMDA0LCJleHAiOjE3NTM5NTIwMDR9.MmbDvtSvM4PpeaNKAlu_F66vndZgxQ1TZ10GVsSLZQbY7UqnhlOyH14d22RRVkLpnJqA57M3CCLjyNAm-9zhjg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{subcategoryUrl}}/{{subcateogryId}}/permanent",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{subcategoryUrl}}",
+								"{{subcateogryId}}",
+								"permanent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Image From Subcategory",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{subcategoryUrl}}/{{subcateogryId}}/images/{{subcateogryImageId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{subcategoryUrl}}",
+								"{{subcateogryId}}",
+								"images",
+								"{{subcateogryImageId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Purge Soft Deleted Subcategories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXN0ZXJnZWtpMDZAZ21haWwuY29tIiwiaWF0IjoxNzUxMzYwMDA0LCJleHAiOjE3NTM5NTIwMDR9.MmbDvtSvM4PpeaNKAlu_F66vndZgxQ1TZ10GVsSLZQbY7UqnhlOyH14d22RRVkLpnJqA57M3CCLjyNAm-9zhjg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{subcategoryUrl}}/purge",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{subcategoryUrl}}",
+								"purge"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
