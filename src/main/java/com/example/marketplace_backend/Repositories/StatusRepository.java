@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface StatusRepository extends JpaRepository<Statuses, UUID> {
+    Statuses findByName(String name);
 }

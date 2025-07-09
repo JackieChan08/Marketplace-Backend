@@ -18,21 +18,24 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
-    private final OrderStatusRepository orderStatusRepository;
+    // private final OrderStatusRepository orderStatusRepository; // ЗАКОММЕНТИРОВАНО: больше не используется
+    private final StatusRepository statusRepository; // ДОБАВЛЕНО: теперь используем StatusRepository
     private final CartService cartService;
 
     public OrderServiceImpl(OrderRepository orderRepository,
                             CartRepository cartRepository,
                             UserRepository userRepository,
                             ProductRepository productRepository,
-                            OrderStatusRepository orderStatusRepository,
+                            // OrderStatusRepository orderStatusRepository, // ЗАКОММЕНТИРОВАНО
+                            StatusRepository statusRepository, // ДОБАВЛЕНО
                             CartService cartService) {
         super(orderRepository);
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
-        this.orderStatusRepository = orderStatusRepository;
+        // this.orderStatusRepository = orderStatusRepository; // ЗАКОММЕНТИРОВАНО
+        this.statusRepository = statusRepository; // ДОБАВЛЕНО
         this.cartService = cartService;
     }
 
@@ -44,16 +47,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
             throw new RuntimeException("Cart is empty");
         }
 
-        // Получаем дефолтный статус (например, "Pending" или "Created")
-        OrderStatuses defaultStatus = orderStatusRepository.findByName("Pending")
-                .orElseThrow(() -> new RuntimeException("Default order status 'Pending' not found"));
-
         Order order = new Order();
         order.setUser(userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found")));
         order.setAddress(request.getAddress());
         order.setPhoneNumber(request.getPhoneNumber());
-        order.setOrderStatuses(defaultStatus);
         order.setComment(request.getComment());
         order.setWholesale(request.getIsWholesale());
 
@@ -78,8 +76,20 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         order.setOrderItems(orderItems);
         order.setTotalPrice(total);
 
+        // Сохраняем заказ сначала, чтобы получить ID
         Order savedOrder = orderRepository.save(order);
 
+        // Теперь обрабатываем statuses
+        if (request.getStatuses() != null) {
+            for (Statuses status : request.getStatuses()) {
+                status.setOrder(savedOrder); // ИСПРАВЛЕНО: устанавливаем связь с заказом
+            }
+            savedOrder.setStatuses(request.getStatuses());
+            // Сохраняем заказ с обновленными статусами
+            savedOrder = orderRepository.save(savedOrder);
+        }
+
+        // Очищаем корзину
         cart.getCartItems().clear();
         cartRepository.save(cart);
 
@@ -90,6 +100,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         return orderRepository.findAllOrders();
     }
 
+    // ЗАКОММЕНТИРОВАНО: методы для работы с OrderStatuses
+    /*
     public Order updateOrderStatus(UUID orderId, UUID statusId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
@@ -109,6 +121,51 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
                 .orElseThrow(() -> new RuntimeException("Order status not found: " + statusName));
 
         order.setOrderStatuses(orderStatus);
+        return orderRepository.save(order);
+    }
+    */
+
+    // ДОБАВЛЕНО: новые методы для работы со Statuses
+    public Order addStatusToOrder(UUID orderId, UUID statusId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        Statuses status = statusRepository.findById(statusId)
+                .orElseThrow(() -> new RuntimeException("Status not found"));
+
+        // Создаем новый статус для заказа
+        Statuses orderStatus = Statuses.builder()
+                .name(status.getName())
+                .color(status.getColor())
+                .order(order)
+                .build();
+
+        if (order.getStatuses() == null) {
+            order.setStatuses(new ArrayList<>());
+        }
+        order.getStatuses().add(orderStatus);
+
+        return orderRepository.save(order);
+    }
+
+    public Order addStatusToOrderByName(UUID orderId, String statusName) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        Statuses status = statusRepository.findByName(statusName);
+
+        // Создаем новый статус для заказа
+        Statuses orderStatus = Statuses.builder()
+                .name(status.getName())
+                .color(status.getColor())
+                .order(order)
+                .build();
+
+        if (order.getStatuses() == null) {
+            order.setStatuses(new ArrayList<>());
+        }
+        order.getStatuses().add(orderStatus);
+
         return orderRepository.save(order);
     }
 
@@ -134,6 +191,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         return orderRepository.findAllRetailOrders();
     }
 
+    // ЗАКОММЕНТИРОВАНО: методы для работы с OrderStatuses
+    /*
     public List<Order> getOrdersByStatus(UUID statusId) {
         return orderRepository.findByOrderStatusesId(statusId);
     }
@@ -142,5 +201,36 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         OrderStatuses orderStatus = orderStatusRepository.findByName(statusName)
                 .orElseThrow(() -> new RuntimeException("Order status not found: " + statusName));
         return orderRepository.findByOrderStatusesId(orderStatus.getId());
+    }
+    */
+
+    // ДОБАВЛЕНО: новые методы для работы со Statuses
+    public List<Order> getOrdersByStatusName(String statusName) {
+        return orderRepository.findByStatusesName(statusName);
+    }
+
+    public List<Order> getOrdersWithStatus(UUID statusId) {
+        Statuses status = statusRepository.findById(statusId)
+                .orElseThrow(() -> new RuntimeException("Status not found"));
+        return orderRepository.findByStatusesName(status.getName());
+    }
+
+    // ДОБАВЛЕНО: метод для удаления статуса из заказа
+    public Order removeStatusFromOrder(UUID orderId, UUID statusId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        if (order.getStatuses() != null) {
+            order.getStatuses().removeIf(status -> status.getId().equals(statusId));
+        }
+
+        return orderRepository.save(order);
+    }
+
+    // ДОБАВЛЕНО: метод для получения всех статусов заказа
+    public List<Statuses> getOrderStatuses(UUID orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        return order.getStatuses();
     }
 }

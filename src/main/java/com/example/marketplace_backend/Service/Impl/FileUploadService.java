@@ -44,7 +44,7 @@ public class FileUploadService {
             throw new IllegalArgumentException("Поддерживаются только изображения");
         }
 
-        // Проверка размера файла (например, максимум 10MB)
+        // Проверка размера файла
         long maxFileSize = 10 * 1024 * 1024; // 10MB
         if (file.getSize() > maxFileSize) {
             throw new IllegalArgumentException("Размер файла не должен превышать 10MB");
@@ -109,6 +109,7 @@ public class FileUploadService {
                         contentType.equals("image/gif") ||
                         contentType.equals("image/webp") ||
                         contentType.equals("image/svg") ||
+                        contentType.equals("image/xml") ||
                         contentType.equals("image/bmp"));
     }
 

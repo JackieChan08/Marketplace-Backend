@@ -20,9 +20,12 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Query("SELECT o FROM Order o WHERE o.isWholesale = false ORDER BY o.createdAt DESC")
     List<Order> findAllRetailOrders();
 
-    @Query("SELECT o FROM Order o WHERE o.orderStatuses.id = :statusId")
-    List<Order> findByOrderStatusesId(@Param("statusId") UUID statusId);
+    @Query("SELECT o FROM Order o JOIN o.statuses s WHERE s.name = :statusName")
+    List<Order> findByStatusesName(@Param("statusName") String statusName);
 
-    @Query("SELECT o FROM Order o WHERE o.orderStatuses.name = :statusName")
-    List<Order> findByOrderStatusesName(@Param("statusName") String statusName);
+    @Query("SELECT o FROM Order o WHERE o.id IN (SELECT s.order.id FROM Statuses s WHERE s.name = :statusName)")
+    List<Order> findOrdersByStatusName(@Param("statusName") String statusName);
+
+    @Query("SELECT o FROM Order o WHERE o.id IN (SELECT s.order.id FROM Statuses s WHERE s.id = :statusId)")
+    List<Order> findOrdersByStatusId(@Param("statusId") UUID statusId);
 }
