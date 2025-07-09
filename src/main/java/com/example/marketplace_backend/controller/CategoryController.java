@@ -7,7 +7,9 @@ import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Product;
 import com.example.marketplace_backend.Repositories.CategoryRepository;
+import com.example.marketplace_backend.Repositories.ProductRepository;
 import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
+import com.example.marketplace_backend.Service.Impl.ConverterService;
 import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,6 +34,8 @@ public class CategoryController {
     private final ProductServiceImpl productService;
     private final CategoryServiceImpl categoryService;
     private final CategoryRepository categoryRepository;
+    private final ConverterService  converter;
+
     @Value("${app.base-url}")
     private String baseUrl;
 
@@ -45,7 +49,7 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        CategoryResponse response = convertToCategoryResponse(category);
+        CategoryResponse response = converter.convertToCategoryResponse(category);
         return ResponseEntity.ok(response);
     }
 
@@ -57,69 +61,10 @@ public class CategoryController {
         Pageable pageable = PageRequest.of(page, size);
         Page<Category> categories = categoryService.findAll(pageable);
 
-        Page<CategoryResponse> responses = categories.map(this::convertToCategoryResponse);
+        Page<CategoryResponse> responses = categories.map(converter::convertToCategoryResponse);
         return ResponseEntity.ok(responses);
     }
 
 
-    private CategoryResponse convertToCategoryResponse(Category category) {
-        CategoryResponse response = new CategoryResponse();
-        response.setId(category.getId());
-        response.setName(category.getName());
-
-        if (category.getCategoryImages() != null && !category.getCategoryImages().isEmpty()) {
-            List<FileResponse> imageFiles = category.getCategoryImages().stream()
-                    .map(categoryImage -> {
-                        FileEntity image = categoryImage.getImage();
-                        FileResponse fileResponse = new FileResponse();
-                        fileResponse.setUniqueName(image.getUniqueName());
-                        fileResponse.setOriginalName(image.getOriginalName());
-                        fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
-                        fileResponse.setFileType(image.getFileType());
-                        return fileResponse;
-                    })
-                    .toList();
-
-            response.setImageFiles(imageFiles);
-        }
-
-        // Получение всех продуктов через подкатегории этой категории
-        List<ProductResponse> productResponses = category.getSubcategories().stream() // ← исправлено имя метода
-                .filter(subcategory -> subcategory.getDeletedAt() == null) // пропустить удалённые подкатегории
-                .flatMap(subcategory -> subcategory.getProducts().stream())
-                .filter(product -> product.getDeletedAt() == null)
-                .map(this::convertToProductResponse)
-                .toList();
-
-        response.setProducts(productResponses);
-
-        return response;
-    }
-
-    private ProductResponse convertToProductResponse(Product product) {
-        ProductResponse response = new ProductResponse();
-        response.setId(product.getId());
-        response.setName(product.getName());
-        response.setDescriptions(product.getDescriptions());
-        response.setBrandId(product.getBrand().getId());
-
-        if (product.getProductImages() != null && !product.getProductImages().isEmpty()) {
-            List<FileResponse> images = product.getProductImages().stream()
-                    .map(productImage -> {
-                        FileEntity image = productImage.getImage();
-                        FileResponse fileResponse = new FileResponse();
-                        fileResponse.setUniqueName(image.getUniqueName());
-                        fileResponse.setOriginalName(image.getOriginalName());
-                        fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
-                        fileResponse.setFileType(image.getFileType());
-                        return fileResponse;
-                    })
-                    .toList();
-
-            response.setImages(images);
-        }
-
-        return response;
-    }
 
 }

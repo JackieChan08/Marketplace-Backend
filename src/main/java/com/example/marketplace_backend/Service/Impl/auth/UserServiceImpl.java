@@ -6,6 +6,7 @@ import com.example.marketplace_backend.DTO.Requests.Jwt.RegisterRequest;
 import com.example.marketplace_backend.DTO.Responses.models.UserResponse;
 import com.example.marketplace_backend.DTO.Responses.Jwt.JwtResponse;
 import com.example.marketplace_backend.Service.Impl.BaseServiceImpl;
+import com.example.marketplace_backend.Service.Impl.ConverterService;
 import com.example.marketplace_backend.Service.Impl.JwtService;
 import com.example.marketplace_backend.enums.Role;
 import com.example.marketplace_backend.Model.*;
@@ -27,16 +28,18 @@ public class UserServiceImpl extends BaseServiceImpl<User, UUID> {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final ConverterService converterService;
 
     @Value("${jwt.refresh.expiration}")
     private long refreshExpiration;
 
-    protected UserServiceImpl(UserRepository repository, PasswordEncoder passwordEncoder, JwtService jwtService, RefreshTokenRepository refreshTokenRepository) {
+    protected UserServiceImpl(UserRepository repository, PasswordEncoder passwordEncoder, JwtService jwtService, RefreshTokenRepository refreshTokenRepository, ConverterService converterService) {
         super(repository);
         this.userRepository = repository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.converterService = converterService;
     }
 
     @Transactional
@@ -73,16 +76,13 @@ public class UserServiceImpl extends BaseServiceImpl<User, UUID> {
 
     public Page<UserResponse> searchUsers(String query, Pageable pageable) {
         Page<User> users = userRepository.searchUsers(query, pageable);
-        return users.map(this::convertToResponse);
+        return users.map(converterService::convertToUserResponse);
     }
 
-    private UserResponse convertToResponse(User user) {
-        return new UserResponse(
-                user.getId(),
-                user.getEmail(),
-                user.getName(),
-                user.getRole()
-        );
+
+    public Page<UserResponse> findAll(Pageable pageable) {
+        Page<User> users = userRepository.findAll(pageable);
+        return users.map(converterService::convertToUserResponse);
     }
 
 }

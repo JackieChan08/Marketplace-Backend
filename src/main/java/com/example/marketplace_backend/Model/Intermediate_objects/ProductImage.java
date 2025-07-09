@@ -22,7 +22,7 @@ public class ProductImage {
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    @JsonManagedReference("product-images")
+    @JsonBackReference
     private Product product;
 
     @ManyToOne

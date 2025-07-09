@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -21,10 +24,20 @@ public class AdminBrandController {
     private final BrandServiceImpl  brandService;
     private final FileUploadService  fileUploadService;
 
-    @GetMapping("")
-    public ResponseEntity<List<Brand>> getAllBrands() {
-        return ResponseEntity.ok(brandService.findAllActive());
+
+
+
+    @GetMapping("/list")
+    public ResponseEntity<Page<Brand>> getPaginatedBrands(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Brand> brands = brandService.findAll(pageable);
+        return ResponseEntity.ok(brands);
     }
+
+
 
     @GetMapping("/inactive")
     public ResponseEntity<List<Brand>> getInactiveBrands() {

@@ -5,6 +5,7 @@ import com.example.marketplace_backend.Model.Product;
 import com.example.marketplace_backend.Model.Subcategory;
 import com.example.marketplace_backend.Repositories.ProductRepository;
 import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
+import com.example.marketplace_backend.Service.Impl.ConverterService;
 import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
 import com.example.marketplace_backend.DTO.Responses.models.FileResponse;
 import com.example.marketplace_backend.DTO.Responses.models.ProductResponse;
@@ -32,6 +33,8 @@ public class ProductController {
     private final CategoryServiceImpl categoryService;
     private final UserServiceImpl userService;
     private final ProductRepository productRepository;
+    private final ConverterService  converter;
+
     @Value("${app.base-url}")
     private String baseUrl;
 
@@ -41,7 +44,7 @@ public class ProductController {
         if (product == null || product.getDeletedAt() != null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        ProductResponse productResponse = convertToProductResponse(product);
+        ProductResponse productResponse = converter.convertToProductResponse(product);
 
         return ResponseEntity.ok(productResponse);
     }
@@ -54,26 +57,9 @@ public class ProductController {
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> products = productService.findAll(pageable);
 
-        Page<ProductResponse> responses = products.map(this::convertToProductResponse);
+        Page<ProductResponse> responses = products.map(converter::convertToProductResponse);
         return ResponseEntity.ok(responses);
     }
-
-
-
-
-//    @GetMapping("/list")
-//    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-//        List<Product> products = productService.findAllActive();
-//        if (products.isEmpty()) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//        }
-//
-//        List<ProductResponse> responses = products.stream()
-//                .map(this::convertToProductResponse)
-//                .toList();
-//
-//        return ResponseEntity.ok(responses);
-//    }
 
     @GetMapping("/list/search")
     public ResponseEntity<Page<ProductResponse>> findByNameContaining(
@@ -84,58 +70,9 @@ public class ProductController {
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> products = productService.findByNameContaining(query, pageable);
 
-        Page<ProductResponse> responses = products.map(this::convertToProductResponse);
+        Page<ProductResponse> responses = products.map(converter::convertToProductResponse);
         return ResponseEntity.ok(responses);
     }
-
-
-    private ProductResponse convertToProductResponse(Product product) {
-        ProductResponse response = new ProductResponse();
-        response.setId(product.getId());
-        response.setName(product.getName());
-        response.setDescriptions(product.getDescriptions());
-
-        // Получаем подкатегорию
-        Subcategory subcategory = product.getSubcategory();
-        if (subcategory != null) {
-            response.setSubcategoryId(subcategory.getId());
-            response.setSubcategoryName(subcategory.getName());
-
-            // Получаем категорию через подкатегорию
-            if (subcategory.getCategory() != null) {
-                response.setCategoryId(subcategory.getCategory().getId());
-                response.setCategoryName(subcategory.getCategory().getName());
-            }
-        }
-
-        // Бренд
-        if (product.getBrand() != null) {
-            response.setBrandId(product.getBrand().getId());
-        }
-
-        // Изображения
-        if (product.getProductImages() != null && !product.getProductImages().isEmpty()) {
-            List<FileResponse> images = product.getProductImages().stream()
-                    .map(productImage -> {
-                        FileEntity image = productImage.getImage();
-                        FileResponse fileResponse = new FileResponse();
-                        fileResponse.setUniqueName(image.getUniqueName());
-                        fileResponse.setOriginalName(image.getOriginalName());
-                        fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
-                        fileResponse.setFileType(image.getFileType());
-                        return fileResponse;
-                    })
-                    .toList();
-
-            response.setImages(images);
-        }
-
-        return response;
-    }
-
-
-
-
 
 
 }

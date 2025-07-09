@@ -1,13 +1,14 @@
 {
 	"info": {
-		"_postman_id": "97fbb357-f790-4aa9-918a-71153297af21",
+		"_postman_id": "32ee46f6-ed4a-4c4b-a3f9-161d3d143912",
 		"name": "AdminController",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "38769339"
+		"_exporter_id": "46611599",
+		"_collection_link": "https://meta88-0265.postman.co/workspace/Meta-Workspace~a78a8a26-1788-416c-8182-49e4284d96d6/collection/46611599-32ee46f6-ed4a-4c4b-a3f9-161d3d143912?action=share&source=collection_link&creator=46611599"
 	},
 	"item": [
 		{
-			"name": "AdminBrandController",
+			"name": "Brand",
 			"item": [
 				{
 					"name": "Get Brand by ID",
@@ -354,7 +355,7 @@
 			]
 		},
 		{
-			"name": "AdminCategoryController",
+			"name": "Category",
 			"item": [
 				{
 					"name": "Get Category by ID",
@@ -680,62 +681,8 @@
 			]
 		},
 		{
-			"name": "AdminOrderController",
+			"name": "Order",
 			"item": [
-				{
-					"name": "Get Wholesale Orders",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/admin/orders/wholesale",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"admin",
-								"orders",
-								"wholesale"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Retail Orders",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/admin/orders/retail",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"admin",
-								"orders",
-								"retail"
-							]
-						}
-					},
-					"response": []
-				},
 				{
 					"name": "Update Order Status",
 					"request": {
@@ -822,11 +769,177 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get All Orders (Paginated)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/orders?page=0&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Wholesale Orders (Paginated)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/orders/wholesale?page=0&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"orders",
+								"wholesale"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Orders by Status ID (Paginated)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/orders/by-status/00000000-0000-0000-0000-000000000000?page=0&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"orders",
+								"by-status",
+								"00000000-0000-0000-0000-000000000000"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						},
+						"description": "🔁 Замените UUID в URL на настоящий статус заказа"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Retail Orders (Paginated)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/orders/retail?page=0&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"orders",
+								"retail"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Orders by Status Name (Paginated)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/orders/by-status-name?statusName=Pending&page=0&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"orders",
+								"by-status-name"
+							],
+							"query": [
+								{
+									"key": "statusName",
+									"value": "Pending"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						},
+						"description": "📌 Замените 'Pending' на нужный статус"
+					},
+					"response": []
 				}
 			]
 		},
 		{
-			"name": "AdminProductController",
+			"name": "Product",
 			"item": [
 				{
 					"name": "Get Product by ID",
@@ -1238,7 +1351,7 @@
 			]
 		},
 		{
-			"name": "AdminProductParametersController",
+			"name": "ProductParameters",
 			"item": [
 				{
 					"name": "Get Parameter Stats by Product ID",
@@ -1375,7 +1488,7 @@
 			]
 		},
 		{
-			"name": "AdminProductSubParametersController",
+			"name": "ProductSubParameters",
 			"item": [
 				{
 					"name": "Get Stats for SubParameters by Parameter ID",
@@ -1574,7 +1687,7 @@
 			]
 		},
 		{
-			"name": "AdminSubcategoryController",
+			"name": "Subcategory",
 			"item": [
 				{
 					"name": "Get Subcategory by ID",
@@ -1612,7 +1725,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXN0ZXJnZWtpMDZAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMzU2MjUwLCJleHAiOjE3NTEzNTk4NTB9.TDRkaEcCryikroJigwn4Yb-zy4d3q4AvUOG4f3rA0OlwL0JlHGdGzrwC_ObpDnYlRYur5-iKWtObiz_UYW1l3g",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -1957,6 +2070,206 @@
 							"path": [
 								"{{subcategoryUrl}}",
 								"purge"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "GetUsers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/users?page=0&size=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUsersByName",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/users/search?page=0&size=5&query=mis",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"users",
+								"search"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								},
+								{
+									"key": "query",
+									"value": "mis"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AdminStatusController",
+			"item": [
+				{
+					"name": "Get All Statuses",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{statusUrl}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{statusUrl}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Со скидкой_dsflkj",
+									"type": "text"
+								},
+								{
+									"key": "color",
+									"value": "blue",
+									"type": "text"
+								},
+								{
+									"key": "productId",
+									"value": "{{productId}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{statusUrl}}/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{statusUrl}}",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Status",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{statusUrl}}/{{statusId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{statusUrl}}",
+								"{{statusId}}"
 							]
 						}
 					},
