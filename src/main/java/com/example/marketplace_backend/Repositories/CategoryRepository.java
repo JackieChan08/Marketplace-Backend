@@ -2,6 +2,7 @@ package com.example.marketplace_backend.Repositories;
 
 
 import com.example.marketplace_backend.Model.Category;
+import com.example.marketplace_backend.Model.Subcategory;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,6 +29,4 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
     @Query("UPDATE Category c SET c.deletedAt = :deletedAt WHERE c.id = :id")
     void softDeleteById(@Param("id") UUID id, @Param("deletedAt") LocalDateTime deletedAt);
 
-    @Query("SELECT c FROM Category c WHERE c.deletedAt IS NOT NULL AND c.priority IS TRUE")
-    List<Subcategory> findByPriority();
 }
