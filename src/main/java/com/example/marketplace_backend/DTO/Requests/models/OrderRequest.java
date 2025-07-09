@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 public class OrderRequest {
@@ -14,4 +15,6 @@ public class OrderRequest {
     private Boolean isWholesale;
     private String comment;
     private List<Statuses> statuses;
+    private List<UUID> cartItemIds;
+
 }

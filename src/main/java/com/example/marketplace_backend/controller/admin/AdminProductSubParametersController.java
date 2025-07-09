@@ -29,7 +29,7 @@ public class AdminProductSubParametersController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<ProductSubParameters> createProductSubParameter(@RequestBody ProductSubParameters productSubParameters) {
+    public ResponseEntity<ProductSubParameters> createProductSubParameter(@ModelAttribute ProductSubParameters productSubParameters) {
         try {
             ProductSubParameters created = productSubParametersService.create(productSubParameters);
             return ResponseEntity.ok(created);
@@ -41,7 +41,7 @@ public class AdminProductSubParametersController {
     }
 
     @PostMapping("/create/batch")
-    public ResponseEntity<List<ProductSubParameters>> createProductSubParametersBatch(@RequestBody List<ProductSubParameters> productSubParameters) {
+    public ResponseEntity<List<ProductSubParameters>> createProductSubParametersBatch(@ModelAttribute List<ProductSubParameters> productSubParameters) {
         try {
             List<ProductSubParameters> created = productSubParametersService.createBatch(productSubParameters);
             return ResponseEntity.ok(created);
@@ -55,7 +55,7 @@ public class AdminProductSubParametersController {
     @PostMapping("/edit/{id}")
     public ResponseEntity<ProductSubParameters> editProductSubParameter(
             @PathVariable UUID id,
-            @RequestBody ProductSubParameters updatedSubParameters) {
+            @ModelAttribute ProductSubParameters updatedSubParameters) {
         try {
             ProductSubParameters updated = productSubParametersService.update(id, updatedSubParameters);
             return ResponseEntity.ok(updated);

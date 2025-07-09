@@ -30,7 +30,7 @@ public class AdminProductParametersController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ProductParameters> createProductParameter(@RequestBody ProductParameters productParameters) {
+    public ResponseEntity<ProductParameters> createProductParameter(@ModelAttribute ProductParameters productParameters) {
         try {
             ProductParameters created = productParametersService.create(productParameters);
             return ResponseEntity.ok(created);
@@ -44,7 +44,7 @@ public class AdminProductParametersController {
     @PostMapping("/edit/{id}")
     public ResponseEntity<ProductParameters> editProductParameter(
             @PathVariable UUID id,
-            @RequestBody ProductParameters updatedParameters) {
+            @ModelAttribute ProductParameters updatedParameters) {
         try {
             ProductParameters updated = productParametersService.update(id, updatedParameters);
             return ResponseEntity.ok(updated);

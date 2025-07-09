@@ -1,11 +1,11 @@
 {
 	"info": {
-		"_postman_id": "fb08c447-a2a8-4504-ae78-f85af70e4391",
+		"_postman_id": "b9409f4e-4837-45ef-9680-85f2089f17c6",
 		"name": "Marketplace Backend API",
 		"description": "Коллекция запросов для marketplace_backend (Category, Product, Subcategory, File Controllers)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "40388756",
-		"_collection_link": "https://test99-0330.postman.co/workspace/test~7488d7e6-fe20-496e-ad1d-0a4b9129da6b/collection/40388756-fb08c447-a2a8-4504-ae78-f85af70e4391?action=share&source=collection_link&creator=40388756"
+		"_exporter_id": "46611599",
+		"_collection_link": "https://meta88-0265.postman.co/workspace/Meta-Workspace~a78a8a26-1788-416c-8182-49e4284d96d6/collection/46611599-b9409f4e-4837-45ef-9680-85f2089f17c6?action=share&source=collection_link&creator=46611599"
 	},
 	"item": [
 		{
@@ -38,7 +38,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/categories/list",
+							"raw": "http://localhost:8080/api/categories/list?page=0&size10",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -48,6 +48,16 @@
 								"api",
 								"categories",
 								"list"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size10",
+									"value": null
+								}
 							]
 						}
 					},
@@ -61,10 +71,20 @@
 				{
 					"name": "Get Product by ID",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/products/1",
+							"raw": "http://localhost:8080/api/products/{{productId}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -73,7 +93,7 @@
 							"path": [
 								"api",
 								"products",
-								"1"
+								"{{productId}}"
 							]
 						}
 					},
@@ -81,11 +101,33 @@
 				},
 				{
 					"name": "Get All Products",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8080/api/products/list",
+							"raw": "http://localhost:8080/api/products/list?page=0&size10",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -95,6 +137,16 @@
 								"api",
 								"products",
 								"list"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size10",
+									"value": null
+								}
 							]
 						}
 					},
@@ -103,10 +155,20 @@
 				{
 					"name": "Search Products by Name",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/products/list/search?query=Пицца",
+							"raw": "http://localhost:8080/api/products/list/search?query=пицца&page=0&size10",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -121,7 +183,15 @@
 							"query": [
 								{
 									"key": "query",
-									"value": "Пицца"
+									"value": "пицца"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size10",
+									"value": null
 								}
 							]
 						}
@@ -134,33 +204,22 @@
 			"name": "Subcategories",
 			"item": [
 				{
-					"name": "Get Subcategory by ID",
+					"name": "Get all subcategories (paginated)",
 					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/subcategories/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"subcategories",
-								"1"
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
 							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get All Subcategories",
-					"request": {
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/subcategories/list",
+							"raw": "http://localhost:8080/api/subcategories/list?page=0&size=10",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -170,6 +229,135 @@
 								"api",
 								"subcategories",
 								"list"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get subcategories by category ID (paginated)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/subcategories/category/23e4567e-e89b-12d3-a456-426614174000?page=0&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"subcategories",
+								"category",
+								"23e4567e-e89b-12d3-a456-426614174000"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search subcategories by name (paginated)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/subcategories/list/search?query=пицца&page=0&size=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"subcategories",
+								"list",
+								"search"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "пицца"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get subcategory by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/subcategories/23e4567e-e89b-12d3-a456-426614174000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"subcategories",
+								"23e4567e-e89b-12d3-a456-426614174000"
 							]
 						}
 					},
@@ -227,7 +415,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"productId\": 1,\n    \"quantity\": 2\n}"
+							"raw": "{\n    \"productId\": \"dbc1f296-30d2-4794-8b84-e598d398e284\",\n    \"quantity\": 2\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/cart/add",

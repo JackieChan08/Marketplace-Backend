@@ -49,4 +49,12 @@ public class OrderController {
         return ResponseEntity.ok(orderService.createOrderFromCart(userId, request));
     }
 
+    @PutMapping("/{orderId}/comment")
+    public ResponseEntity<Order> updateComment(@PathVariable UUID orderId,
+                                               @RequestParam String comment) {
+        return ResponseEntity.ok(orderService.updateOrderComment(orderId, comment));
+    }
+
+
+
 }
