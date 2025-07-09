@@ -42,4 +42,12 @@ public class AdminController {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(userService.searchUsers(query, pageable));
     }
+    @GetMapping("/users")
+    public ResponseEntity<Page<UserResponse>> getUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(userService.findAll(pageable));
+    }
 }

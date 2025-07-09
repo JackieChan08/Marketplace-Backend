@@ -33,43 +33,33 @@ public class CartController {
         this.userService = userService;
     }
 
-    private UUID extractUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        return userService.findByEmail(email).getId();
-    }
 
     @PostMapping("/add")
-    public ResponseEntity<CartResponse> addItem(@RequestBody CartRequest request) {
-        UUID userId = extractUserId();
-        Cart cart = cartService.addItemToCart(userId, request.getProductId(), request.getQuantity());
+    public ResponseEntity<CartResponse> addItem(@ModelAttribute CartRequest request) {
+        Cart cart = cartService.addItemToCart(request.getProductId(), request.getQuantity());
         return ResponseEntity.ok(cartService.convertToCartResponse(cart));
     }
 
     @DeleteMapping("/remove")
-    public ResponseEntity<String> removeItem(@RequestBody CartRequest request) {
-        UUID userId = extractUserId();
-        cartService.removeItemFromCart(userId, request.getProductId());
+    public ResponseEntity<String> removeItem(@ModelAttribute CartRequest request) {
+        cartService.removeItemFromCart(request.getProductId());
         return ResponseEntity.ok("Removed product with ID: " + request.getProductId());
     }
 
     @DeleteMapping("/clear")
     public ResponseEntity<String> clearCart() {
-        UUID userId = extractUserId();
-        cartService.clearCart(userId);
+        cartService.clearCart();
         return ResponseEntity.ok("Cart cleared");
     }
 
     @GetMapping
     public ResponseEntity<CartResponse> getCart() {
-        UUID userId = extractUserId();
-        Cart cart = cartService.getCart(userId);
+        Cart cart = cartService.getCart();
         return ResponseEntity.ok(cartService.convertToCartResponse(cart));
     }
 
     @GetMapping("/items")
     public ResponseEntity<List<CartItem>> getCartItems() {
-        UUID userId = extractUserId();
-        return cartService.getCartItemsByUserId(userId);
+        return cartService.getCartItemsByUserId();
     }
 }

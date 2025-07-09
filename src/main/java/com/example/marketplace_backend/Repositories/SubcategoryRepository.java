@@ -1,10 +1,10 @@
 package com.example.marketplace_backend.Repositories;
 
-import com.example.marketplace_backend.Model.Brand;
 import com.example.marketplace_backend.Model.Category;
-import com.example.marketplace_backend.Model.Product;
 import com.example.marketplace_backend.Model.Subcategory;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -39,4 +38,11 @@ public interface SubcategoryRepository extends JpaRepository<Subcategory, UUID> 
     @Transactional
     @Query("UPDATE Subcategory s SET s.deletedAt = :deletedAt WHERE s.id = :id")
     void softDeleteById(@Param("id") UUID id, @Param("deletedAt") LocalDateTime deletedAt);
+
+    Page<Subcategory> findAllByDeletedAtIsNull(Pageable pageable);
+
+    Page<Subcategory> findByCategoryAndDeletedAtIsNull(Category category, Pageable pageable);
+
+    Page<Subcategory> findByNameContainingIgnoreCaseAndDeletedAtIsNull(String name, Pageable pageable);
+
 }

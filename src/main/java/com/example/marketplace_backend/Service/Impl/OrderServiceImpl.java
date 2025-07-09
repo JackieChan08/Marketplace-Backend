@@ -6,6 +6,8 @@ import com.example.marketplace_backend.Model.Intermediate_objects.OrderItem;
 import com.example.marketplace_backend.Repositories.*;
 import com.example.marketplace_backend.DTO.Requests.models.OrderRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -44,7 +46,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
             throw new RuntimeException("Cart is empty");
         }
 
-        // Получаем дефолтный статус (например, "Pending" или "Created")
+        List<UUID> selectedItemIds = request.getCartItemIds();
+        if (selectedItemIds == null || selectedItemIds.isEmpty()) {
+            throw new RuntimeException("No cart items selected");
+        }
+
         OrderStatuses defaultStatus = orderStatusRepository.findByName("Pending")
                 .orElseThrow(() -> new RuntimeException("Default order status 'Pending' not found"));
 
@@ -60,7 +66,15 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
 
-        for (CartItem cartItem : cart.getCartItems()) {
+        List<CartItem> selectedItems = cart.getCartItems().stream()
+                .filter(item -> selectedItemIds.contains(item.getId()))
+                .toList();
+
+        if (selectedItems.isEmpty()) {
+            throw new RuntimeException("No matching cart items found");
+        }
+
+        for (CartItem cartItem : selectedItems) {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setProduct(productRepository.findById(cartItem.getProduct().getId())
@@ -80,14 +94,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
 
         Order savedOrder = orderRepository.save(order);
 
-        cart.getCartItems().clear();
+        cart.getCartItems().removeIf(item -> selectedItemIds.contains(item.getId()));
         cartRepository.save(cart);
 
         return savedOrder;
-    }
-
-    public List<Order> getAllOrders() {
-        return orderRepository.findAllOrders();
     }
 
     public Order updateOrderStatus(UUID orderId, UUID statusId) {
@@ -126,21 +136,27 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         return orderRepository.save(order);
     }
 
-    public List<Order> getAllWholesaleOrders() {
-        return orderRepository.findAllWholesaleOrders();
+
+
+
+    public Page<Order> getAllOrders(Pageable pageable) {
+        return orderRepository.findAllOrders(pageable);
     }
 
-    public List<Order> getAllRetailOrders() {
-        return orderRepository.findAllRetailOrders();
+    public Page<Order> getAllWholesaleOrders(Pageable pageable) {
+        return orderRepository.findAllWholesaleOrders(pageable);
     }
 
-    public List<Order> getOrdersByStatus(UUID statusId) {
-        return orderRepository.findByOrderStatusesId(statusId);
+    public Page<Order> getAllRetailOrders(Pageable pageable) {
+        return orderRepository.findAllRetailOrders(pageable);
     }
 
-    public List<Order> getOrdersByStatusName(String statusName) {
-        OrderStatuses orderStatus = orderStatusRepository.findByName(statusName)
-                .orElseThrow(() -> new RuntimeException("Order status not found: " + statusName));
-        return orderRepository.findByOrderStatusesId(orderStatus.getId());
+    public Page<Order> getOrdersByStatus(UUID statusId, Pageable pageable) {
+        return orderRepository.findByOrderStatusesId(statusId, pageable);
     }
+
+    public Page<Order> getOrdersByStatusName(String statusName, Pageable pageable) {
+        return orderRepository.findByOrderStatusesName(statusName, pageable);
+    }
+
 }

@@ -190,7 +190,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         if (dto.getName() != null) product.setName(dto.getName());
         if (dto.getPrice() != null) product.setPrice(dto.getPrice());
         if (dto.isAvailability()) product.setAvailability(true);
-        if (dto.getDescriptions() != null) product.setDescriptions(dto.getDescriptions());
+//        if (dto.getDescriptions() != null) product.setDescriptions(dto.getDescriptions());
         if (dto.getSubCategoryId() != null) {
             product.setSubcategory(subcategoryRepository.findById(dto.getSubCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category not found")));

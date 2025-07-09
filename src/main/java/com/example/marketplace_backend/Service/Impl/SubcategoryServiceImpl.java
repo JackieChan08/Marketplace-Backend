@@ -253,4 +253,15 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
 
         return removed;
     }
+
+    public Page<Subcategory> findAllActive(Pageable pageable){
+        return subcategoryRepository.findAllByDeletedAtIsNull(pageable);
+    }
+    public Page<Subcategory> findByCategoryActive(Category category, Pageable pageable){
+        return subcategoryRepository.findByCategoryAndDeletedAtIsNull(category, pageable);
+    }
+    public Page<Subcategory> searchByName(String query, Pageable pageable){
+        return subcategoryRepository.findByNameContainingIgnoreCaseAndDeletedAtIsNull(query, pageable);
+    }
+
 }

@@ -47,7 +47,7 @@ public class Product {
     private Brand brand;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference("product-images")
+    @JsonManagedReference
     private List<ProductImage> productImages;
 //    @JoinTable(
 //            name = "product_images",
