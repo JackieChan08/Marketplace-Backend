@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.controller.admin;
 
 import com.example.marketplace_backend.Model.Order;
+import com.example.marketplace_backend.Model.Statuses;
 import com.example.marketplace_backend.Service.Impl.OrderServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -65,16 +66,27 @@ public class AdminOrderController {
         return ResponseEntity.ok(orderService.getOrdersByStatusName(statusName, pageable));
     }
 
-    @PutMapping("/{orderId}/status")
-    public ResponseEntity<Order> updateStatus(@PathVariable UUID orderId,
-                                              @RequestParam UUID statusId) {
-        return ResponseEntity.ok(orderService.updateOrderStatus(orderId, statusId));
+    @PostMapping("/{orderId}/status")
+    public ResponseEntity<Order> addStatusToOrder(@PathVariable UUID orderId,
+                                                  @RequestParam UUID statusId) {
+        return ResponseEntity.ok(orderService.addStatusToOrder(orderId, statusId));
     }
 
-    @PutMapping("/{orderId}/status-by-name")
-    public ResponseEntity<Order> updateStatusByName(@PathVariable UUID orderId,
-                                                    @RequestParam String statusName) {
-        return ResponseEntity.ok(orderService.updateOrderStatusByName(orderId, statusName));
+    @PostMapping("/{orderId}/status-by-name")
+    public ResponseEntity<Order> addStatusToOrderByName(@PathVariable UUID orderId,
+                                                        @RequestParam String statusName) {
+        return ResponseEntity.ok(orderService.addStatusToOrderByName(orderId, statusName));
+    }
+
+    @DeleteMapping("/{orderId}/status/{statusId}")
+    public ResponseEntity<Order> removeStatusFromOrder(@PathVariable UUID orderId,
+                                                       @PathVariable UUID statusId) {
+        return ResponseEntity.ok(orderService.removeStatusFromOrder(orderId, statusId));
+    }
+
+    @GetMapping("/{orderId}/statuses")
+    public ResponseEntity<List<Statuses>> getOrderStatuses(@PathVariable UUID orderId) {
+        return ResponseEntity.ok(orderService.getOrderStatuses(orderId));
     }
 
     @PutMapping("/{orderId}/comment")
@@ -87,6 +99,16 @@ public class AdminOrderController {
     public ResponseEntity<Order> updateAddress(@PathVariable UUID orderId,
                                                @RequestParam String address) {
         return ResponseEntity.ok(orderService.updateOrderAddress(orderId, address));
+    }
+
+    @GetMapping("/by-status/{statusId}")
+    public ResponseEntity<List<Order>> getOrdersWithStatus(@PathVariable UUID statusId) {
+        return ResponseEntity.ok(orderService.getOrdersWithStatus(statusId));
+    }
+
+    @GetMapping("/by-status-name")
+    public ResponseEntity<List<Order>> getOrdersByStatusName(@RequestParam String statusName) {
+        return ResponseEntity.ok(orderService.getOrdersByStatusName(statusName));
     }
 
 }

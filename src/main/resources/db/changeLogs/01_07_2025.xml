@@ -109,17 +109,6 @@
                                  constraintName="fk_subcategories_category"/>
     </changeSet>
 
-    <!-- Order statuses table -->
-    <changeSet id="6" author="JekiChan08">
-        <createTable tableName="order_statuses">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="name" type="varchar(255)"/>
-            <column name="color" type="varchar(255)"/>
-        </createTable>
-    </changeSet>
-
     <!-- Products table -->
     <changeSet id="7" author="JekiChan08">
         <createTable tableName="products">
