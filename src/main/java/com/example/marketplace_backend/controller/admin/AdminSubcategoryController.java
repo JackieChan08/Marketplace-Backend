@@ -1,14 +1,19 @@
 package com.example.marketplace_backend.controller.admin;
 
 import com.example.marketplace_backend.DTO.Requests.models.SubcategoryRequest;
+import com.example.marketplace_backend.DTO.Responses.models.SubcategoryResponse;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Intermediate_objects.SubcategoryImage;
 import com.example.marketplace_backend.Model.Subcategory;
 import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
+import com.example.marketplace_backend.Service.Impl.ConverterService;
 import com.example.marketplace_backend.Service.Impl.FileUploadService;
 import com.example.marketplace_backend.Service.Impl.SubcategoryServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,15 +31,28 @@ public class AdminSubcategoryController {
     private final SubcategoryServiceImpl  subcategoryService;
     private final FileUploadService  fileUploadService;
     private final CategoryServiceImpl categoryService;
+    private final ConverterService converter;
 
-    @GetMapping()
-    public ResponseEntity<List<Subcategory>> getAllSubcategories() {
-        return ResponseEntity.ok(subcategoryService.findAllActive());
+    @GetMapping("/list")
+    public ResponseEntity<Page<SubcategoryResponse>> getAllSubcategoriesPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Subcategory> subcategories = subcategoryService.findAllActive(pageable);
+        Page<SubcategoryResponse> responses = subcategories.map(converter::convertToSubcategoryResponse);
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/inactive")
-    public ResponseEntity<List<Subcategory>> getInactiveSubcategories() {
-        return ResponseEntity.ok(subcategoryService.findAllDeActive());
+    public ResponseEntity<Page<SubcategoryResponse>> getAllSubcategoriesDeActive(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Subcategory> subcategories = subcategoryService.findAllDeActive(pageable);
+        Page<SubcategoryResponse> responses = subcategories.map(converter::convertToSubcategoryResponse);
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/category/{categoryId}/inactive")
@@ -43,11 +61,14 @@ public class AdminSubcategoryController {
         return categoryOpt.map(category -> ResponseEntity.ok(subcategoryService.findByCategoryDeActive(category))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping({"{id}"})
-    public ResponseEntity<Subcategory> getSubcategoryById(@PathVariable UUID id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<SubcategoryResponse> getSubcategoryById(@PathVariable UUID id) {
         Optional<Subcategory> subcategory = subcategoryService.findById(id);
-        return subcategory.map(ResponseEntity::ok).
-                orElseGet(() -> ResponseEntity.notFound().build());
+        if (subcategory.isEmpty() || subcategory.get().getDeletedAt() != null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        SubcategoryResponse subcategoryResponse = converter.convertToSubcategoryResponse(subcategory.get());
+        return ResponseEntity.ok(subcategoryResponse);
     }
 
     @GetMapping("/stats")

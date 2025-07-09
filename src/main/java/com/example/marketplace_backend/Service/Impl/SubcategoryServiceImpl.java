@@ -48,8 +48,8 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
     }
 
     @Transactional(readOnly = true)
-    public List<Subcategory> findAllDeActive() {
-        return subcategoryRepository.findAllDeActive();
+    public Page<Subcategory> findAllDeActive(Pageable pageable) {
+        return subcategoryRepository.findAllDeActive(pageable);
     }
 
     @Transactional(readOnly = true)
@@ -110,7 +110,7 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
 
     @Transactional
     public void purgeOldSubcategories() {
-        List<Subcategory> subcategoriesToDelete = subcategoryRepository.findAllDeActive();
+        List<Subcategory> subcategoriesToDelete = subcategoryRepository.findAllDeActiveList();
         subcategoryRepository.deleteAll(subcategoriesToDelete);
     }
 
@@ -143,7 +143,7 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
 
     @Transactional(readOnly = true)
     public long countDeActiveSubcategories() {
-        return findAllDeActive().size();
+        return findAllDeActiveList().size();
     }
 
     @Transactional(readOnly = true)
@@ -262,6 +262,10 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
     }
     public Page<Subcategory> searchByName(String query, Pageable pageable){
         return subcategoryRepository.findByNameContainingIgnoreCaseAndDeletedAtIsNull(query, pageable);
+    }
+
+    public List<Subcategory> findAllDeActiveList(){
+        return subcategoryRepository.findAllDeActiveList();
     }
 
 }

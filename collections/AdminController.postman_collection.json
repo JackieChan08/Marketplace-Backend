@@ -4,7 +4,7 @@
 		"name": "AdminController",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "46611599",
-		"_collection_link": "https://meta88-0265.postman.co/workspace/Meta-Workspace~a78a8a26-1788-416c-8182-49e4284d96d6/collection/46611599-32ee46f6-ed4a-4c4b-a3f9-161d3d143912?action=share&source=collection_link&creator=46611599"
+		"_collection_link": "https://meta88-0265.postman.co/workspace/a78a8a26-1788-416c-8182-49e4284d96d6/collection/46611599-32ee46f6-ed4a-4c4b-a3f9-161d3d143912?action=share&source=collection_link&creator=46611599"
 	},
 	"item": [
 		{
@@ -1115,6 +1115,16 @@
 									"key": "descriptions[1].text",
 									"value": "Apple A11 Bionic",
 									"type": "text"
+								},
+								{
+									"key": "statuses[0].name",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "statuses[0].color",
+									"value": "",
+									"type": "text"
 								}
 							]
 						},
@@ -1733,12 +1743,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/{{subcategoryUrl}}",
+							"raw": "{{baseUrl}}/{{subcategoryUrl}}/list",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"{{subcategoryUrl}}"
+								"{{subcategoryUrl}}",
+								"list"
 							]
 						}
 					},
@@ -2180,7 +2191,7 @@
 			]
 		},
 		{
-			"name": "AdminStatusController",
+			"name": "Status",
 			"item": [
 				{
 					"name": "Get All Statuses",
@@ -2276,6 +2287,13 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "",
+			"type": "default"
 		}
 	]
 }
