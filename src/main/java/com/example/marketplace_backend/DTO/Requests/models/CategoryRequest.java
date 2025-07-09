@@ -16,4 +16,5 @@ import java.util.List;
 public class CategoryRequest {
     private String name;
     private List<MultipartFile> images;
+    private boolean priority;
 }

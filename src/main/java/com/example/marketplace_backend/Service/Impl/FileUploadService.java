@@ -24,23 +24,30 @@ import java.util.UUID;
 public class FileUploadService {
 
     private final FileRepository fileRepository;
+
     @Value("${file.upload.dir}")
     private String uploadsDir;
 
+    @Transactional
     public FileEntity saveImage(MultipartFile file) throws IOException {
-
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("Файл не может быть пустым");
         }
 
         String originalName = file.getOriginalFilename();
-        if (originalName == null) {
-            throw new IllegalArgumentException("Имя файла не может быть null");
+        if (originalName == null || originalName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Имя файла не может быть пустым");
         }
 
         String contentType = file.getContentType();
         if (contentType == null || !isImageFile(contentType)) {
             throw new IllegalArgumentException("Поддерживаются только изображения");
+        }
+
+        // Проверка размера файла (например, максимум 10MB)
+        long maxFileSize = 10 * 1024 * 1024; // 10MB
+        if (file.getSize() > maxFileSize) {
+            throw new IllegalArgumentException("Размер файла не должен превышать 10MB");
         }
 
         Path uploadPath = Paths.get(uploadsDir);
@@ -49,13 +56,7 @@ public class FileUploadService {
         }
 
         String fileExtension = getFileExtension(originalName);
-        String uniqueName = UUID.randomUUID() + "_" + System.currentTimeMillis() + fileExtension;
-
-        Optional<FileEntity> existing = fileRepository.findByOriginalName(uniqueName);
-        if (existing.isPresent()) {
-            uniqueName = UUID.randomUUID() + "_" + System.currentTimeMillis() + fileExtension;
-        }
-
+        String uniqueName = generateUniqueFileName(originalName, fileExtension);
 
         try {
             Path filePath = uploadPath.resolve(uniqueName).normalize();
@@ -84,12 +85,30 @@ public class FileUploadService {
         }
     }
 
+    private String generateUniqueFileName(String originalName, String fileExtension) {
+        String uniqueName;
+        int attempts = 0;
+        int maxAttempts = 5;
+
+        do {
+            uniqueName = UUID.randomUUID() + "_" + System.currentTimeMillis() + fileExtension;
+            attempts++;
+
+            if (attempts > maxAttempts) {
+                throw new RuntimeException("Не удалось создать уникальное имя файла после " + maxAttempts + " попыток");
+            }
+        } while (fileRepository.findByUniqueName(uniqueName).isPresent());
+
+        return uniqueName;
+    }
+
     private boolean isImageFile(String contentType) {
         return contentType.startsWith("image/") &&
                 (contentType.equals("image/jpeg") ||
                         contentType.equals("image/png") ||
                         contentType.equals("image/gif") ||
                         contentType.equals("image/webp") ||
+                        contentType.equals("image/svg") ||
                         contentType.equals("image/bmp"));
     }
 
@@ -97,9 +116,10 @@ public class FileUploadService {
         if (fileName == null || !fileName.contains(".")) {
             return "";
         }
-        return fileName.substring(fileName.lastIndexOf(".") + 1);
+        return fileName.substring(fileName.lastIndexOf("."));
     }
 
+    @Transactional
     public boolean deleteImage(String uniqueName) {
         if (uniqueName == null || uniqueName.trim().isEmpty()) {
             log.warn("Попытка удалить файл с пустым uniqueName");
@@ -167,10 +187,18 @@ public class FileUploadService {
         }
 
         // Проверяем на диске
-        Path filePath = Paths.get(uploadsDir).resolve(uniqueName);
+        Path filePath = Paths.get(uploadsDir).resolve(uniqueName).normalize();
+
+        // Проверка на path traversal
+        Path uploadPath = Paths.get(uploadsDir);
+        if (!filePath.startsWith(uploadPath)) {
+            return false;
+        }
+
         return Files.exists(filePath);
     }
 
+    @Transactional
     public void cleanupOrphanedFiles() {
         try {
             Path uploadPath = Paths.get(uploadsDir);
@@ -195,5 +223,4 @@ public class FileUploadService {
             log.error("Ошибка при очистке неиспользуемых файлов", e);
         }
     }
-
 }

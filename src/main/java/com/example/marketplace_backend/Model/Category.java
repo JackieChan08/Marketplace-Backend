@@ -48,4 +48,7 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Subcategory> subcategories;
+
+    @Column(name = "priority", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean priority;
 }

@@ -2,6 +2,7 @@ package com.example.marketplace_backend.DTO.Responses.models;
 
 
 import com.example.marketplace_backend.Model.Description;
+import com.example.marketplace_backend.Model.Statuses;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,4 +29,5 @@ public class ProductResponse {
     private double discountedPrice;
     private UUID brandId;
     private boolean availability;
+    private UUID statusId;
 }

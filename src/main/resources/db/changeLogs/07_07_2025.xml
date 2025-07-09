@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="add_statuses" author="aiteginbaratov">
+        <dropTable tableName="order_statuses" cascadeConstraints="true" />
+
+        <createTable tableName="statuses">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="color" type="VARCHAR(255)"/>
+            <column name="product_id" type="UUID"/>
+            <column name="order_id" type="UUID"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="statuses"
+                baseColumnNames="product_id"
+                constraintName="fk_statuses_product"
+                referencedTableName="products"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="statuses"
+                baseColumnNames="order_id"
+                constraintName="fk_statuses_order"
+                referencedTableName="orders"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <addColumn tableName="categories">
+            <column name="priority" type="boolean"/>
+        </addColumn>
+    </changeSet>
+
+
+
+</databaseChangeLog>

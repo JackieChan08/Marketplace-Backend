@@ -133,6 +133,7 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
         category.setName(request.getName());
         category.setDeletedAt(null);
         category.setCreatedAt(LocalDateTime.now());
+        category.setPriority(request.isPriority());
 
         category = save(category);
 
@@ -159,6 +160,10 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
 
         if (request.getName() != null && !request.getName().isEmpty()) {
             category.setName(request.getName());
+        }
+
+        if (request.isPriority()) {
+            category.setPriority(true);
         }
 
         if (request.getImages() != null && !request.getImages().isEmpty()) {
