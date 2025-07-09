@@ -62,5 +62,9 @@ public class Order {
 
     @Column(name = "is_wholesale")
     private boolean isWholesale;// true — опт, false — розница
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Statuses> statuses;
 }
 

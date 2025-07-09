@@ -27,4 +27,7 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
     @Transactional
     @Query("UPDATE Category c SET c.deletedAt = :deletedAt WHERE c.id = :id")
     void softDeleteById(@Param("id") UUID id, @Param("deletedAt") LocalDateTime deletedAt);
+
+    @Query("SELECT c FROM Category c WHERE c.deletedAt IS NOT NULL AND c.priority IS TRUE")
+    List<Subcategory> findByPriority();
 }
