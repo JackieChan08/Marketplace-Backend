@@ -26,21 +26,26 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     private final ProductImageRepository productImageRepository;
     private final BrandRepository brandRepository;
     private final SubcategoryRepository subcategoryRepository;
+    private final StatusRepository statusRepository;
 
+    // ИСПРАВЛЕНО: убрал static из @Value поля
     @Value("${app.base-url}")
-    private static String baseUrl;
+    private String baseUrl;
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository,
                               SubcategoryRepository subcategoryRepository,
                               FileUploadService fileUploadService,
-                              ProductImageRepository productImageRepository, BrandRepository brandRepository) {
+                              ProductImageRepository productImageRepository,
+                              BrandRepository brandRepository,
+                              StatusRepository statusRepository) {
         super(productRepository);
         this.productRepository = productRepository;
         this.fileUploadService = fileUploadService;
         this.productImageRepository = productImageRepository;
         this.brandRepository = brandRepository;
         this.subcategoryRepository = subcategoryRepository;
+        this.statusRepository = statusRepository;
     }
 
     public List<Product> findAllDeActive() {
@@ -116,9 +121,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     }
 
     public void activeProductsByBrand(Brand brand){
-        List<Product> products = productRepository.findActiveByBrand(brand);
+        List<Product> products = productRepository.findDeActiveByBrand(brand); // Было: findActiveByBrand
         for(Product product : products){
-            product.setDeletedAt(LocalDateTime.now());
+            product.setDeletedAt(null);
             productRepository.save(product);
         }
     }
@@ -129,7 +134,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
 
     @Override
     public Product save(Product product) {
-        if (product.getId() != null) {
+        if (product.getId() == null) {
             product.setCreatedAt(LocalDateTime.now());
         } else {
             product.setUpdatedAt(LocalDateTime.now());
@@ -160,15 +165,34 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         Product product = new Product();
         product.setName(dto.getName());
         product.setPrice(dto.getPrice());
-        product.setDescriptions(dto.getDescriptions());
         product.setSubcategory(subcategoryRepository.findById(dto.getSubCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found")));
+                .orElseThrow(() -> new RuntimeException("Subcategory not found")));
         product.setBrand(brandRepository.findById(dto.getBrandId())
                 .orElseThrow(() -> new RuntimeException("Brand not found")));
         product.setAvailability(dto.isAvailability());
 
         Product savedProduct = productRepository.save(product);
 
+        if (dto.getDescriptions() != null) {
+            for (Description description : dto.getDescriptions()) {
+                description.setProduct(savedProduct); // Устанавливаем связь
+                description.setCreatedAt(LocalDateTime.now());
+                description.setUpdatedAt(LocalDateTime.now());
+            }
+            savedProduct.setDescriptions(dto.getDescriptions());
+        }
+
+        if (dto.getStatuses() != null) {
+            for (Statuses status : dto.getStatuses()) {
+                status.setProduct(savedProduct); // Устанавливаем связь
+            }
+            savedProduct.setStatuses(dto.getStatuses());
+        }
+
+        // Сохраняем продукт с обновленными связями
+        savedProduct = productRepository.save(savedProduct);
+
+        // Обрабатываем изображения
         if (dto.getImages() != null) {
             for (MultipartFile image : dto.getImages()) {
                 FileEntity fileEntity = fileUploadService.saveImage(image);
@@ -190,7 +214,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         if (dto.getName() != null) product.setName(dto.getName());
         if (dto.getPrice() != null) product.setPrice(dto.getPrice());
         if (dto.isAvailability()) product.setAvailability(true);
-        if (dto.getDescriptions() != null) product.setDescriptions(dto.getDescriptions());
+
         if (dto.getSubCategoryId() != null) {
             product.setSubcategory(subcategoryRepository.findById(dto.getSubCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category not found")));
@@ -199,10 +223,31 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
             product.setBrand(brandRepository.findById(dto.getBrandId())
                     .orElseThrow(() -> new RuntimeException("Brand not found")));
         }
-        product.setCreatedAt(LocalDateTime.now());
 
+        // Обновляем descriptions
+        if (dto.getDescriptions() != null) {
+            for (Description description : dto.getDescriptions()) {
+                description.setProduct(product); // Устанавливаем связь
+                description.setUpdatedAt(LocalDateTime.now());
+                if (description.getCreatedAt() == null) {
+                    description.setCreatedAt(LocalDateTime.now());
+                }
+            }
+            product.setDescriptions(dto.getDescriptions());
+        }
+
+        // Обновляем statuses
+        if (dto.getStatuses() != null) {
+            for (Statuses status : dto.getStatuses()) {
+                status.setProduct(product); // Устанавливаем связь
+            }
+            product.setStatuses(dto.getStatuses());
+        }
+
+        product.setUpdatedAt(LocalDateTime.now());
         Product updatedProduct = productRepository.save(product);
 
+        // Обрабатываем изображения
         if (dto.getImages() != null && !dto.getImages().isEmpty()) {
             productImageRepository.deleteByProductId(product.getId());
             for (MultipartFile image : dto.getImages()) {
@@ -257,7 +302,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         return removed;
     }
 
-    public static ProductResponse convertToProductResponse(Product product) {
+    public ProductResponse convertToProductResponse(Product product) {
         ProductResponse response = new ProductResponse();
         response.setId(product.getId());
         response.setName(product.getName());

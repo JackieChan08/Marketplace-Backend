@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.DTO.Requests.models;
 
 import com.example.marketplace_backend.Model.Description;
+import com.example.marketplace_backend.Model.Statuses;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,4 +24,5 @@ public class ProductRequest {
     private List<Description> descriptions;
     private UUID brandId;
     private boolean availability;
+    private List<Statuses> statuses;
 }
