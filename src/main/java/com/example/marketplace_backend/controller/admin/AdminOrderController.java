@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -17,7 +18,6 @@ import java.util.UUID;
 @RequestMapping("/api/admin/orders")
 public class AdminOrderController {
     private final OrderServiceImpl orderService;
-
 
     @GetMapping
     public ResponseEntity<Page<Order>> getAllOrdersPaginated(
@@ -46,7 +46,8 @@ public class AdminOrderController {
         return ResponseEntity.ok(orderService.getAllRetailOrders(pageable));
     }
 
-    @GetMapping("/by-status/{statusId}")
+    // ИСПРАВЛЕНО: изменен путь для пагинированного поиска по статусу
+    @GetMapping("/by-status/{statusId}/paginated")
     public ResponseEntity<Page<Order>> getOrdersByStatusPaginated(
             @PathVariable UUID statusId,
             @RequestParam(defaultValue = "0") int page,
@@ -56,7 +57,8 @@ public class AdminOrderController {
         return ResponseEntity.ok(orderService.getOrdersByStatus(statusId, pageable));
     }
 
-    @GetMapping("/by-status-name")
+    // ИСПРАВЛЕНО: изменен путь для пагинированного поиска по названию статуса
+    @GetMapping("/by-status-name/paginated")
     public ResponseEntity<Page<Order>> getOrdersByStatusNamePaginated(
             @RequestParam String statusName,
             @RequestParam(defaultValue = "0") int page,
@@ -101,14 +103,59 @@ public class AdminOrderController {
         return ResponseEntity.ok(orderService.updateOrderAddress(orderId, address));
     }
 
+    // ИСПРАВЛЕНО: теперь только один метод для получения заказов по статусу (не пагинированный)
     @GetMapping("/by-status/{statusId}")
     public ResponseEntity<List<Order>> getOrdersWithStatus(@PathVariable UUID statusId) {
         return ResponseEntity.ok(orderService.getOrdersWithStatus(statusId));
     }
 
+    // ИСПРАВЛЕНО: теперь только один метод для получения заказов по названию статуса (не пагинированный)
     @GetMapping("/by-status-name")
     public ResponseEntity<List<Order>> getOrdersByStatusName(@RequestParam String statusName) {
         return ResponseEntity.ok(orderService.getOrdersByStatusName(statusName));
     }
 
+    // ДОБАВЛЕНО: метод для получения всех заказов без пагинации
+    @GetMapping("/all")
+    public ResponseEntity<List<Order>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
+    // ДОБАВЛЕНО: метод для получения всех оптовых заказов без пагинации
+    @GetMapping("/wholesale/all")
+    public ResponseEntity<List<Order>> getAllWholesaleOrders() {
+        return ResponseEntity.ok(orderService.getAllWholesaleOrders());
+    }
+
+    // ДОБАВЛЕНО: метод для получения всех розничных заказов без пагинации
+    @GetMapping("/retail/all")
+    public ResponseEntity<List<Order>> getAllRetailOrders() {
+        return ResponseEntity.ok(orderService.getAllRetailOrders());
+    }
+
+    // ЗАКОММЕНТИРОВАНО: дубликат метода для получения заказов по статусу
+    /*
+    @GetMapping("/by-status/{statusId}")
+    public ResponseEntity<Page<Order>> getOrdersByStatusPaginated(
+            @PathVariable UUID statusId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(orderService.getOrdersByStatus(statusId, pageable));
+    }
+    */
+
+    // ЗАКОММЕНТИРОВАНО: дубликат метода для получения заказов по названию статуса
+    /*
+    @GetMapping("/by-status-name")
+    public ResponseEntity<Page<Order>> getOrdersByStatusNamePaginated(
+            @RequestParam String statusName,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(orderService.getOrdersByStatusName(statusName, pageable));
+    }
+    */
 }
