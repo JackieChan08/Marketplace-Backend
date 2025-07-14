@@ -89,6 +89,7 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
         } else {
             subcategory.setUpdatedAt(LocalDateTime.now());
         }
+
         return subcategoryRepository.save(subcategory);
     }
 
@@ -163,7 +164,6 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
                         s.getCategory().getId().equals(categoryId))
                 .count();
     }
-
     public ResponseEntity<Subcategory> createSubcategory(SubcategoryRequest request) throws IOException {
         Optional<Category> categoryOpt = categoryService.findById(request.getCategoryId());
         if (categoryOpt.isEmpty()) {
@@ -178,21 +178,25 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
 
         subcategory = save(subcategory);
 
-        List<SubcategoryImage> subcategoryImages = new ArrayList<>();
-        for (MultipartFile image : request.getImages()) {
+        MultipartFile image = request.getImage();
+        if (image != null && !image.isEmpty()) {
             FileEntity savedImage = fileUploadService.saveImage(image);
+
             SubcategoryImage subcategoryImage = SubcategoryImage.builder()
                     .subcategory(subcategory)
                     .image(savedImage)
                     .build();
-            subcategoryImages.add(subcategoryImage);
+
+            List<SubcategoryImage> images = new ArrayList<>();
+            images.add(subcategoryImage);
+            subcategory.setSubcategoryImages(images);
+
+            subcategory = save(subcategory); // обновить с изображением
         }
 
-        subcategory.setSubcategoryImages(subcategoryImages);
-
-        subcategory = save(subcategory);
         return ResponseEntity.ok(subcategory);
     }
+
 
     public ResponseEntity<Subcategory> updateSubcategory(UUID id, SubcategoryRequest request) throws IOException {
         Subcategory subcategory = getById(id);
@@ -206,28 +210,25 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
             categoryOpt.ifPresent(subcategory::setCategory);
         }
 
-        if (request.getImages() != null && !request.getImages().isEmpty()) {
-            List<SubcategoryImage> newSubcategoryImages = request.getImages().stream()
-                    .map(image -> {
-                        try {
-                            FileEntity savedImage = fileUploadService.saveImage(image);
-                            return SubcategoryImage.builder()
-                                    .subcategory(subcategory)
-                                    .image(savedImage)
-                                    .build();
-                        } catch (IOException e) {
-                            throw new RuntimeException("Ошибка при сохранении изображения", e);
-                        }
-                    })
-                    .toList();
+        if (request.getImage() != null && !request.getImage().isEmpty()) {
+            FileEntity savedImage = fileUploadService.saveImage(request.getImage());
 
-            if (subcategory.getSubcategoryImages() != null) {
-                subcategory.getSubcategoryImages().addAll(newSubcategoryImages);
+            SubcategoryImage subcategoryImage = SubcategoryImage.builder()
+                    .subcategory(subcategory)
+                    .image(savedImage)
+                    .build();
+
+            if (subcategory.getSubcategoryImages() == null) {
+                subcategory.setSubcategoryImages(new ArrayList<>());
             } else {
-                subcategory.setSubcategoryImages(newSubcategoryImages);
+                subcategory.getSubcategoryImages().clear();
             }
+
+            subcategory.getSubcategoryImages().add(subcategoryImage);
         }
 
+
+        subcategory.setUpdatedAt(LocalDateTime.now());
         save(subcategory);
         return ResponseEntity.ok(subcategory);
     }

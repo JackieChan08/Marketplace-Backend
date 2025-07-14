@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +47,13 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         this.brandRepository = brandRepository;
         this.subcategoryRepository = subcategoryRepository;
         this.statusRepository = statusRepository;
+    }
+
+    public Page<Product> findAllActiveByBrand(UUID brandId, Pageable pageable) {
+        return productRepository.findActiveByBrand(brandId, pageable);
+    }
+    public Page<Product> findAllActiveBySubcategory(UUID subcategoryId, Pageable pageable) {
+        return productRepository.findActiveBySubcategory(subcategoryId, pageable);
     }
 
     public List<Product> findAllDeActive() {
@@ -121,7 +129,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     }
 
     public void activeProductsByBrand(Brand brand){
-        List<Product> products = productRepository.findDeActiveByBrand(brand); // Было: findActiveByBrand
+        List<Product> products = productRepository.findDeActiveByBrand(brand);
         for(Product product : products){
             product.setDeletedAt(null);
             productRepository.save(product);
@@ -302,47 +310,4 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         return removed;
     }
 
-    public ProductResponse convertToProductResponse(Product product) {
-        ProductResponse response = new ProductResponse();
-        response.setId(product.getId());
-        response.setName(product.getName());
-        response.setDescriptions(product.getDescriptions());
-
-        // Получаем подкатегорию
-        Subcategory subcategory = product.getSubcategory();
-        if (subcategory != null) {
-            response.setSubcategoryId(subcategory.getId());
-            response.setSubcategoryName(subcategory.getName());
-
-            // Получаем категорию через подкатегорию
-            if (subcategory.getCategory() != null) {
-                response.setCategoryId(subcategory.getCategory().getId());
-                response.setCategoryName(subcategory.getCategory().getName());
-            }
-        }
-
-        // Бренд
-        if (product.getBrand() != null) {
-            response.setBrandId(product.getBrand().getId());
-        }
-
-        // Изображения
-        if (product.getProductImages() != null && !product.getProductImages().isEmpty()) {
-            List<FileResponse> images = product.getProductImages().stream()
-                    .map(productImage -> {
-                        FileEntity image = productImage.getImage();
-                        FileResponse fileResponse = new FileResponse();
-                        fileResponse.setUniqueName(image.getUniqueName());
-                        fileResponse.setOriginalName(image.getOriginalName());
-                        fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
-                        fileResponse.setFileType(image.getFileType());
-                        return fileResponse;
-                    })
-                    .toList();
-
-            response.setImages(images);
-        }
-
-        return response;
-    }
 }
