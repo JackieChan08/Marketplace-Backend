@@ -18,5 +18,5 @@ import java.util.UUID;
 public class SubcategoryRequest {
     private String name;
     private UUID categoryId;
-    private List<MultipartFile> images;
+    private MultipartFile image;
 }

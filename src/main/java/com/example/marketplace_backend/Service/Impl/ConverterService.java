@@ -31,6 +31,12 @@ public class ConverterService {
                 response.setCategoryName(subcategory.getCategory().getName());
             }
         }
+        if (product.getPrice() != null) {
+            response.setPrice(product.getPrice());
+        }
+        if (product.getDiscountedPrice() != null) {
+            response.setDiscountedPrice(product.getDiscountedPrice());
+        }
 
         if (product.getBrand() != null) {
             response.setBrandId(product.getBrand().getId());
@@ -71,7 +77,21 @@ public class ConverterService {
                     .toList();
             response.setProducts(productResponses);
         }
+        if (subcategory.getSubcategoryImages() != null && !subcategory.getSubcategoryImages().isEmpty()) {
+            List<FileResponse> imageFiles = subcategory.getSubcategoryImages().stream()
+                    .map(subcategoryImage -> {
+                        FileEntity image = subcategoryImage.getImage();
+                        FileResponse fileResponse = new FileResponse();
+                        fileResponse.setUniqueName(image.getUniqueName());
+                        fileResponse.setOriginalName(image.getOriginalName());
+                        fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
+                        fileResponse.setFileType(image.getFileType());
+                        return fileResponse;
+                    })
+                    .toList();
 
+            response.setImageFiles(imageFiles);
+        }
 
         return response;
     }

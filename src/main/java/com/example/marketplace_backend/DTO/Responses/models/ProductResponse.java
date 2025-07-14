@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,8 +26,8 @@ public class ProductResponse {
     private String subcategoryName;
     private UUID subcategoryId;
     private List<FileResponse> images;
-    private double price;
-    private double discountedPrice;
+    private BigDecimal price;
+    private BigDecimal discountedPrice;
     private UUID brandId;
     private boolean availability;
     private UUID statusId;

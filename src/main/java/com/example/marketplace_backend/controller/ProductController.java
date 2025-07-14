@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.controller;
 
+import com.example.marketplace_backend.DTO.Responses.models.BrandResponse;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Product;
 import com.example.marketplace_backend.Model.Subcategory;
@@ -73,6 +74,29 @@ public class ProductController {
         Page<ProductResponse> responses = products.map(converter::convertToProductResponse);
         return ResponseEntity.ok(responses);
     }
+    @GetMapping("/brand")
+    public ResponseEntity<Page<ProductResponse>> getProductsByBrand(
+            @RequestParam UUID brandId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productService.findAllActiveByBrand(brandId, pageable);
+        Page<ProductResponse> responses = products.map(converter::convertToProductResponse);
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/subcategory")
+    public ResponseEntity<Page<ProductResponse>> getProductsBySubcategory(
+            @RequestParam UUID subcategoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productService.findAllActiveBySubcategory(subcategoryId, pageable);
+        Page<ProductResponse> responses = products.map(converter::convertToProductResponse);
+        return ResponseEntity.ok(responses);
+    }
+
+
 
 
 }

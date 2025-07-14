@@ -15,7 +15,7 @@ import java.util.UUID;
 public class SubcategoryResponse {
     private UUID id;
     private String name;
-//    List<FileResponse> imageFiles;
+    List<FileResponse> imageFiles;
     private List<ProductResponse> products;
     private String categoryName;
     private UUID categoryId;
