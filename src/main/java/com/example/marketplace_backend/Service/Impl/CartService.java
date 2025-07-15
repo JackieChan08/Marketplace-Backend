@@ -43,7 +43,7 @@ public class CartService {
     }
 
     public Cart getCart() {
-        return cartRepository.findByUser(extractUser()).orElseGet(() -> {
+        return cartRepository.findCartByUserId(extractUser().getId()).orElseGet(() -> {
             Cart newCart = new Cart();
             newCart.setUser(extractUser());
             newCart.setCartItems(new ArrayList<>());
@@ -104,7 +104,7 @@ public class CartService {
     }
 
     public ResponseEntity<List<CartItem>> getCartItemsByUserId() {
-        return cartRepository.findByUser(extractUser())
+        return cartRepository.findCartByUserId(extractUser().getId())
                 .map(cart -> ResponseEntity.ok(cart.getCartItems()))
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -118,6 +118,7 @@ public class CartService {
                     .quantity(item.getQuantity())
                     .pricePerItem(item.getPrice())
                     .totalPrice(totalPrice)
+                    .cartItemId(item.getId())
                     .build();
         }).toList();
 

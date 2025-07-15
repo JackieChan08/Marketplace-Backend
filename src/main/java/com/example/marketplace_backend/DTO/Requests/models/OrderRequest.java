@@ -14,7 +14,7 @@ public class OrderRequest {
     private String phoneNumber;
     private Boolean isWholesale;
     private String comment;
-    private List<Statuses> statuses;
+//    private List<Statuses> statuses;
     private List<UUID> cartItemIds;
 
 }

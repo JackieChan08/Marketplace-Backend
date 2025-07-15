@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.controller;
 
+import com.example.marketplace_backend.DTO.Responses.models.OrderResponse;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Service.Impl.*;
 import com.example.marketplace_backend.DTO.Requests.models.OrderRequest;
@@ -41,8 +42,8 @@ public class OrderController {
             return ResponseEntity.ok(orderService.updateOrderAddress(orderId, address));
         } return  ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
-    @PostMapping("/create")
-    public ResponseEntity<Order> createOrder(@RequestBody OrderRequest request) {
+    @PostMapping(value = "/create", consumes = {"multipart/form-data"})
+    public ResponseEntity<OrderResponse> createOrder(@ModelAttribute OrderRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         UUID userId = userService.findByEmail(email).getId();
