@@ -4,6 +4,7 @@ import com.example.marketplace_backend.DTO.Responses.models.FileResponse;
 import com.example.marketplace_backend.DTO.Responses.models.ProductResponse;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
+import com.example.marketplace_backend.Model.Intermediate_objects.ProductStatuses;
 import com.example.marketplace_backend.Repositories.*;
 import com.example.marketplace_backend.DTO.Requests.models.ProductRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -27,8 +27,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     private final BrandRepository brandRepository;
     private final SubcategoryRepository subcategoryRepository;
     private final StatusRepository statusRepository;
+    private final ProductStatusRepository productStatusRepository;
 
-    // ИСПРАВЛЕНО: убрал static из @Value поля
     @Value("${app.base-url}")
     private String baseUrl;
 
@@ -38,7 +38,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                               FileUploadService fileUploadService,
                               ProductImageRepository productImageRepository,
                               BrandRepository brandRepository,
-                              StatusRepository statusRepository) {
+                              ProductStatusRepository productStatusRepository,
+                              StatusRepository statusRepository,
+                              ConverterService converterService) {
         super(productRepository);
         this.productRepository = productRepository;
         this.fileUploadService = fileUploadService;
@@ -46,6 +48,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         this.brandRepository = brandRepository;
         this.subcategoryRepository = subcategoryRepository;
         this.statusRepository = statusRepository;
+        this.productStatusRepository = productStatusRepository;
     }
 
     public List<Product> findAllDeActive() {
@@ -121,7 +124,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     }
 
     public void activeProductsByBrand(Brand brand){
-        List<Product> products = productRepository.findDeActiveByBrand(brand); // Было: findActiveByBrand
+        List<Product> products = productRepository.findDeActiveByBrand(brand);
         for(Product product : products){
             product.setDeletedAt(null);
             productRepository.save(product);
@@ -170,27 +173,10 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         product.setBrand(brandRepository.findById(dto.getBrandId())
                 .orElseThrow(() -> new RuntimeException("Brand not found")));
         product.setAvailability(dto.isAvailability());
+        product.setTitle(dto.getTitle());
+        product.setDescription(dto.getDescription());
 
         Product savedProduct = productRepository.save(product);
-
-        if (dto.getDescriptions() != null) {
-            for (Description description : dto.getDescriptions()) {
-                description.setProduct(savedProduct); // Устанавливаем связь
-                description.setCreatedAt(LocalDateTime.now());
-                description.setUpdatedAt(LocalDateTime.now());
-            }
-            savedProduct.setDescriptions(dto.getDescriptions());
-        }
-
-        if (dto.getStatuses() != null) {
-            for (Statuses status : dto.getStatuses()) {
-                status.setProduct(savedProduct); // Устанавливаем связь
-            }
-            savedProduct.setStatuses(dto.getStatuses());
-        }
-
-        // Сохраняем продукт с обновленными связями
-        savedProduct = productRepository.save(savedProduct);
 
         // Обрабатываем изображения
         if (dto.getImages() != null) {
@@ -204,7 +190,35 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
             }
         }
 
-        return savedProduct;
+        // Обрабатываем статусы
+        if (dto.getStatusId() != null && !dto.getStatusId().isEmpty()) {
+            for (UUID statusId : dto.getStatusId()) {
+                Statuses status = statusRepository.findById(statusId)
+                        .orElseThrow(() -> new RuntimeException("Status not found with ID: " + statusId));
+
+                ProductStatuses productStatus = ProductStatuses.builder()
+                        .product(savedProduct)
+                        .status(status)
+                        .build();
+                productStatusRepository.save(productStatus);
+            }
+        } else {
+            // Устанавливаем статус по умолчанию, если не указан
+            Statuses defaultStatus = statusRepository.findByName("Активен")
+                    .orElseThrow(() -> new RuntimeException("Default status not found"));
+
+            ProductStatuses productStatus = ProductStatuses.builder()
+                    .product(savedProduct)
+                    .status(defaultStatus)
+                    .build();
+            productStatusRepository.save(productStatus);
+        }
+
+        // ИСПРАВЛЕНИЕ: Используем метод с JOIN FETCH для получения всех связанных данных
+        Product finalProduct = productRepository.findByIdWithImagesAndStatuses(savedProduct.getId())
+                .orElseThrow(() -> new RuntimeException("Product not found after creation"));
+
+        return finalProduct;
     }
 
     public Product editProduct(UUID id, ProductRequest dto) throws Exception {
@@ -213,35 +227,33 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
 
         if (dto.getName() != null) product.setName(dto.getName());
         if (dto.getPrice() != null) product.setPrice(dto.getPrice());
-        if (dto.isAvailability()) product.setAvailability(true);
+        if (dto.getTitle() != null) product.setTitle(dto.getTitle());
+        if (dto.getDescription() != null) product.setDescription(dto.getDescription());
+        product.setAvailability(dto.isAvailability());
 
         if (dto.getSubCategoryId() != null) {
             product.setSubcategory(subcategoryRepository.findById(dto.getSubCategoryId())
-                    .orElseThrow(() -> new RuntimeException("Category not found")));
+                    .orElseThrow(() -> new RuntimeException("Subcategory not found")));
         }
         if (dto.getBrandId() != null) {
             product.setBrand(brandRepository.findById(dto.getBrandId())
                     .orElseThrow(() -> new RuntimeException("Brand not found")));
         }
 
-        // Обновляем descriptions
-        if (dto.getDescriptions() != null) {
-            for (Description description : dto.getDescriptions()) {
-                description.setProduct(product); // Устанавливаем связь
-                description.setUpdatedAt(LocalDateTime.now());
-                if (description.getCreatedAt() == null) {
-                    description.setCreatedAt(LocalDateTime.now());
-                }
-            }
-            product.setDescriptions(dto.getDescriptions());
-        }
+        // Обновляем статусы продукта, если указаны новые
+        if (dto.getStatusId() != null && !dto.getStatusId().isEmpty()) {
+            productStatusRepository.deleteByProductId(product.getId());
 
-        // Обновляем statuses
-        if (dto.getStatuses() != null) {
-            for (Statuses status : dto.getStatuses()) {
-                status.setProduct(product); // Устанавливаем связь
+            for (UUID statusId : dto.getStatusId()) {
+                Statuses status = statusRepository.findById(statusId)
+                        .orElseThrow(() -> new RuntimeException("Status not found with ID: " + statusId));
+
+                ProductStatuses productStatus = ProductStatuses.builder()
+                        .product(product)
+                        .status(status)
+                        .build();
+                productStatusRepository.save(productStatus);
             }
-            product.setStatuses(dto.getStatuses());
         }
 
         product.setUpdatedAt(LocalDateTime.now());
@@ -260,13 +272,17 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
             }
         }
 
-        return updatedProduct;
+        // ИСПРАВЛЕНИЕ: Используем метод с JOIN FETCH для получения всех связанных данных
+        Product finalProduct = productRepository.findByIdWithImagesAndStatuses(updatedProduct.getId())
+                .orElseThrow(() -> new RuntimeException("Product not found after update"));
+
+        return finalProduct;
     }
 
     @Override
     public void delete(UUID id) {
         try {
-            List<ProductImage>  productImages = productImageRepository.findByProductId(id);
+            List<ProductImage> productImages = productImageRepository.findByProductId(id);
 
             for (ProductImage productImage : productImages) {
                 if (productImage.getImage() != null && productImage.getImage().getUniqueName() != null) {
@@ -300,49 +316,5 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         }
 
         return removed;
-    }
-
-    public ProductResponse convertToProductResponse(Product product) {
-        ProductResponse response = new ProductResponse();
-        response.setId(product.getId());
-        response.setName(product.getName());
-        response.setDescriptions(product.getDescriptions());
-
-        // Получаем подкатегорию
-        Subcategory subcategory = product.getSubcategory();
-        if (subcategory != null) {
-            response.setSubcategoryId(subcategory.getId());
-            response.setSubcategoryName(subcategory.getName());
-
-            // Получаем категорию через подкатегорию
-            if (subcategory.getCategory() != null) {
-                response.setCategoryId(subcategory.getCategory().getId());
-                response.setCategoryName(subcategory.getCategory().getName());
-            }
-        }
-
-        // Бренд
-        if (product.getBrand() != null) {
-            response.setBrandId(product.getBrand().getId());
-        }
-
-        // Изображения
-        if (product.getProductImages() != null && !product.getProductImages().isEmpty()) {
-            List<FileResponse> images = product.getProductImages().stream()
-                    .map(productImage -> {
-                        FileEntity image = productImage.getImage();
-                        FileResponse fileResponse = new FileResponse();
-                        fileResponse.setUniqueName(image.getUniqueName());
-                        fileResponse.setOriginalName(image.getOriginalName());
-                        fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
-                        fileResponse.setFileType(image.getFileType());
-                        return fileResponse;
-                    })
-                    .toList();
-
-            response.setImages(images);
-        }
-
-        return response;
     }
 }

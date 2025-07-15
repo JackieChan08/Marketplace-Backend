@@ -110,8 +110,7 @@ public class AdminSubcategoryController {
     }
 
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
-    public ResponseEntity<Subcategory> createSubcategoryWithImages(
-            @ModelAttribute SubcategoryRequest request
+    public ResponseEntity<?> createSubcategoryWithImages(@ModelAttribute SubcategoryRequest request
             ) throws Exception {
         return subcategoryService.createSubcategory(request);
     }

@@ -22,9 +22,9 @@ public class AdminStatusController {
         return ResponseEntity.ok(statusService.getAllStatuses());
     }
 
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     public ResponseEntity<Statuses> createStatuses(
-            @RequestBody StatusRequest request
+            @ModelAttribute StatusRequest request
     ) {
         try {
             return statusService.createStatuses(request);

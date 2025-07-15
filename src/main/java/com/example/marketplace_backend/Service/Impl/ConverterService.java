@@ -2,6 +2,8 @@ package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.DTO.Responses.models.*;
 import com.example.marketplace_backend.Model.*;
+import com.example.marketplace_backend.Model.Intermediate_objects.BrandImage;
+import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,23 +21,30 @@ public class ConverterService {
         ProductResponse response = new ProductResponse();
         response.setId(product.getId());
         response.setName(product.getName());
-        response.setDescriptions(product.getDescriptions());
+        response.setPrice(product.getPrice());
+        response.setAvailability(product.isAvailability());
+        response.setTitle(product.getTitle());
+        response.setDescription(product.getDescription());
 
-        Subcategory subcategory = product.getSubcategory();
-        if (subcategory != null) {
-            response.setSubcategoryId(subcategory.getId());
-            response.setSubcategoryName(subcategory.getName());
+        // Обработка подкатегории
+        if (product.getSubcategory() != null) {
+            response.setSubcategoryId(product.getSubcategory().getId());
+            response.setSubcategoryName(product.getSubcategory().getName());
 
-            if (subcategory.getCategory() != null) {
-                response.setCategoryId(subcategory.getCategory().getId());
-                response.setCategoryName(subcategory.getCategory().getName());
+            // Обработка категории через подкатегорию
+            if (product.getSubcategory().getCategory() != null) {
+                response.setCategoryId(product.getSubcategory().getCategory().getId());
+                response.setCategoryName(product.getSubcategory().getCategory().getName());
             }
         }
 
+        // Обработка бренда
         if (product.getBrand() != null) {
             response.setBrandId(product.getBrand().getId());
+            response.setBrandName(product.getBrand().getName());
         }
 
+        // Обработка изображений
         if (product.getProductImages() != null && !product.getProductImages().isEmpty()) {
             List<FileResponse> images = product.getProductImages().stream()
                     .map(productImage -> {
@@ -51,6 +60,15 @@ public class ConverterService {
             response.setImages(images);
         }
 
+
+        // Обработка статусов
+        if (product.getProductStatuses() != null && !product.getProductStatuses().isEmpty()) {
+            List<String> statuses = product.getProductStatuses().stream()
+                    .map(productStatus -> productStatus.getStatus().getName())
+                    .toList();
+            response.setStatuses(statuses);
+        }
+
         return response;
     }
 
@@ -64,15 +82,6 @@ public class ConverterService {
             response.setCategoryName(subcategory.getCategory().getName());
         }
 
-        if (subcategory.getProducts() != null && !subcategory.getProducts().isEmpty()) {
-            List<ProductResponse> productResponses = subcategory.getProducts().stream()
-                    .filter(product -> product.getDeletedAt() == null)
-                    .map(this::convertToProductResponse)
-                    .toList();
-            response.setProducts(productResponses);
-        }
-
-
         return response;
     }
 
@@ -81,31 +90,30 @@ public class ConverterService {
         CategoryResponse response = new CategoryResponse();
         response.setId(category.getId());
         response.setName(category.getName());
+        response.setCreatedAt(category.getCreatedAt());
+        response.setUpdatedAt(category.getUpdatedAt());
+        response.setDeletedAt(category.getDeletedAt());
+        response.setPriority(category.isPriority());
 
         if (category.getCategoryImages() != null && !category.getCategoryImages().isEmpty()) {
-            List<FileResponse> imageFiles = category.getCategoryImages().stream()
-                    .map(categoryImage -> {
-                        FileEntity image = categoryImage.getImage();
-                        FileResponse fileResponse = new FileResponse();
-                        fileResponse.setUniqueName(image.getUniqueName());
-                        fileResponse.setOriginalName(image.getOriginalName());
-                        fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
-                        fileResponse.setFileType(image.getFileType());
-                        return fileResponse;
-                    })
-                    .toList();
+            CategoryImage firstImage = category.getCategoryImages().iterator().next();
+            CategoryImageResponse categoryImageResponse = new CategoryImageResponse();
 
-            response.setImageFiles(imageFiles);
+            // предположим, внутри image вложен FileEntity
+            FileEntity image = firstImage.getImage();
+            if (image != null) {
+                FileResponse fileResponse = new FileResponse();
+                fileResponse.setOriginalName(image.getOriginalName());
+                fileResponse.setUniqueName(image.getUniqueName());
+                fileResponse.setFileType(image.getFileType());
+                fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
+
+                categoryImageResponse.setId(firstImage.getId());
+                categoryImageResponse.setImage(fileResponse);
+            }
+
+            response.setCategoryImage(categoryImageResponse);
         }
-
-        List<ProductResponse> productResponses = category.getSubcategories().stream()
-                .filter(subcategory -> subcategory.getDeletedAt() == null)
-                .flatMap(subcategory -> subcategory.getProducts().stream())
-                .filter(product -> product.getDeletedAt() == null)
-                .map(this::convertToProductResponse)
-                .toList();
-
-        response.setProducts(productResponses);
 
         return response;
     }
@@ -134,6 +142,35 @@ public class ConverterService {
                     })
                     .toList();
             response.setImages(images);
+        }
+
+        return response;
+    }
+
+    public BrandResponse convertToBrandResponse(Brand brand) {
+        BrandResponse response = new BrandResponse();
+        response.setId(brand.getId());
+        response.setName(brand.getName());
+        response.setCreatedAt(brand.getCreatedAt());
+        response.setUpdatedAt(brand.getUpdatedAt());
+        response.setDeletedAt(brand.getDeletedAt());
+
+        if (brand.getBrandImages() != null && !brand.getBrandImages().isEmpty()) {
+            BrandImage firstImage = brand.getBrandImages().iterator().next();
+            BrandImageResponse brandImageResponse = new BrandImageResponse();
+
+            FileEntity image = firstImage.getImage();
+            if (image != null) {
+                FileResponse fileResponse = new FileResponse();
+                fileResponse.setOriginalName(image.getOriginalName());
+                fileResponse.setUniqueName(image.getUniqueName());
+                fileResponse.setFileType(image.getFileType());
+                fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName())
+                ;
+                brandImageResponse.setId(firstImage.getId());
+                brandImageResponse.setImage(fileResponse);
+            }
+            response.setBrandImage(brandImageResponse);
         }
 
         return response;

@@ -3,6 +3,7 @@ package com.example.marketplace_backend.Service.Impl;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.CartItem;
 import com.example.marketplace_backend.Model.Intermediate_objects.OrderItem;
+import com.example.marketplace_backend.Model.Intermediate_objects.OrderStatuses;
 import com.example.marketplace_backend.Repositories.*;
 import com.example.marketplace_backend.DTO.Requests.models.OrderRequest;
 import org.springframework.data.domain.Page;
@@ -22,12 +23,14 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
     private final ProductRepository productRepository;
     private final StatusRepository statusRepository;
     private final CartService cartService;
+    private final OrderStatusRepository orderStatusRepository;
 
     public OrderServiceImpl(OrderRepository orderRepository,
                             CartRepository cartRepository,
                             UserRepository userRepository,
                             ProductRepository productRepository,
                             StatusRepository statusRepository,
+                            OrderStatusRepository orderStatusRepository,
                             CartService cartService) {
         super(orderRepository);
         this.orderRepository = orderRepository;
@@ -36,6 +39,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         this.productRepository = productRepository;
         this.statusRepository = statusRepository;
         this.cartService = cartService;
+        this.orderStatusRepository = orderStatusRepository;
     }
 
     public Order createOrderFromCart(UUID userId, OrderRequest request) {
@@ -78,15 +82,18 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         // Сохраняем заказ сначала, чтобы получить ID
         Order savedOrder = orderRepository.save(order);
 
+        // Устанавливаем начальный статус заказа
+        Statuses initialStatus = statusRepository.findByName("Создан")
+                .orElseThrow(() -> new RuntimeException("Initial order status not found"));
+
+        OrderStatuses orderStatus = OrderStatuses.builder()
+                .order(savedOrder)
+                .status(initialStatus)
+                .build();
+        orderStatusRepository.save(orderStatus);
+
+        // Старая строка без статуса:
         // Теперь обрабатываем statuses
-        if (request.getStatuses() != null) {
-            for (Statuses status : request.getStatuses()) {
-                status.setOrder(savedOrder);
-            }
-            savedOrder.setStatuses(request.getStatuses());
-            // Сохраняем заказ с обновленными статусами
-            savedOrder = orderRepository.save(savedOrder);
-        }
 
         // Очищаем корзину
         cart.getCartItems().clear();
@@ -119,86 +126,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
 
     public Page<Order> getAllRetailOrders(Pageable pageable) {
         return orderRepository.findAllRetailOrders(pageable);
-    }
-
-    public Page<Order> getOrdersByStatus(UUID statusId, Pageable pageable) {
-        return orderRepository.findByStatusesId(statusId, pageable);
-    }
-
-    public Page<Order> getOrdersByStatusName(String statusName, Pageable pageable) {
-        return orderRepository.findByStatusesName(statusName, pageable);
-    }
-
-    // Методы для работы со статусами
-    public Order addStatusToOrder(UUID orderId, UUID statusId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-
-        Statuses status = statusRepository.findById(statusId)
-                .orElseThrow(() -> new RuntimeException("Status not found"));
-
-        // Создаем новый статус для заказа
-        Statuses orderStatus = Statuses.builder()
-                .name(status.getName())
-                .color(status.getColor())
-                .order(order)
-                .build();
-
-        if (order.getStatuses() == null) {
-            order.setStatuses(new ArrayList<>());
-        }
-        order.getStatuses().add(orderStatus);
-
-        return orderRepository.save(order);
-    }
-
-    public Order addStatusToOrderByName(UUID orderId, String statusName) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-
-        Statuses status = statusRepository.findByName(statusName);
-
-        // Создаем новый статус для заказа
-        Statuses orderStatus = Statuses.builder()
-                .name(status.getName())
-                .color(status.getColor())
-                .order(order)
-                .build();
-
-        if (order.getStatuses() == null) {
-            order.setStatuses(new ArrayList<>());
-        }
-        order.getStatuses().add(orderStatus);
-
-        return orderRepository.save(order);
-    }
-
-    public Order removeStatusFromOrder(UUID orderId, UUID statusId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-
-        if (order.getStatuses() != null) {
-            order.getStatuses().removeIf(status -> status.getId().equals(statusId));
-        }
-
-        return orderRepository.save(order);
-    }
-
-    public List<Statuses> getOrderStatuses(UUID orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-        return order.getStatuses();
-    }
-
-    // Методы для получения заказов по статусу без пагинации
-    public List<Order> getOrdersByStatusName(String statusName) {
-        return orderRepository.findByStatusesName(statusName);
-    }
-
-    public List<Order> getOrdersWithStatus(UUID statusId) {
-        Statuses status = statusRepository.findById(statusId)
-                .orElseThrow(() -> new RuntimeException("Status not found"));
-        return orderRepository.findByStatusesName(status.getName());
     }
 
     // Методы для обновления заказа

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -32,7 +33,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     @Query("SELECT p FROM Product p WHERE p.subcategory = :subcategory and p.deletedAt IS NULL")
     List<Product> findActiveBySubcategory(@Param("subcategory") Subcategory subcategory);
 
-    @Query("SELECT p FROM Product p WHERE p.subcategory = :cubategory and p.deletedAt IS NOT NULL")
+    @Query("SELECT p FROM Product p WHERE p.subcategory = :subcategory and p.deletedAt IS NOT NULL")
     List<Product> findDeActiveBySubcategory(@Param("subcategory") Subcategory subcategory);
 
     @Query("SELECT p FROM Product p WHERE p.brand = :brand and p.deletedAt IS NULL")
@@ -40,6 +41,14 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     @Query("SELECT p FROM Product p WHERE p.brand = :brand and p.deletedAt IS NOT NULL")
     List<Product> findDeActiveByBrand(@Param("brand") Brand brand);
+
+    @Query("SELECT p FROM Product p " +
+            "LEFT JOIN FETCH p.productImages pi " +
+            "LEFT JOIN FETCH pi.image " +
+            "LEFT JOIN FETCH p.productStatuses ps " +
+            "LEFT JOIN FETCH ps.status " +
+            "WHERE p.id = :id")
+    Optional<Product> findByIdWithImagesAndStatuses(@Param("id") UUID id);
 
     @Modifying
     @Transactional

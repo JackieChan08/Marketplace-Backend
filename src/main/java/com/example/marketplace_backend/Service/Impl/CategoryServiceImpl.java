@@ -1,20 +1,16 @@
 package com.example.marketplace_backend.Service.Impl;
 
-
 import com.example.marketplace_backend.DTO.Requests.models.CategoryRequest;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
-import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
 import com.example.marketplace_backend.Repositories.CategoryImageRepository;
 import com.example.marketplace_backend.Repositories.CategoryRepository;
-import com.example.marketplace_backend.Repositories.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -28,13 +24,18 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
     private final CategoryRepository categoryRepository;
     private final CategoryImageRepository categoryImageRepository;
     private final FileUploadService  fileUploadService;
+    private final ConverterService converterService;
 
     @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository, CategoryImageRepository categoryImageRepository, FileUploadService fileUploadService) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository,
+                               CategoryImageRepository categoryImageRepository,
+                               FileUploadService fileUploadService,
+                               ConverterService converterService) {
         super(categoryRepository);
         this.categoryRepository = categoryRepository;
         this.categoryImageRepository = categoryImageRepository;
         this.fileUploadService = fileUploadService;
+        this.converterService = converterService;
     }
 
     public Category findByName(String name) {
@@ -127,8 +128,8 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
         return findAllDeActive().size();
     }
 
+    @Transactional
     public Category createCategory(CategoryRequest request) throws IOException {
-
         Category category = new Category();
         category.setName(request.getName());
         category.setDeletedAt(null);
@@ -137,25 +138,23 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
 
         category = save(category);
 
-        List<CategoryImage> categoryImages = new ArrayList<>();
-        for (MultipartFile image : request.getImages()) {
-            FileEntity savedImage = fileUploadService.saveImage(image);
-            CategoryImage categoryImage = CategoryImage.builder()
-                    .category(category)
-                    .image(savedImage)
-                    .build();
-            categoryImages.add(categoryImage);
-        }
+        FileEntity savedImage = fileUploadService.saveImage(request.getImage());
 
-        category.setCategoryImages(categoryImages);
+        CategoryImage categoryImage = CategoryImage.builder()
+                .category(category)
+                .image(savedImage)
+                .build();
+
+        List<CategoryImage> images = new ArrayList<>();
+        images.add(categoryImage);
+        category.setCategoryImages(images);
 
         category = save(category);
         return category;
-
     }
 
-    public Category updateCategory(UUID id,CategoryRequest request) throws IOException {
-
+    @Transactional
+    public Category updateCategory(UUID id, CategoryRequest request) throws IOException {
         Category category = getById(id);
 
         if (request.getName() != null && !request.getName().isEmpty()) {
@@ -166,51 +165,61 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
             category.setPriority(true);
         }
 
-        if (request.getImages() != null && !request.getImages().isEmpty()) {
-            List<CategoryImage> newCategoryImages = request.getImages().stream()
-                    .map(image -> {
-                        try {
-                            FileEntity savedImage = fileUploadService.saveImage(image);
-                            return CategoryImage.builder()
-                                    .category(category)
-                                    .image(savedImage)
-                                    .build();
-                        } catch (IOException e) {
-                            throw new RuntimeException("Ошибка при сохранении изображения", e);
-                        }
-                    })
-                    .toList();
+        // Обновляем приоритет
+        category.setPriority(request.isPriority());
 
-            if (category.getCategoryImages() != null) {
-                category.getCategoryImages().addAll(newCategoryImages);
+        if (request.getImage() != null && !request.getImage().isEmpty()) {
+
+
+            // Сохраняем новое изображение
+            FileEntity savedImage = fileUploadService.saveImage(request.getImage());
+
+            // Создаем новое изображение категории
+            CategoryImage categoryImage = CategoryImage.builder()
+                    .category(category)
+                    .image(savedImage)
+                    .build();
+
+            // Инициализируем коллекцию если она null
+            if (category.getCategoryImages() == null) {
+                category.setCategoryImages(new ArrayList<>());
             } else {
-                category.setCategoryImages(newCategoryImages);
+                // Очищаем старые изображения
+                category.getCategoryImages().clear();
             }
+
+            // Добавляем новое изображение
+            category.getCategoryImages().add(categoryImage);
         }
 
+        category.setUpdatedAt(LocalDateTime.now());
         return save(category);
     }
 
+    @Transactional
+    public void deleteCategoryImage(UUID categoryId) {
+        Category category = getById(categoryId);
 
-    public boolean deleteCategoryImage(UUID categoryId, UUID imageId) {
-        Optional<Category> categoryOpt = categoryRepository.findById(categoryId);
-        if (categoryOpt.isEmpty()) {
-            return false;
+        if (category.getCategoryImages() != null && !category.getCategoryImages().isEmpty()) {
+            // Удаляем изображение из файловой системы
+            deleteOldCategoryImage(category);
+
+            // Очищаем коллекцию изображений
+            category.getCategoryImages().clear();
+            save(category);
         }
+    }
 
-        Category category = categoryOpt.get();
-
-        boolean removed = false;
-        if (category.getCategoryImages() != null) {
-            removed = category.getCategoryImages().removeIf(img ->
-                    img.getImage() != null && img.getImage().getId().equals(imageId)
-            );
+    private void deleteOldCategoryImage(Category category) {
+        if (category.getCategoryImages() != null && !category.getCategoryImages().isEmpty()) {
+            CategoryImage oldImage = category.getCategoryImages().get(0);
+            if (oldImage.getImage() != null && oldImage.getImage().getUniqueName() != null) {
+                try {
+                    fileUploadService.deleteImage(oldImage.getImage().getUniqueName());
+                } catch (Exception e) {
+                    System.err.println("Ошибка при удалении старого изображения: " + e.getMessage());
+                }
+            }
         }
-
-        if (removed) {
-            categoryRepository.save(category);
-        }
-
-        return removed;
     }
 }
