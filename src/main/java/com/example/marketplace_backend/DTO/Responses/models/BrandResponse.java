@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,6 +16,8 @@ import java.util.UUID;
 public class BrandResponse {
     private UUID id;
     private String name;
-    private List<FileResponse> images;
-    private List<ProductResponse> products;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
+    private BrandImageResponse brandImage;
 }

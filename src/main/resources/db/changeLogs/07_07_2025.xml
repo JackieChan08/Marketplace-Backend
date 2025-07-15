@@ -4,9 +4,8 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="add_statuses" author="aiteginbaratov">
-        <dropTable tableName="order_statuses" cascadeConstraints="true" />
-
+    <!-- Statuses table -->
+    <changeSet id="statuses" author="aiteginbaratov">
         <createTable tableName="statuses">
             <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
@@ -15,31 +14,68 @@
                 <constraints nullable="false"/>
             </column>
             <column name="color" type="VARCHAR(255)"/>
-            <column name="product_id" type="UUID"/>
-            <column name="order_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Order status table -->
+    <changeSet id="create-order-statuses-table" author="developer">
+        <createTable tableName="order_statuses">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="order_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <addForeignKeyConstraint
-                baseTableName="statuses"
+                baseTableName="order_statuses"
+                baseColumnNames="order_id"
+                constraintName="fk_order_statuses_order"
+                referencedTableName="orders"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="order_statuses"
+                baseColumnNames="status_id"
+                constraintName="fk_order_statuses_status"
+                referencedTableName="statuses"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <!-- Product status table -->
+    <changeSet id="create-product-statuses-table" author="developer">
+        <createTable tableName="product_statuses">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="product_statuses"
                 baseColumnNames="product_id"
-                constraintName="fk_statuses_product"
+                constraintName="fk_product_statuses_product"
                 referencedTableName="products"
                 referencedColumnNames="id"
                 onDelete="CASCADE"/>
 
         <addForeignKeyConstraint
-                baseTableName="statuses"
-                baseColumnNames="order_id"
-                constraintName="fk_statuses_order"
-                referencedTableName="orders"
+                baseTableName="product_statuses"
+                baseColumnNames="status_id"
+                constraintName="fk_product_statuses_status"
+                referencedTableName="statuses"
                 referencedColumnNames="id"
                 onDelete="CASCADE"/>
-
-        <addColumn tableName="categories">
-            <column name="priority" type="boolean"/>
-        </addColumn>
     </changeSet>
-
-
-
 </databaseChangeLog>

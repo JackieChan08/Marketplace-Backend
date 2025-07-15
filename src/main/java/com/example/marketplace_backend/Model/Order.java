@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.Model;
 
 import com.example.marketplace_backend.Model.Intermediate_objects.OrderItem;
+import com.example.marketplace_backend.Model.Intermediate_objects.OrderStatuses;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -60,7 +61,7 @@ public class Order {
     private boolean isWholesale;// true — опт, false — розница
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Statuses> statuses;
+    @JsonManagedReference("order-statuses")
+    private List<OrderStatuses> orderStatuses;
 }
 

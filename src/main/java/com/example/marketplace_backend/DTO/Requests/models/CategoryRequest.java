@@ -15,6 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 public class CategoryRequest {
     private String name;
-    private List<MultipartFile> images;
+    private MultipartFile image;
     private boolean priority;
 }

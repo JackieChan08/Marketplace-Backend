@@ -83,6 +83,7 @@
             </column>
             <column name="updated_at" type="timestamp"/>
             <column name="deleted_at" type="timestamp"/>
+            <column name="priority" type="boolean"/>
         </createTable>
     </changeSet>
 
@@ -127,9 +128,11 @@
             </column>
             <column name="updated_at" type="timestamp"/>
             <column name="deleted_at" type="timestamp"/>
-            <column name="availability" type="boolean"/>
+            <column name="availability" type="boolean" defaultValue="true"/>
             <column name="brand_id" type="uuid"/>
             <column name="subcategory_id" type="uuid"/>
+            <column name="title" type="varchar(100)"/>
+            <column name="description" type="text"/>
         </createTable>
         <addForeignKeyConstraint baseTableName="products"
                                  baseColumnNames="brand_id"
@@ -141,31 +144,6 @@
                                  referencedTableName="subcategories"
                                  referencedColumnNames="id"
                                  constraintName="fk_products_subcategory"/>
-    </changeSet>
-
-    <!-- Description table -->
-    <changeSet id="8" author="JekiChan08">
-        <createTable tableName="description">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="title" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="text" type="text">
-                <constraints nullable="false"/>
-            </column>
-            <column name="created_at" type="timestamp">
-                <constraints nullable="false"/>
-            </column>
-            <column name="updated_at" type="timestamp"/>
-            <column name="product_id" type="uuid"/>
-        </createTable>
-        <addForeignKeyConstraint baseTableName="description"
-                                 baseColumnNames="product_id"
-                                 referencedTableName="products"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_description_product"/>
     </changeSet>
 
     <!-- Product parameters table -->
@@ -464,20 +442,12 @@
             <column name="user_id" type="uuid">
                 <constraints nullable="false"/>
             </column>
-            <column name="order_statuses" type="uuid">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="orders"
                                  baseColumnNames="user_id"
                                  referencedTableName="users"
                                  referencedColumnNames="id"
                                  constraintName="fk_orders_user"/>
-        <addForeignKeyConstraint baseTableName="orders"
-                                 baseColumnNames="order_statuses"
-                                 referencedTableName="order_statuses"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_orders_order_statuses"/>
     </changeSet>
 
     <!-- Order items table -->

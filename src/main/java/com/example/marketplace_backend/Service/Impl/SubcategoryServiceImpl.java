@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.DTO.Requests.models.SubcategoryRequest;
+import com.example.marketplace_backend.DTO.Responses.models.SubcategoryResponse;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
@@ -30,16 +31,20 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
     private final SubcategoryImageRepository subcategoryImageRepository;
     private final FileUploadService fileUploadService;
     private final CategoryServiceImpl categoryService;
+    private final ConverterService converterService;
 
     @Autowired
     public SubcategoryServiceImpl(SubcategoryRepository subcategoryRepository,
                                   SubcategoryImageRepository subcategoryImageRepository,
-                                  FileUploadService fileUploadService, CategoryServiceImpl categoryService) {
+                                  FileUploadService fileUploadService,
+                                  CategoryServiceImpl categoryService,
+                                  ConverterService converterService) {
         super(subcategoryRepository);
         this.subcategoryRepository = subcategoryRepository;
         this.subcategoryImageRepository = subcategoryImageRepository;
         this.fileUploadService = fileUploadService;
         this.categoryService = categoryService;
+        this.converterService = converterService;
     }
 
     @Transactional(readOnly = true)
@@ -164,7 +169,7 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
                         s.getCategory().getId().equals(categoryId))
                 .count();
     }
-    public ResponseEntity<Subcategory> createSubcategory(SubcategoryRequest request) throws IOException {
+    public ResponseEntity<SubcategoryResponse> createSubcategory(SubcategoryRequest request) throws IOException {
         Optional<Category> categoryOpt = categoryService.findById(request.getCategoryId());
         if (categoryOpt.isEmpty()) {
             return ResponseEntity.badRequest().build();
@@ -178,23 +183,8 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
 
         subcategory = save(subcategory);
 
-        MultipartFile image = request.getImage();
-        if (image != null && !image.isEmpty()) {
-            FileEntity savedImage = fileUploadService.saveImage(image);
-
-            SubcategoryImage subcategoryImage = SubcategoryImage.builder()
-                    .subcategory(subcategory)
-                    .image(savedImage)
-                    .build();
-
-            List<SubcategoryImage> images = new ArrayList<>();
-            images.add(subcategoryImage);
-            subcategory.setSubcategoryImages(images);
-
-            subcategory = save(subcategory); // обновить с изображением
-        }
-
-        return ResponseEntity.ok(subcategory);
+        SubcategoryResponse subcategoryResponse = converterService.convertToSubcategoryResponse(subcategory);
+        return ResponseEntity.ok(subcategoryResponse);
     }
 
 
@@ -209,24 +199,6 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
             Optional<Category> categoryOpt = categoryService.findById(request.getCategoryId());
             categoryOpt.ifPresent(subcategory::setCategory);
         }
-
-        if (request.getImage() != null && !request.getImage().isEmpty()) {
-            FileEntity savedImage = fileUploadService.saveImage(request.getImage());
-
-            SubcategoryImage subcategoryImage = SubcategoryImage.builder()
-                    .subcategory(subcategory)
-                    .image(savedImage)
-                    .build();
-
-            if (subcategory.getSubcategoryImages() == null) {
-                subcategory.setSubcategoryImages(new ArrayList<>());
-            } else {
-                subcategory.getSubcategoryImages().clear();
-            }
-
-            subcategory.getSubcategoryImages().add(subcategoryImage);
-        }
-
 
         subcategory.setUpdatedAt(LocalDateTime.now());
         save(subcategory);
