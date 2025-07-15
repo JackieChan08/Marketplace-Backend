@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.Service.Impl;
 
+import com.example.marketplace_backend.DTO.Responses.models.OrderResponse;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.CartItem;
 import com.example.marketplace_backend.Model.Intermediate_objects.OrderItem;
@@ -38,12 +39,17 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         this.cartService = cartService;
     }
 
-    public Order createOrderFromCart(UUID userId, OrderRequest request) {
-        Cart cart = cartRepository.findById(userId)
+    public OrderResponse createOrderFromCart(UUID userId, OrderRequest request) {
+        Cart cart = cartRepository.findCartByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
         if (cart.getCartItems().isEmpty()) {
             throw new RuntimeException("Cart is empty");
+        }
+
+        List<UUID> selectedItemIds = request.getCartItemIds();
+        if (selectedItemIds == null || selectedItemIds.isEmpty()) {
+            throw new RuntimeException("No cart items selected");
         }
 
         Order order = new Order();
@@ -57,7 +63,15 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
 
-        for (CartItem cartItem : cart.getCartItems()) {
+        List<CartItem> selectedItems = cart.getCartItems().stream()
+                .filter(item -> selectedItemIds.contains(item.getId()))
+                .toList();
+
+        if (selectedItems.isEmpty()) {
+            throw new RuntimeException("No matching cart items found");
+        }
+
+        for (CartItem cartItem : selectedItems) {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setProduct(productRepository.findById(cartItem.getProduct().getId())
@@ -75,25 +89,15 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         order.setOrderItems(orderItems);
         order.setTotalPrice(total);
 
-        // Сохраняем заказ сначала, чтобы получить ID
         Order savedOrder = orderRepository.save(order);
 
-        // Теперь обрабатываем statuses
-        if (request.getStatuses() != null) {
-            for (Statuses status : request.getStatuses()) {
-                status.setOrder(savedOrder);
-            }
-            savedOrder.setStatuses(request.getStatuses());
-            // Сохраняем заказ с обновленными статусами
-            savedOrder = orderRepository.save(savedOrder);
-        }
-
-        // Очищаем корзину
-        cart.getCartItems().clear();
+        // Удаляем выбранные товары из корзины
+        cart.getCartItems().removeIf(item -> selectedItemIds.contains(item.getId()));
         cartRepository.save(cart);
 
-        return savedOrder;
+        return OrderMapper.toOrderResponse(savedOrder);
     }
+
 
     // Методы без пагинации
     public List<Order> getAllOrders() {

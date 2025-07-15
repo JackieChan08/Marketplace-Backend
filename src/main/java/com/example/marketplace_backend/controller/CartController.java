@@ -34,7 +34,7 @@ public class CartController {
     }
 
 
-    @PostMapping("/add")
+    @PostMapping(value = "/add", consumes = {"multipart/form-data"})
     public ResponseEntity<CartResponse> addItem(@ModelAttribute CartRequest request) {
         Cart cart = cartService.addItemToCart(request.getProductId(), request.getQuantity());
         return ResponseEntity.ok(cartService.convertToCartResponse(cart));
