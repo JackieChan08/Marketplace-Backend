@@ -2,6 +2,7 @@ package com.example.marketplace_backend.Model;
 
 
 import com.example.marketplace_backend.Model.Intermediate_objects.BrandImage;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -43,7 +44,7 @@ public class Brand {
     private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonManagedReference("product-brand")
+    @JsonIgnore
     private List<Product> products;
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, orphanRemoval = true)

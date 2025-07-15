@@ -4,22 +4,21 @@ import com.example.marketplace_backend.DTO.Requests.models.BrandRequest;
 import com.example.marketplace_backend.Model.Brand;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Intermediate_objects.BrandImage;
+import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
 import com.example.marketplace_backend.Repositories.BrandImageRepository;
 import com.example.marketplace_backend.Repositories.BrandRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class BrandServiceImpl extends BaseServiceImpl<Brand, UUID>{
@@ -120,30 +119,44 @@ public class BrandServiceImpl extends BaseServiceImpl<Brand, UUID>{
         return findAllDeActive().size();
     }
 
-    public Brand createBrand(BrandRequest request) throws IOException {
+    private void deleteOldBrandImage(Brand brand) {
+        if (brand.getBrandImages() != null && !brand.getBrandImages().isEmpty()) {
+            BrandImage oldImage = brand.getBrandImages().get(0);
+            if (oldImage.getImage() != null && oldImage.getImage().getUniqueName() != null) {
+                try {
+                    fileUploadService.deleteImage(oldImage.getImage().getUniqueName());
+                } catch (Exception e) {
+                    System.err.println("Ошибка при удалении старого изображения: " + e.getMessage());
+                }
+            }
+        }
+    }
 
+    public Brand createBrand(BrandRequest request) throws IOException {
         Brand brand = new Brand();
         brand.setName(request.getName());
         brand.setDeletedAt(null);
         brand.setCreatedAt(LocalDateTime.now());
 
-        brand = save(brand);
+        brand = save(brand); // сохраняем бренд
 
-        List<BrandImage> brandImages = new ArrayList<>();
-        for (MultipartFile image : request.getImages()) {
-            FileEntity savedImage = fileUploadService.saveImage(image);
-            BrandImage brandImage = BrandImage.builder()
-                    .brand(brand)
-                    .image(savedImage)
-                    .build();
-            brandImages.add(brandImage);
-        }
+        // Сохраняем изображение
+        FileEntity savedImage = fileUploadService.saveImage(request.getImage());
 
-        brand.setBrandImages(brandImages);
+        // Привязываем изображение
+        BrandImage brandImage = BrandImage.builder()
+                .brand(brand)
+                .image(savedImage)
+                .build();
+
+        List<BrandImage> images = new ArrayList<>();
+        images.add(brandImage);
+        brand.setBrandImages(images);
 
         brand = save(brand);
         return brand;
     }
+
 
     public Brand editBrand(UUID id, BrandRequest request) throws IOException {
         Brand brand = getById(id);
@@ -152,29 +165,43 @@ public class BrandServiceImpl extends BaseServiceImpl<Brand, UUID>{
             brand.setName(request.getName());
         }
 
-        if (request.getImages() != null && !request.getImages().isEmpty()) {
-            List<BrandImage> newBrandImages = request.getImages().stream()
-                    .map(image -> {
-                        try {
-                            FileEntity savedImage = fileUploadService.saveImage(image);
-                            return BrandImage.builder()
-                                    .brand(brand)
-                                    .image(savedImage)
-                                    .build();
-                        } catch (IOException e) {
-                            throw new RuntimeException("Ошибка при сохранении изображения", e);
-                        }
-                    })
-                    .toList();
+        if (request.getImage() != null && !request.getImage().isEmpty()) {
+            deleteOldBrandImage(brand);
 
-            if (brand.getBrandImages() != null) {
-                brand.getBrandImages().addAll(newBrandImages);
+            FileEntity savedImage = fileUploadService.saveImage(request.getImage());
+
+            BrandImage brandImage = BrandImage.builder()
+                    .brand(brand)
+                    .image(savedImage)
+                    .build();
+
+            if (brand.getBrandImages() == null) {
+                brand.setBrandImages(new ArrayList<>());
             } else {
-                brand.setBrandImages(newBrandImages);
+                brand.getBrandImages().clear(); // если нужно удалить старые
             }
+            brand.getBrandImages().add(brandImage);
+
         }
 
+        brand.setUpdatedAt(LocalDateTime.now());
         save(brand);
         return brand;
     }
+
+    @Transactional
+    public void deleteBrandImage(UUID brandId) {
+        Brand brand = getById(brandId);
+
+        if (brand.getBrandImages() != null && !brand.getBrandImages().isEmpty()) {
+            // Удаляем изображение из файловой системы
+            deleteOldBrandImage(brand);
+
+            // Очищаем коллекцию изображений
+            brand.setBrandImages(new ArrayList<>());
+            save(brand);
+        }
+    }
+
+
 }

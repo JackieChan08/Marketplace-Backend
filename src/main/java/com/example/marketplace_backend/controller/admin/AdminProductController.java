@@ -1,19 +1,20 @@
 package com.example.marketplace_backend.controller.admin;
 
+import com.example.marketplace_backend.DTO.Requests.models.CategoryRequest;
 import com.example.marketplace_backend.DTO.Requests.models.ProductRequest;
+import com.example.marketplace_backend.DTO.Responses.models.ProductResponse;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.Product;
 import com.example.marketplace_backend.Repositories.BrandRepository;
 import com.example.marketplace_backend.Repositories.SubcategoryRepository;
+import com.example.marketplace_backend.Service.Impl.ConverterService;
 import com.example.marketplace_backend.Service.Impl.FileUploadService;
 import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -23,8 +24,8 @@ import java.util.*;
 public class AdminProductController {
     private final ProductServiceImpl productService;
     private final FileUploadService fileUploadService;
-    private final BrandRepository brandRepository;
-    private final SubcategoryRepository subcategoryRepository;
+    private final ConverterService converterService;
+
 
     @GetMapping()
     public ResponseEntity<List<Product>> getAllProducts() {
@@ -66,7 +67,7 @@ public class AdminProductController {
     }
 
     @PostMapping("/restore/{id}")
-    public ResponseEntity<Product> restoreProduct(@PathVariable UUID id) {
+    public ResponseEntity<Void> restoreProduct(@PathVariable UUID id) {
         try {
             productService.restore(id);
             return ResponseEntity.noContent().build();
@@ -76,10 +77,18 @@ public class AdminProductController {
     }
 
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
-    public ResponseEntity<Product> createProductWithImages(
+    public ResponseEntity<?> createProductWithImages(
             @ModelAttribute ProductRequest request
     ) throws Exception {
-        return ResponseEntity.ok(productService.createProduct(request));
+        if (request.getImages() == null || request.getImages().isEmpty()) {
+            return ResponseEntity.badRequest().body("Изображение обязательно для создания продукта");
+        }
+
+        // Старый код:
+        // return ResponseEntity.ok(productService.createProduct(request));
+
+        ProductResponse productResponse = converterService.convertToProductResponse(productService.createProduct(request));
+        return ResponseEntity.ok(productResponse);
     }
 
     @DeleteMapping("{id}/permanent")
@@ -103,11 +112,15 @@ public class AdminProductController {
     }
 
     @PostMapping(value = "/edit/{id}", consumes = {"multipart/form-data"})
-    public ResponseEntity<Product> editProduct(
+    public ResponseEntity<ProductResponse> editProduct(
             @PathVariable UUID id,
             @ModelAttribute ProductRequest request
     ) throws Exception {
-        return ResponseEntity.ok(productService.editProduct(id, request));
+        // Старый код:
+        // return ResponseEntity.ok(productService.editProduct(id, request));
+
+        ProductResponse productResponse = converterService.convertToProductResponse(productService.editProduct(id, request));
+        return ResponseEntity.ok(productResponse);
     }
 
     @DeleteMapping("{productId}/images/{imageId}")
@@ -127,13 +140,4 @@ public class AdminProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-
-
-
-
-
-
-
-
 }

@@ -5,17 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SubcategoryResponse {
+public class CategoryImageResponse {
     private UUID id;
-    private String name;
-    private String categoryName;
-    private UUID categoryId;
-
+    private FileResponse image;
 }
+

@@ -1,8 +1,10 @@
 package com.example.marketplace_backend.controller.admin;
 
 import com.example.marketplace_backend.DTO.Requests.models.BrandRequest;
+import com.example.marketplace_backend.DTO.Responses.models.BrandResponse;
 import com.example.marketplace_backend.Model.Brand;
 import com.example.marketplace_backend.Service.Impl.BrandServiceImpl;
+import com.example.marketplace_backend.Service.Impl.ConverterService;
 import com.example.marketplace_backend.Service.Impl.FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,16 +18,13 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/brands")
 public class AdminBrandController {
-    private final BrandServiceImpl  brandService;
-    private final FileUploadService  fileUploadService;
-
-
-
+    private final BrandServiceImpl brandService;
+    private final FileUploadService fileUploadService;
+    private final ConverterService converterService;
 
     @GetMapping("/list")
     public ResponseEntity<Page<Brand>> getPaginatedBrands(
@@ -36,8 +35,6 @@ public class AdminBrandController {
         Page<Brand> brands = brandService.findAll(pageable);
         return ResponseEntity.ok(brands);
     }
-
-
 
     @GetMapping("/inactive")
     public ResponseEntity<List<Brand>> getInactiveBrands() {
@@ -82,13 +79,15 @@ public class AdminBrandController {
     }
 
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
-    public ResponseEntity<Brand> createBrandWithImages(
-            @ModelAttribute BrandRequest request
-            ) throws Exception {
-        Brand brand = brandService.createBrand(request);
+    public ResponseEntity<?> createBrandWithImages(@ModelAttribute BrandRequest request) throws Exception {
+        if (request.getImage() == null || request.getImage().isEmpty()) {
+            return ResponseEntity.badRequest().body("Изображение обязательно для создания бренда.");
+        }
 
+        BrandResponse brand = converterService.convertToBrandResponse(brandService.createBrand(request));
         return ResponseEntity.ok(brand);
     }
+
 
     @DeleteMapping("/{id}/permanent")
     public ResponseEntity<Void> permanentDeleteBrand(@PathVariable UUID id) {
@@ -111,38 +110,39 @@ public class AdminBrandController {
     }
 
     @PostMapping(value = "/edit/{id}", consumes = {"multipart/form-data"})
-    public ResponseEntity<Brand> editBrand(
-            @PathVariable UUID id, @ModelAttribute BrandRequest request
+    public ResponseEntity<BrandResponse> editBrand(
+            @PathVariable UUID id,
+            @ModelAttribute BrandRequest request
     ) throws IOException {
-        Brand brand = brandService.editBrand(id, request);
-        return ResponseEntity.ok(brand);
+        BrandResponse brandResponse = converterService.convertToBrandResponse(brandService.editBrand(id, request));
+        return ResponseEntity.ok(brandResponse);
     }
 
-    @DeleteMapping("/{brandId}/images/{imageId}")
-    public ResponseEntity<Void> deleteBrandImage(
-            @PathVariable UUID brandId,
-            @PathVariable UUID imageId
-    ) {
+    /*
+     * try {
+     *     Optional<Brand> brandOpt = brandService.findById(brandId);
+     *     if (brandOpt.isEmpty()) {
+     *         return ResponseEntity.notFound().build();
+     *     }
+     *     Brand brand = brandOpt.get();
+     *     if (brand.getBrandImages() != null) {
+     *         brand.getBrandImages().removeIf(img ->
+     *                 img.getImage() != null && img.getImage().getId().equals(imageId)
+     *         );
+     *         brandService.save(brand);
+     *     }
+     *     return ResponseEntity.noContent().build();
+     * } catch (Exception e) {
+     *     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+     * }
+     */
+    @DeleteMapping("/{brandId}/image") // ИЗМЕНЕНО: path с /images/{imageId} на /image
+    public ResponseEntity<Void> deleteBrandImage(@PathVariable UUID brandId) {
         try {
-            Optional<Brand> brandOpt = brandService.findById(brandId);
-            if (brandOpt.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-
-            Brand brand = brandOpt.get();
-            if (brand.getBrandImages() != null) {
-                brand.getBrandImages().removeIf(img ->
-                        img.getImage() != null && img.getImage().getId().equals(imageId)
-                );
-                brandService.save(brand);
-            }
-
+            brandService.deleteBrandImage(brandId);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-
-
 }

@@ -24,12 +24,6 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Query("SELECT o FROM Order o WHERE o.isWholesale = false ORDER BY o.createdAt DESC")
     Page<Order> findAllRetailOrders(Pageable pageable);
 
-    @Query("SELECT o FROM Order o JOIN o.statuses s WHERE s.id = :statusId")
-    Page<Order> findByStatusesId(@Param("statusId") UUID statusId, Pageable pageable);
-
-    @Query("SELECT o FROM Order o JOIN o.statuses s WHERE s.name = :statusName")
-    Page<Order> findByStatusesName(@Param("statusName") String statusName, Pageable pageable);
-
     // Методы без пагинации
     @Query("SELECT o FROM Order o ORDER BY o.createdAt DESC")
     List<Order> findAllOrders();
@@ -40,14 +34,6 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Query("SELECT o FROM Order o WHERE o.isWholesale = false ORDER BY o.createdAt DESC")
     List<Order> findAllRetailOrders();
 
-    @Query("SELECT o FROM Order o JOIN o.statuses s WHERE s.name = :statusName")
-    List<Order> findByStatusesName(@Param("statusName") String statusName);
-
-    @Query("SELECT o FROM Order o WHERE o.id IN (SELECT s.order.id FROM Statuses s WHERE s.name = :statusName)")
-    List<Order> findOrdersByStatusName(@Param("statusName") String statusName);
-
-    @Query("SELECT o FROM Order o WHERE o.id IN (SELECT s.order.id FROM Statuses s WHERE s.id = :statusId)")
-    List<Order> findOrdersByStatusId(@Param("statusId") UUID statusId);
 
     // Закомментированные методы для старой структуры OrderStatuses
     // @Query("SELECT o FROM Order o WHERE o.orderStatuses.id = :statusId")

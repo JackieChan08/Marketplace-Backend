@@ -20,9 +20,11 @@ public class ProductRequest {
     private String name;
     private BigDecimal price;
     private UUID subCategoryId;
-    private List<MultipartFile> images;
-    private List<Description> descriptions;
     private UUID brandId;
     private boolean availability;
-    private List<Statuses> statuses;
+    private String title;
+    private String description;
+
+    private List<MultipartFile> images;
+    private List<UUID> statusId;
 }

@@ -10,5 +10,5 @@ import java.util.UUID;
 @Data
 public class BrandRequest {
     private String name;
-    private List<MultipartFile> images;
+    private MultipartFile image;
 }

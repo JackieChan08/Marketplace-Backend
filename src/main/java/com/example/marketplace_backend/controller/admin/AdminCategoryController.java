@@ -1,7 +1,11 @@
 package com.example.marketplace_backend.controller.admin;
 
+import com.example.marketplace_backend.DTO.Requests.models.BrandRequest;
+import com.example.marketplace_backend.DTO.Responses.models.CategoryResponse;
+import com.example.marketplace_backend.Model.Brand;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
+import com.example.marketplace_backend.Service.Impl.ConverterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/admin/categories")
 public class AdminCategoryController {
     private final CategoryServiceImpl categoryService;
+    private final ConverterService converterService;
 
     @GetMapping
     public ResponseEntity<Page<Category>> getAllCategories(
@@ -75,8 +80,14 @@ public class AdminCategoryController {
     }
 
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
-    public ResponseEntity<Category> createCategoryWithImages(@ModelAttribute CategoryRequest request) throws Exception {
-        return ResponseEntity.ok(categoryService.createCategory(request));
+    public ResponseEntity<?> createCategoryWithImages(@ModelAttribute CategoryRequest request)
+            throws Exception {
+        if (request.getImage() == null || request.getImage().isEmpty()) {
+            return ResponseEntity.badRequest().body("Изображение обязательно для создания категории.");
+        }
+
+        CategoryResponse category = converterService.convertToCategoryResponse(categoryService.createCategory(request));
+        return ResponseEntity.ok(category);
     }
 
     @DeleteMapping("/{id}/permanent")
@@ -100,24 +111,21 @@ public class AdminCategoryController {
     }
 
     @PostMapping(value = "/edit/{id}", consumes = {"multipart/form-data"})
-    public ResponseEntity<Category> editCategory(
+    public ResponseEntity<CategoryResponse> editCategory(
             @PathVariable UUID id,
             @ModelAttribute CategoryRequest request
     ) throws IOException {
-        return ResponseEntity.ok(categoryService.updateCategory(id, request));
+        CategoryResponse categoryResponse = converterService.convertToCategoryResponse(categoryService.updateCategory(id, request));
+        return ResponseEntity.ok(categoryResponse);
     }
 
     @DeleteMapping("/{categoryId}/images/{imageId}")
     public ResponseEntity<Void> deleteCategoryImage(
-            @PathVariable UUID categoryId,
-            @PathVariable UUID imageId
+            @PathVariable UUID categoryId
     ) {
         try {
-            boolean deleted = categoryService.deleteCategoryImage(categoryId, imageId);
-            if (!deleted) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.noContent().build();
+            categoryService.deleteCategoryImage(categoryId);
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

@@ -20,15 +20,19 @@ import java.util.UUID;
 public class ProductResponse {
     private UUID id;
     private String name;
-    private List<Description> descriptions;
-    private UUID categoryId;
-    private String categoryName;
-    private String subcategoryName;
-    private UUID subcategoryId;
-    private List<FileResponse> images;
     private BigDecimal price;
     private BigDecimal discountedPrice;
-    private UUID brandId;
     private boolean availability;
-    private UUID statusId;
+    private String title;
+    private String description;
+
+    private String subcategoryName;
+    private UUID subcategoryId;
+
+    private UUID brandId;
+    private String categoryName;
+    private UUID categoryId;
+
+    private List<FileResponse> images;
+    private List<String> statuses;
 }
