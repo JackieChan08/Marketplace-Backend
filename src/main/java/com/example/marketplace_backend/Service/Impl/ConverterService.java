@@ -37,6 +37,12 @@ public class ConverterService {
                 response.setCategoryName(product.getSubcategory().getCategory().getName());
             }
         }
+        if (product.getPrice() != null) {
+            response.setPrice(product.getPrice());
+        }
+        if (product.getDiscountedPrice() != null) {
+            response.setDiscountedPrice(product.getDiscountedPrice());
+        }
 
         // Обработка бренда
         if (product.getBrand() != null) {

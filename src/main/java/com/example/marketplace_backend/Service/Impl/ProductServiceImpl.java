@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,6 +50,13 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         this.subcategoryRepository = subcategoryRepository;
         this.statusRepository = statusRepository;
         this.productStatusRepository = productStatusRepository;
+    }
+
+    public Page<Product> findAllActiveByBrand(UUID brandId, Pageable pageable) {
+        return productRepository.findActiveByBrand(brandId, pageable);
+    }
+    public Page<Product> findAllActiveBySubcategory(UUID subcategoryId, Pageable pageable) {
+        return productRepository.findActiveBySubcategory(subcategoryId, pageable);
     }
 
     public List<Product> findAllDeActive() {

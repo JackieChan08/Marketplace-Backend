@@ -94,6 +94,7 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
         } else {
             subcategory.setUpdatedAt(LocalDateTime.now());
         }
+
         return subcategoryRepository.save(subcategory);
     }
 
@@ -168,7 +169,6 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
                         s.getCategory().getId().equals(categoryId))
                 .count();
     }
-
     public ResponseEntity<SubcategoryResponse> createSubcategory(SubcategoryRequest request) throws IOException {
         Optional<Category> categoryOpt = categoryService.findById(request.getCategoryId());
         if (categoryOpt.isEmpty()) {

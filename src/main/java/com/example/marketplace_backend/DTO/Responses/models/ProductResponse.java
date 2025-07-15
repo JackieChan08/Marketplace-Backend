@@ -28,7 +28,7 @@ public class ProductResponse {
 
     private String subcategoryName;
     private UUID subcategoryId;
-    private String brandName;
+
     private UUID brandId;
     private String categoryName;
     private UUID categoryId;
