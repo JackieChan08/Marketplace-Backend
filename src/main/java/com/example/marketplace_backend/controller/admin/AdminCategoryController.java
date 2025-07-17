@@ -26,7 +26,7 @@ public class AdminCategoryController {
     private final ConverterService converterService;
 
     @GetMapping
-    public ResponseEntity<Page<Category>> getAllCategories(
+    public ResponseEntity<Page<CategoryResponse>> getAllCategories(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
