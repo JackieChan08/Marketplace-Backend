@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.DTO.Requests.models.CategoryRequest;
+import com.example.marketplace_backend.DTO.Responses.models.CategoryResponse;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
@@ -53,9 +54,11 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
     }
 
     @Transactional(readOnly = true)
-    public Page<Category> findAll(Pageable pageable) {
-        return categoryRepository.findAll(pageable);
+    public Page<CategoryResponse> findAll(Pageable pageable) {
+        return categoryRepository.findAll(pageable)
+                .map(converterService::convertToCategoryResponse);
     }
+
 
     @Transactional(readOnly = true)
     public Optional<Category> findById(UUID categoryId) {

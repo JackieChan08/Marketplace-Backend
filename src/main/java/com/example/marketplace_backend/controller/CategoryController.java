@@ -59,11 +59,10 @@ public class CategoryController {
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Category> categories = categoryService.findAll(pageable);
-
-        Page<CategoryResponse> responses = categories.map(converter::convertToCategoryResponse);
+        Page<CategoryResponse> responses = categoryService.findAll(pageable);
         return ResponseEntity.ok(responses);
     }
+
 
 
 

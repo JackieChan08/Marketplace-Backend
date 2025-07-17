@@ -118,7 +118,6 @@ public class AdminProductController {
     ) throws Exception {
         // Старый код:
         // return ResponseEntity.ok(productService.editProduct(id, request));
-
         ProductResponse productResponse = converterService.convertToProductResponse(productService.editProduct(id, request));
         return ResponseEntity.ok(productResponse);
     }

@@ -40,7 +40,8 @@ public class FileUploadService {
         }
 
         String contentType = file.getContentType();
-        if (contentType == null || !isImageFile(contentType)) {
+        if (contentType == null ||
+                (!contentType.startsWith("image/") && !contentType.equalsIgnoreCase("image/svg+xml"))) {
             throw new IllegalArgumentException("Поддерживаются только изображения");
         }
 
