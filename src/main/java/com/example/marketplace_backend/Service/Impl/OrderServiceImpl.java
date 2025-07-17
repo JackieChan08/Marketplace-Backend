@@ -104,6 +104,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
                 .status(initialStatus)
                 .build();
         orderStatusRepository.save(orderStatus);
+
+
         cart.getCartItems().removeIf(item -> selectedItemIds.contains(item.getId()));
         cartRepository.save(cart);
 

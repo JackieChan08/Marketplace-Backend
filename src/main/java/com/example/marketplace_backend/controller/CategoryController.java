@@ -53,7 +53,7 @@ public class CategoryController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/list")
+    @GetMapping
     public ResponseEntity<Page<CategoryResponse>> getCategories(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size

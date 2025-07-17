@@ -4,6 +4,8 @@ package com.example.marketplace_backend.Repositories;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.Subcategory;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,6 +25,9 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
 
     @Query("SELECT c FROM Category c WHERE c.deletedAt IS NOT NULL")
     List<Category> findAllDeActive();
+
+    @Query("SELECT c FROM Category c WHERE c.deletedAt IS NOT NULL")
+    Page<Category> findAllDeActive(Pageable  pageable);
 
     @Modifying
     @Transactional
