@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.controller;
 
+import com.example.marketplace_backend.DTO.Requests.models.ProductFilterRequest;
 import com.example.marketplace_backend.DTO.Responses.models.BrandResponse;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Product;
@@ -105,6 +106,11 @@ public class ProductController {
         Page<Product> products = productService.findAllActiveByCategoryId(categoryId, pageable);
         Page<ProductResponse> responses = products.map(converter::convertToProductResponse);
         return ResponseEntity.ok(responses);
+    }
+
+    @PostMapping("/filter")
+    public ResponseEntity<List<ProductResponse>> filterProducts(@RequestBody ProductFilterRequest filterRequest) {
+        return ResponseEntity.ok(productService.filterProducts(filterRequest));
     }
 
 
