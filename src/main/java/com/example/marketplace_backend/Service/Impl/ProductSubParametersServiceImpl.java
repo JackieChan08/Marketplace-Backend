@@ -14,7 +14,9 @@ import java.util.UUID;
 
 @Service
 @Transactional
-public class ProductSubParametersServiceImpl extends BaseServiceImpl<ProductSubParameters, UUID> {
+public class
+
+ProductSubParametersServiceImpl extends BaseServiceImpl<ProductSubParameters, UUID> {
     private final ProductSubParametersRepository productSubParametersRepository;
     private final ProductParametersRepository productParametersRepository;
 

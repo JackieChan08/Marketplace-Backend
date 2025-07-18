@@ -27,8 +27,14 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     @Query("SELECT p FROM Product p WHERE p.deletedAt IS NULL")
     List<Product> findAllActive();
 
+    @Query("SELECT p FROM Product p WHERE p.deletedAt IS NULL")
+    Page<Product> findAllActive(Pageable pageable);
+
     @Query("SELECT p FROM Product p WHERE p.deletedAt IS NOT NULL")
     List<Product> findAllDeActive();
+
+    @Query("SELECT p FROM Product p WHERE p.deletedAt IS NOT NULL")
+    Page<Product> findAllDeActive(Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.subcategory = :subcategory and p.deletedAt IS NULL")
     List<Product> findActiveBySubcategory(@Param("subcategory") Subcategory subcategory);
@@ -44,6 +50,9 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     @Query("SELECT p FROM Product p WHERE p.subcategory.id = :subcategoryId and p.deletedAt IS NULL")
     Page<Product> findActiveBySubcategory(@Param("subcategoryId") UUID subcategoryId, Pageable pageable);
+
+    @Query("SELECT p FROM Product p WHERE p.subcategory.category.id = :categoryId and p.deletedAt IS NULL")
+    Page<Product> findActiveByCategory(@Param("subcategoryId") UUID categoryId, Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.brand = :brand and p.deletedAt IS NOT NULL")
     List<Product> findDeActiveByBrand(@Param("brand") Brand brand);

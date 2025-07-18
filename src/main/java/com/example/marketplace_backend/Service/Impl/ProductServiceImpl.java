@@ -59,12 +59,24 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         return productRepository.findActiveBySubcategory(subcategoryId, pageable);
     }
 
+    public Page<Product> findAllActiveByCategoryId(UUID categoryId, Pageable pageable) {
+        return productRepository.findActiveByCategory(categoryId, pageable);
+    }
+
     public List<Product> findAllDeActive() {
         return productRepository.findAllDeActive();
     }
 
+    public Page<Product> findAllDeActive(Pageable pageable) {
+        return productRepository.findAllDeActive(pageable);
+    }
+
     public List<Product> findAllActive() {
         return productRepository.findAllActive();
+    }
+
+    public Page<Product> findAllActive(Pageable pageable) {
+        return productRepository.findAllActive(pageable);
     }
 
     public Product findByName(String name) {
