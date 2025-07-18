@@ -49,7 +49,7 @@ public class Subcategory {
     @JsonBackReference
     private Category category;
 
-    @JsonManagedReference
+    @JsonBackReference
     @OneToMany(mappedBy = "subcategory", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products;
 

@@ -45,7 +45,7 @@ public class BrandServiceImpl extends BaseServiceImpl<Brand, UUID>{
     }
 
     public Page<Brand> findAllDeActive(Pageable pageable) {
-        return brandRepository.findAllDeActive();
+        return brandRepository.findAllDeActive(pageable);
     }
 
     @Transactional(readOnly = true)

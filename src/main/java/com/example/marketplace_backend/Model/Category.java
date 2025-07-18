@@ -46,7 +46,7 @@ public class Category {
     private List<CategoryImage> categoryImages;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonBackReference
     private List<Subcategory> subcategories;
 
     @Column(name = "priority", columnDefinition = "BOOLEAN DEFAULT FALSE")
