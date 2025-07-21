@@ -109,9 +109,10 @@ public class ProductController {
     }
 
     @PostMapping("/filter")
-    public ResponseEntity<List<ProductResponse>> filterProducts(@RequestBody ProductFilterRequest filterRequest) {
+    public ResponseEntity<Page<ProductResponse>> filterProducts(@RequestBody ProductFilterRequest filterRequest) {
         return ResponseEntity.ok(productService.filterProducts(filterRequest));
     }
+
 
 
 }

@@ -27,4 +27,6 @@ public class OrderResponse {
     private String username;
 
     private List<OrderItemResponse> orderItems;
+
+    private List<OrderStatusResponse> statuses;
 }

@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.controller.admin;
 
+import com.example.marketplace_backend.DTO.Requests.models.ProductFilterRequest;
 import com.example.marketplace_backend.DTO.Requests.models.ProductRequest;
 import com.example.marketplace_backend.DTO.Responses.models.ProductResponse;
 import com.example.marketplace_backend.Model.Product;
@@ -51,10 +52,13 @@ public class AdminProductController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable UUID id) {
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable UUID id) {
         Optional<Product> product = productService.findById(id);
-        return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return product
+                .map(p -> ResponseEntity.ok(converterService.convertToProductResponse(p)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 
     @GetMapping("/exist/{name}")
     public ResponseEntity<Boolean> productExistByName(@PathVariable String name) {
@@ -152,4 +156,11 @@ public class AdminProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @PostMapping("/filter")
+    public ResponseEntity<Page<ProductResponse>> filterProducts(@RequestBody ProductFilterRequest filterRequest) {
+        return ResponseEntity.ok(productService.filterProducts(filterRequest));
+    }
+
+
 }

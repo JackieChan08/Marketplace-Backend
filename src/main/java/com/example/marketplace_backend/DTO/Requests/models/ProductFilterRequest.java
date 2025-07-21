@@ -12,7 +12,9 @@ public class ProductFilterRequest {
     private List<UUID> brandIds;
     private BigDecimal minPrice;
     private BigDecimal maxPrice;
-    private String sortBy;       // "price" или "name"
+    private String sortBy; // "price" или "name"
     private String sortDirection; // "asc" или "desc"
+    private int page = 0;
+    private int size = 10;
 }
 

@@ -56,10 +56,20 @@ public class AdminSubcategoryController {
     }
 
     @GetMapping("/category/{categoryId}/inactive")
-    public ResponseEntity<List<Subcategory>> getInactiveSubcategoriesByCategory(@PathVariable UUID categoryId) {
+    public ResponseEntity<List<SubcategoryResponse>> getInactiveSubcategoriesByCategory(@PathVariable UUID categoryId) {
         Optional<Category> categoryOpt = categoryService.findById(categoryId);
-        return categoryOpt.map(category -> ResponseEntity.ok(subcategoryService.findByCategoryDeActive(category))).orElseGet(() -> ResponseEntity.notFound().build());
+        if (categoryOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<Subcategory> subcategories = subcategoryService.findByCategoryDeActive(categoryOpt.get());
+        List<SubcategoryResponse> responses = subcategories.stream()
+                .map(converter::convertToSubcategoryResponse)
+                .toList();
+
+        return ResponseEntity.ok(responses);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<SubcategoryResponse> getSubcategoryById(@PathVariable UUID id) {
@@ -98,16 +108,18 @@ public class AdminSubcategoryController {
     }
 
     @PostMapping("/restore/{id}")
-    public ResponseEntity<Subcategory> restoreSubcategory(@PathVariable UUID id) {
+    public ResponseEntity<SubcategoryResponse> restoreSubcategory(@PathVariable UUID id) {
         try {
             subcategoryService.restore(id);
             Optional<Subcategory> subcategory = subcategoryService.findById(id);
-            return subcategory.map(ResponseEntity::ok)
+
+            return subcategory.map(sub -> ResponseEntity.ok(converter.convertToSubcategoryResponse(sub)))
                     .orElse(ResponseEntity.notFound().build());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     public ResponseEntity<?> createSubcategoryWithImages(@ModelAttribute SubcategoryRequest request
@@ -136,12 +148,20 @@ public class AdminSubcategoryController {
     }
 
     @PostMapping(value = "/edit/{id}", consumes = {"multipart/form-data"})
-    public ResponseEntity<Subcategory> editSubcategory(
+    public ResponseEntity<SubcategoryResponse> editSubcategory(
             @PathVariable UUID id,
             @ModelAttribute SubcategoryRequest request
     ) throws IOException {
-        return subcategoryService.updateSubcategory(id, request);
+        ResponseEntity<Subcategory> result = subcategoryService.updateSubcategory(id, request);
+
+        if (result.getStatusCode().is2xxSuccessful() && result.getBody() != null) {
+            SubcategoryResponse response = converter.convertToSubcategoryResponse(result.getBody());
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(result.getStatusCode()).build();
+        }
     }
+
 
     @DeleteMapping("/{subcategoryId}/images/{imageId}")
     public ResponseEntity<Void> deleteSubcategoryImage(
