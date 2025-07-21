@@ -11,6 +11,9 @@ import com.example.marketplace_backend.Service.Impl.ConverterService;
 import com.example.marketplace_backend.Service.Impl.FileUploadService;
 import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +31,15 @@ public class AdminProductController {
 
 
     @GetMapping()
-    public ResponseEntity<List<Product>> getAllProducts() {
-        return ResponseEntity.ok(productService.findAllActive());
+    public ResponseEntity<Page<ProductResponse>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productService.findAll(pageable);
+
+        Page<ProductResponse> responses = products.map(converterService::convertToProductResponse);
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/inactive")

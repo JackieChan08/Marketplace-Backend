@@ -32,8 +32,14 @@ public class Statuses {
     @Column
     private String color;
 
+    @Column(name = "order_flag")
+    private boolean orderFlag;
+
+    @Column(name = "product_flag")
+    private boolean productFlag;
+
     @OneToMany(mappedBy = "status", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("status-products") // Добавлен уникальный идентификатор
+    @JsonManagedReference("status-products")
     private List<ProductStatuses> productStatuses = new ArrayList<>();
 
     @OneToMany(mappedBy = "status", cascade = CascadeType.ALL, orphanRemoval = true)

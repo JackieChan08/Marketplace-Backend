@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,4 +15,10 @@ public interface StatusRepository extends JpaRepository<Statuses, UUID> {
 
     @Query("SELECT s FROM Statuses s WHERE s.name = :name")
     Optional<Statuses> findByName(@Param("name") String name);
+
+    @Query("SELECT s FROM Statuses s WHERE s.orderFlag = true ")
+    List<Statuses> findAllByOrderFlag();
+
+    @Query("SELECT s FROM Statuses s WHERE s.productFlag = true ")
+    List<Statuses> findAllByProductFlag();
 }
