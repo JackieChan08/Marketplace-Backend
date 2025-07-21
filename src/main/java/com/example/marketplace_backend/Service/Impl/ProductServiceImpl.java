@@ -1,6 +1,6 @@
 package com.example.marketplace_backend.Service.Impl;
 
-import com.example.marketplace_backend.DTO.Responses.models.FileResponse;
+import com.example.marketplace_backend.DTO.Requests.models.ProductFilterRequest;
 import com.example.marketplace_backend.DTO.Responses.models.ProductResponse;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
@@ -11,12 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import com.example.marketplace_backend.Model.Product;
+import com.example.marketplace_backend.Repositories.ProductRepository;
+import com.example.marketplace_backend.Service.Impl.ProductSpecification;
+import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,6 +34,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     private final SubcategoryRepository subcategoryRepository;
     private final StatusRepository statusRepository;
     private final ProductStatusRepository productStatusRepository;
+    private final ConverterService converter;
 
     @Value("${app.base-url}")
     private String baseUrl;
@@ -41,7 +47,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                               BrandRepository brandRepository,
                               ProductStatusRepository productStatusRepository,
                               StatusRepository statusRepository,
-                              ConverterService converterService) {
+                              ConverterService converter) {
         super(productRepository);
         this.productRepository = productRepository;
         this.fileUploadService = fileUploadService;
@@ -50,6 +56,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         this.subcategoryRepository = subcategoryRepository;
         this.statusRepository = statusRepository;
         this.productStatusRepository = productStatusRepository;
+        this.converter = converter;
     }
 
     public Page<Product> findAllActiveByBrand(UUID brandId, Pageable pageable) {
@@ -59,12 +66,24 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         return productRepository.findActiveBySubcategory(subcategoryId, pageable);
     }
 
+    public Page<Product> findAllActiveByCategoryId(UUID categoryId, Pageable pageable) {
+        return productRepository.findActiveByCategory(categoryId, pageable);
+    }
+
     public List<Product> findAllDeActive() {
         return productRepository.findAllDeActive();
     }
 
+    public Page<Product> findAllDeActive(Pageable pageable) {
+        return productRepository.findAllDeActive(pageable);
+    }
+
     public List<Product> findAllActive() {
         return productRepository.findAllActive();
+    }
+
+    public Page<Product> findAllActive(Pageable pageable) {
+        return productRepository.findAllActive(pageable);
     }
 
     public Product findByName(String name) {
@@ -323,5 +342,25 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         }
 
         return removed;
+    }
+
+    public List<ProductResponse> filterProducts(ProductFilterRequest filterRequest) {
+        Specification<Product> spec =
+                ProductSpecification.isNotDeleted()
+                        .and(ProductSpecification.hasSubcategoryIds(filterRequest.getSubcategoryIds()))
+                        .and(ProductSpecification.hasBrandIds(filterRequest.getBrandIds()))
+                        .and(ProductSpecification.hasPriceBetween(filterRequest.getMinPrice(), filterRequest.getMaxPrice()));
+
+
+        // Сортировка
+        String sortBy = filterRequest.getSortBy() != null ? filterRequest.getSortBy() : "name";
+        String direction = filterRequest.getSortDirection() != null ? filterRequest.getSortDirection() : "asc";
+        Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+
+        List<Product> products = productRepository.findAll(spec, sort);
+
+        return products.stream()
+                .map(converter::convertToProductResponse)
+                .collect(Collectors.toList());
     }
 }

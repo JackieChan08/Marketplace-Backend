@@ -35,8 +35,12 @@ public class AdminCategoryController {
     }
 
     @GetMapping("/inactive")
-    public ResponseEntity<List<Category>> getInactiveCategories() {
-        return ResponseEntity.ok(categoryService.findAllDeActive());
+    public ResponseEntity<Page<Category>> getInactiveCategories(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(categoryService.findAllDeActive(pageable));
     }
 
     @GetMapping("/{id}")

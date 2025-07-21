@@ -37,8 +37,13 @@ public class AdminBrandController {
     }
 
     @GetMapping("/inactive")
-    public ResponseEntity<List<Brand>> getInactiveBrands() {
-        return ResponseEntity.ok(brandService.findAllDeActive());
+    public ResponseEntity<Page<Brand>> getInactiveBrands(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Brand> brands = brandService.findAllDeActive(pageable);
+        return ResponseEntity.ok(brands);
     }
 
     @GetMapping("/{id}")

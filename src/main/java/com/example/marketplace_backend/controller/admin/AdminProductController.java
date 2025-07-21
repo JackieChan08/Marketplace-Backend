@@ -1,12 +1,8 @@
 package com.example.marketplace_backend.controller.admin;
 
-import com.example.marketplace_backend.DTO.Requests.models.CategoryRequest;
 import com.example.marketplace_backend.DTO.Requests.models.ProductRequest;
 import com.example.marketplace_backend.DTO.Responses.models.ProductResponse;
-import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.Product;
-import com.example.marketplace_backend.Repositories.BrandRepository;
-import com.example.marketplace_backend.Repositories.SubcategoryRepository;
 import com.example.marketplace_backend.Service.Impl.ConverterService;
 import com.example.marketplace_backend.Service.Impl.FileUploadService;
 import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
@@ -43,8 +39,15 @@ public class AdminProductController {
     }
 
     @GetMapping("/inactive")
-    public ResponseEntity<List<Product>> getInactiveProducts() {
-        return ResponseEntity.ok(productService.findAllDeActive());
+    public ResponseEntity<Page<ProductResponse>> getInactiveProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productService.findAllDeActive(pageable);
+
+        Page<ProductResponse> responses = products.map(converterService::convertToProductResponse);
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("{id}")

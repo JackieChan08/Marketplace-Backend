@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.controller;
 
+import com.example.marketplace_backend.DTO.Requests.models.ProductFilterRequest;
 import com.example.marketplace_backend.DTO.Responses.models.BrandResponse;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Product;
@@ -50,7 +51,7 @@ public class ProductController {
         return ResponseEntity.ok(productResponse);
     }
 
-    @GetMapping("/list")
+    @GetMapping
     public ResponseEntity<Page<ProductResponse>> getProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -62,7 +63,7 @@ public class ProductController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/list/search")
+    @GetMapping("/search")
     public ResponseEntity<Page<ProductResponse>> findByNameContaining(
             @RequestParam String query,
             @RequestParam(defaultValue = "0") int page,
@@ -96,7 +97,21 @@ public class ProductController {
         return ResponseEntity.ok(responses);
     }
 
+    @GetMapping("/category")
+    public ResponseEntity<Page<ProductResponse>> getProductsByCategory(
+            @RequestParam UUID categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productService.findAllActiveByCategoryId(categoryId, pageable);
+        Page<ProductResponse> responses = products.map(converter::convertToProductResponse);
+        return ResponseEntity.ok(responses);
+    }
 
+    @PostMapping("/filter")
+    public ResponseEntity<List<ProductResponse>> filterProducts(@RequestBody ProductFilterRequest filterRequest) {
+        return ResponseEntity.ok(productService.filterProducts(filterRequest));
+    }
 
 
 }
