@@ -35,19 +35,26 @@ public class AdminCategoryController {
     }
 
     @GetMapping("/inactive")
-    public ResponseEntity<Page<Category>> getInactiveCategories(
+    public ResponseEntity<Page<CategoryResponse>> getInactiveCategories(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(categoryService.findAllDeActive(pageable));
+        Page<Category> categories = categoryService.findAllDeActive(pageable);
+        Page<CategoryResponse> responses = categories.map(converterService::convertToCategoryResponse);
+        return ResponseEntity.ok(responses);
     }
 
+
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable UUID id) {
+    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable UUID id) {
         Optional<Category> category = categoryService.findById(id);
-        return category.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return category
+                .map(converterService::convertToCategoryResponse)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
+
 
     @GetMapping("/exists/{name}")
     public ResponseEntity<Boolean> categoryExistsByName(@PathVariable String name) {
@@ -73,15 +80,19 @@ public class AdminCategoryController {
     }
 
     @PostMapping("/restore/{id}")
-    public ResponseEntity<Category> restoreCategory(@PathVariable UUID id) {
+    public ResponseEntity<CategoryResponse> restoreCategory(@PathVariable UUID id) {
         try {
             categoryService.restore(id);
             Optional<Category> category = categoryService.findById(id);
-            return category.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+            return category
+                    .map(converterService::convertToCategoryResponse)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     public ResponseEntity<?> createCategoryWithImages(@ModelAttribute CategoryRequest request)

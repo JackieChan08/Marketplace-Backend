@@ -17,7 +17,7 @@ import java.util.UUID;
 public class AdminStatusController {
     private final StatusServiceImpl statusService;
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<List<Statuses>> getAllStatuses() {
         return ResponseEntity.ok(statusService.getAllStatuses());
     }

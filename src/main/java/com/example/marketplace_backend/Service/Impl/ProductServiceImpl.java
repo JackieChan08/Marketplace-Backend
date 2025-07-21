@@ -10,6 +10,7 @@ import com.example.marketplace_backend.DTO.Requests.models.ProductRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -345,23 +346,23 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         return removed;
     }
 
-    public List<ProductResponse> filterProducts(ProductFilterRequest filterRequest) {
+    public Page<ProductResponse> filterProducts(ProductFilterRequest filterRequest) {
         Specification<Product> spec =
                 ProductSpecification.isNotDeleted()
                         .and(ProductSpecification.hasSubcategoryIds(filterRequest.getSubcategoryIds()))
                         .and(ProductSpecification.hasBrandIds(filterRequest.getBrandIds()))
                         .and(ProductSpecification.hasPriceBetween(filterRequest.getMinPrice(), filterRequest.getMaxPrice()));
 
-
         // Сортировка
         String sortBy = filterRequest.getSortBy() != null ? filterRequest.getSortBy() : "name";
         String direction = filterRequest.getSortDirection() != null ? filterRequest.getSortDirection() : "asc";
         Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
 
-        List<Product> products = productRepository.findAll(spec, sort);
+        Pageable pageable = PageRequest.of(filterRequest.getPage(), filterRequest.getSize(), sort);
 
-        return products.stream()
-                .map(converter::convertToProductResponse)
-                .collect(Collectors.toList());
+        Page<Product> productPage = productRepository.findAll(spec, pageable);
+
+        return productPage.map(converter::convertToProductResponse);
     }
+
 }

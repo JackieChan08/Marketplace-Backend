@@ -26,32 +26,41 @@ public class AdminBrandController {
     private final FileUploadService fileUploadService;
     private final ConverterService converterService;
 
-    @GetMapping("/list")
-    public ResponseEntity<Page<Brand>> getPaginatedBrands(
+    @GetMapping
+    public ResponseEntity<Page<BrandResponse>> getPaginatedBrands(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Brand> brands = brandService.findAll(pageable);
-        return ResponseEntity.ok(brands);
+
+        Page<BrandResponse> responses = brands.map(converterService::convertToBrandResponse);
+        return ResponseEntity.ok(responses);
     }
 
+
     @GetMapping("/inactive")
-    public ResponseEntity<Page<Brand>> getInactiveBrands(
+    public ResponseEntity<Page<BrandResponse>> getInactiveBrands(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Brand> brands = brandService.findAllDeActive(pageable);
-        return ResponseEntity.ok(brands);
+
+        Page<BrandResponse> responses = brands.map(converterService::convertToBrandResponse);
+        return ResponseEntity.ok(responses);
     }
 
+
     @GetMapping("/{id}")
-    public ResponseEntity<Brand> getBrandById(@PathVariable UUID id) {
+    public ResponseEntity<BrandResponse> getBrandById(@PathVariable UUID id) {
         Optional<Brand> brand = brandService.findById(id);
-        return brand.map(ResponseEntity::ok)
+        return brand
+                .map(converterService::convertToBrandResponse)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
 
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Long>> getBrandsStats() {
@@ -72,16 +81,19 @@ public class AdminBrandController {
     }
 
     @PostMapping("/restore/{id}")
-    public ResponseEntity<Brand> restoreBrand(@PathVariable UUID id) {
+    public ResponseEntity<BrandResponse> restoreBrand(@PathVariable UUID id) {
         try {
             brandService.restore(id);
             Optional<Brand> brand = brandService.findById(id);
-            return brand.map(ResponseEntity::ok)
+            return brand
+                    .map(converterService::convertToBrandResponse)
+                    .map(ResponseEntity::ok)
                     .orElse(ResponseEntity.notFound().build());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     public ResponseEntity<?> createBrandWithImages(@ModelAttribute BrandRequest request) throws Exception {

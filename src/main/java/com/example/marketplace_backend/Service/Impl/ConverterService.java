@@ -4,11 +4,14 @@ import com.example.marketplace_backend.DTO.Responses.models.*;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.BrandImage;
 import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
+import com.example.marketplace_backend.Model.Intermediate_objects.OrderItem;
+import com.example.marketplace_backend.Model.Intermediate_objects.OrderStatuses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +52,8 @@ public class ConverterService {
             response.setBrandId(product.getBrand().getId());
             response.setBrandName(product.getBrand().getName());
         }
+
+
 
         // Обработка изображений
         if (product.getProductImages() != null && !product.getProductImages().isEmpty()) {
@@ -180,6 +185,46 @@ public class ConverterService {
         }
 
         return response;
+    }
+
+    public OrderResponse convertToOrderResponse(Order order) {
+        return OrderResponse.builder()
+                .id(order.getId())
+                .address(order.getAddress())
+                .phoneNumber(order.getPhoneNumber())
+                .comment(order.getComment())
+                .totalPrice(order.getTotalPrice())
+                .isWholesale(order.isWholesale())
+                .createdAt(order.getCreatedAt())
+                .userId(order.getUser().getId())
+                .username(order.getUser().getName())
+                .orderItems(convertOrderItems(order.getOrderItems()))
+                .statuses(convertStatuses(order.getOrderStatuses()))
+                .build();
+    }
+
+    private List<OrderItemResponse> convertOrderItems(List<OrderItem> items) {
+        if (items == null) return List.of();
+
+        return items.stream().map(item -> {
+            OrderItemResponse response = new OrderItemResponse();
+            response.setProductId(item.getProduct().getId());
+            response.setProductName(item.getProduct().getName());
+            response.setQuantity(item.getQuantity());
+            response.setPrice(item.getPrice());
+            return response;
+        }).collect(Collectors.toList());
+    }
+
+    private List<OrderStatusResponse> convertStatuses(List<OrderStatuses> statuses) {
+        if (statuses == null) return List.of();
+
+        return statuses.stream().map(status -> {
+            OrderStatusResponse response = new OrderStatusResponse();
+            response.setName(status.getStatus().getName());
+            response.setColor(status.getStatus().getColor());
+            return response;
+        }).collect(Collectors.toList());
     }
 
 }

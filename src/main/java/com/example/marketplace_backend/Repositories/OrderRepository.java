@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.Repositories;
 
 import com.example.marketplace_backend.Model.Order;
+import com.example.marketplace_backend.Model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,6 +34,9 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     @Query("SELECT o FROM Order o WHERE o.isWholesale = false ORDER BY o.createdAt DESC")
     List<Order> findAllRetailOrders();
+
+    @Query("SELECT o from Order o where o.user.id = :userId")
+    Page<Order> findOrdersByUser(Pageable pageable, @Param("userId") UUID userId);
 
 
     // Закомментированные методы для старой структуры OrderStatuses

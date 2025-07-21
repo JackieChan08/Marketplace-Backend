@@ -153,4 +153,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         order.setAddress(address);
         return orderRepository.save(order);
     }
+
+    public Page<Order> findOrdersByUserId(Pageable pageable, UUID userId) {
+        return orderRepository.findOrdersByUser(pageable, userId);
+    }
 }
