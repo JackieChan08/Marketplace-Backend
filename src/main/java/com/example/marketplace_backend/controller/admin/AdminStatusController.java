@@ -22,6 +22,16 @@ public class AdminStatusController {
         return ResponseEntity.ok(statusService.getAllStatuses());
     }
 
+    @GetMapping("/by-order")
+    public ResponseEntity<List<Statuses>> getAllStatusesByOrder() {
+        return ResponseEntity.ok(statusService.getAllStatusesByOrder());
+    }
+
+    @GetMapping("/by-product")
+    public ResponseEntity<List<Statuses>> getAllStatusesByProduct() {
+        return ResponseEntity.ok(statusService.getAllStatusesByProduct());
+    }
+
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     public ResponseEntity<Statuses> createStatuses(
             @ModelAttribute StatusRequest request
@@ -42,4 +52,6 @@ public class AdminStatusController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+
 }

@@ -13,7 +13,7 @@
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="color" type="VARCHAR(255)"/>
+            <column name="primary_color" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
 

@@ -35,6 +35,8 @@ public class StatusServiceImpl {
         Statuses statuses = new Statuses();
         statuses.setName(request.getName());
         statuses.setColor(request.getColor());
+        statuses.setOrderFlag(request.isOrderFlag());
+        statuses.setProductFlag(request.isProductFlag());
 
         statusRepository.save(statuses);
 
@@ -46,5 +48,13 @@ public class StatusServiceImpl {
             throw new IllegalArgumentException("Status not found with id: " + id);
         }
         statusRepository.deleteById(id);
+    }
+
+    public List<Statuses> getAllStatusesByOrder() {
+        return statusRepository.findAllByOrderFlag();
+    }
+
+    public List<Statuses> getAllStatusesByProduct() {
+        return statusRepository.findAllByProductFlag();
     }
 }

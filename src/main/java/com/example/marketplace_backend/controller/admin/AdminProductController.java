@@ -26,13 +26,13 @@ public class AdminProductController {
     private final ConverterService converterService;
 
 
-    @GetMapping
-    public ResponseEntity<Page<ProductResponse>> getProducts(
+    @GetMapping()
+    public ResponseEntity<Page<ProductResponse>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Product> products = productService.findAllActive(pageable);
+        Page<Product> products = productService.findAll(pageable);
 
         Page<ProductResponse> responses = products.map(converterService::convertToProductResponse);
         return ResponseEntity.ok(responses);

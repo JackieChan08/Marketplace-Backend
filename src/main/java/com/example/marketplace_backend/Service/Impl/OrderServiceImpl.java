@@ -5,6 +5,7 @@ import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.CartItem;
 import com.example.marketplace_backend.Model.Intermediate_objects.OrderItem;
 import com.example.marketplace_backend.Model.Intermediate_objects.OrderStatuses;
+import com.example.marketplace_backend.Model.Intermediate_objects.ProductStatuses;
 import com.example.marketplace_backend.Repositories.*;
 import com.example.marketplace_backend.DTO.Requests.models.OrderRequest;
 import org.springframework.data.domain.Page;
@@ -95,20 +96,29 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
 
         Order savedOrder = orderRepository.save(order);
 
-        // Устанавливаем начальный статус заказа
-        Statuses initialStatus = statusRepository.findByName("Создан")
-                .orElseThrow(() -> new RuntimeException("Initial order status not found"));
+        // Обрабатываем статусы
+        if (request.getStatusId() != null && !request.getStatusId().isEmpty()) {
+            for (UUID statusId : request.getStatusId()) {
+                Statuses status = statusRepository.findById(statusId)
+                        .orElseThrow(() -> new RuntimeException("Status not found with ID: " + statusId));
 
-        OrderStatuses orderStatus = OrderStatuses.builder()
-                .order(savedOrder)
-                .status(initialStatus)
-                .build();
-        orderStatusRepository.save(orderStatus);
+                OrderStatuses orderStatuses = OrderStatuses.builder()
+                        .order(savedOrder)
+                        .status(status)
+                        .build();
+                orderStatusRepository.save(orderStatuses);
+            }
+        } else {
+            // Устанавливаем статус по умолчанию, если не указан
+            Statuses defaultStatus = statusRepository.findByName("Активен")
+                    .orElseThrow(() -> new RuntimeException("Default status not found"));
 
-
-        cart.getCartItems().removeIf(item -> selectedItemIds.contains(item.getId()));
-        cartRepository.save(cart);
-
+            OrderStatuses orderStatuses = OrderStatuses.builder()
+                    .order(savedOrder)
+                    .status(defaultStatus)
+                    .build();
+            orderStatusRepository.save(orderStatuses);
+        }
         return OrderMapper.toOrderResponse(savedOrder);
     }
 

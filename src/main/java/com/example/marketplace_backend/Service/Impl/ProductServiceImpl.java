@@ -241,7 +241,6 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
             productStatusRepository.save(productStatus);
         }
 
-        // ИСПРАВЛЕНИЕ: Используем метод с JOIN FETCH для получения всех связанных данных
         Product finalProduct = productRepository.findByIdWithImagesAndStatuses(savedProduct.getId())
                 .orElseThrow(() -> new RuntimeException("Product not found after creation"));
 
