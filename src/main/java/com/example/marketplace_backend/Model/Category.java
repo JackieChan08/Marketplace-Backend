@@ -1,7 +1,9 @@
 package com.example.marketplace_backend.Model;
 
+import com.example.marketplace_backend.Model.Intermediate_objects.CategoryIcon;
 import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
+import com.example.marketplace_backend.Model.Intermediate_objects.SubcategoryImage;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -51,4 +53,8 @@ public class Category {
 
     @Column(name = "priority", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean priority;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CategoryIcon> categoryIcons;
 }

@@ -6,7 +6,10 @@ import com.example.marketplace_backend.Model.Brand;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
 import com.example.marketplace_backend.Service.Impl.ConverterService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class AdminCategoryController {
     private final CategoryServiceImpl categoryService;
     private final ConverterService converterService;
+    private static final Logger log = LoggerFactory.getLogger(AdminCategoryController.class);
 
     @GetMapping
     public ResponseEntity<Page<CategoryResponse>> getAllCategories(
@@ -121,17 +125,5 @@ public class AdminCategoryController {
     ) throws IOException {
         CategoryResponse categoryResponse = converterService.convertToCategoryResponse(categoryService.updateCategory(id, request));
         return ResponseEntity.ok(categoryResponse);
-    }
-
-    @DeleteMapping("/{categoryId}/images/{imageId}")
-    public ResponseEntity<Void> deleteCategoryImage(
-            @PathVariable UUID categoryId
-    ) {
-        try {
-            categoryService.deleteCategoryImage(categoryId);
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
     }
 }

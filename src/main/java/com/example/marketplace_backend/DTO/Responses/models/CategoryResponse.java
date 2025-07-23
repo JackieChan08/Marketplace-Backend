@@ -22,4 +22,5 @@ public class CategoryResponse {
     private LocalDateTime deletedAt;
     private boolean priority;
     private CategoryImageResponse categoryImage;
+    private CategoryIconResponse categoryIcon;
 }

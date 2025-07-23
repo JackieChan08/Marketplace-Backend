@@ -3,6 +3,7 @@ package com.example.marketplace_backend.Service.Impl;
 import com.example.marketplace_backend.DTO.Responses.models.*;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.BrandImage;
+import com.example.marketplace_backend.Model.Intermediate_objects.CategoryIcon;
 import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -101,11 +102,11 @@ public class ConverterService {
         response.setDeletedAt(category.getDeletedAt());
         response.setPriority(category.isPriority());
 
+        // Обработка изображения категории
         if (category.getCategoryImages() != null && !category.getCategoryImages().isEmpty()) {
             CategoryImage firstImage = category.getCategoryImages().iterator().next();
             CategoryImageResponse categoryImageResponse = new CategoryImageResponse();
 
-            // предположим, внутри image вложен FileEntity
             FileEntity image = firstImage.getImage();
             if (image != null) {
                 FileResponse fileResponse = new FileResponse();
@@ -119,6 +120,26 @@ public class ConverterService {
             }
 
             response.setCategoryImage(categoryImageResponse);
+        }
+
+        // Обработка иконки категории
+        if (category.getCategoryIcons() != null && !category.getCategoryIcons().isEmpty()) {
+            CategoryIcon firstIcon = category.getCategoryIcons().iterator().next();
+            CategoryIconResponse categoryIconResponse = new CategoryIconResponse();
+
+            FileEntity icon = firstIcon.getIcon();
+            if (icon != null) {
+                FileResponse fileResponse = new FileResponse();
+                fileResponse.setOriginalName(icon.getOriginalName());
+                fileResponse.setUniqueName(icon.getUniqueName());
+                fileResponse.setFileType(icon.getFileType());
+                fileResponse.setUrl(baseUrl + "/uploads/" + icon.getUniqueName());
+
+                categoryIconResponse.setId(firstIcon.getId());
+                categoryIconResponse.setIcon(fileResponse);
+            }
+
+            response.setCategoryIcon(categoryIconResponse);
         }
 
         return response;
