@@ -2,6 +2,7 @@ package com.example.marketplace_backend.Model.Intermediate_objects;
 
 import com.example.marketplace_backend.Model.Favorite;
 import com.example.marketplace_backend.Model.Product;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,10 +36,12 @@ public class FavoriteItem {
     private LocalDateTime addedAt;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "favorite_id", nullable = false)
     private Favorite favorite;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 }

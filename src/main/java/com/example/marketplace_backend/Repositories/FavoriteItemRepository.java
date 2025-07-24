@@ -1,11 +1,14 @@
 package com.example.marketplace_backend.Repositories;
 
 import com.example.marketplace_backend.Model.Intermediate_objects.FavoriteItem;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.UUID;
 
 @Repository
-public interface FavoriteItemRepository {
-    Optional<FavoriteItem> findByUserId(String userId);
+public interface FavoriteItemRepository extends JpaRepository<FavoriteItem, UUID> {
+    List<FavoriteItem> findByFavoriteId(UUID favoriteId);
+    void deleteByFavoriteIdAndProductId(UUID favoriteId, UUID productId);
 }
