@@ -57,7 +57,7 @@ public class ProductController {
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Product> products = productService.findAll(pageable);
+        Page<Product> products = productService.findAllActive(pageable);
 
         Page<ProductResponse> responses = products.map(converter::convertToProductResponse);
         return ResponseEntity.ok(responses);
@@ -70,7 +70,7 @@ public class ProductController {
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Product> products = productService.findByNameContaining(query, pageable);
+        Page<Product> products = productService.findByNameContainingActive(query, pageable);
 
         Page<ProductResponse> responses = products.map(converter::convertToProductResponse);
         return ResponseEntity.ok(responses);

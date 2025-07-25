@@ -1,28 +1,29 @@
 package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.DTO.Requests.models.ProductFilterRequest;
+import com.example.marketplace_backend.DTO.Requests.models.ProductParameterRequest;
+import com.example.marketplace_backend.DTO.Requests.models.ProductRequest;
+import com.example.marketplace_backend.DTO.Requests.models.ProductSubParameterRequest;
 import com.example.marketplace_backend.DTO.Responses.models.ProductResponse;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductStatuses;
 import com.example.marketplace_backend.Repositories.*;
-import com.example.marketplace_backend.DTO.Requests.models.ProductRequest;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import com.example.marketplace_backend.Model.Product;
-import com.example.marketplace_backend.Repositories.ProductRepository;
-import com.example.marketplace_backend.Service.Impl.ProductSpecification;
-import org.springframework.data.jpa.domain.Specification;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,6 +37,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     private final StatusRepository statusRepository;
     private final ProductStatusRepository productStatusRepository;
     private final ConverterService converter;
+    private final ProductParametersRepository pproductParametersRepository;
+    private final ProductParametersRepository productParametersRepository;
 
     @Value("${app.base-url}")
     private String baseUrl;
@@ -48,7 +51,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                               BrandRepository brandRepository,
                               ProductStatusRepository productStatusRepository,
                               StatusRepository statusRepository,
-                              ConverterService converter) {
+                              ConverterService converter, ProductParametersRepository pproductParametersRepository, ProductParametersRepository productParametersRepository) {
         super(productRepository);
         this.productRepository = productRepository;
         this.fileUploadService = fileUploadService;
@@ -58,6 +61,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         this.statusRepository = statusRepository;
         this.productStatusRepository = productStatusRepository;
         this.converter = converter;
+        this.pproductParametersRepository = pproductParametersRepository;
+        this.productParametersRepository = productParametersRepository;
     }
 
     public Page<Product> findAllActiveByBrand(UUID brandId, Pageable pageable) {
@@ -105,6 +110,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
 
     public Page<Product> findByNameContaining(String name, Pageable pageable) {
         return productRepository.findByNameContaining(name, pageable);
+    }
+    public Page<Product> findByNameContainingActive(String name, Pageable pageable) {
+        return productRepository.findByNameContainingActive(name, pageable);
     }
 
     public List<Product> findAllActiveBySubcategory(Subcategory subcategory){
@@ -242,6 +250,38 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
             productStatusRepository.save(productStatus);
         }
 
+        ObjectMapper mapper = new ObjectMapper();
+        List<ProductParameterRequest> parameters = new ArrayList<>();
+
+        if (dto.getParametersJson() != null && !dto.getParametersJson().isEmpty()) {
+            parameters = mapper.readValue(
+                    dto.getParametersJson(),
+                    new TypeReference<List<ProductParameterRequest>>() {}
+            );
+        }
+
+
+        if (parameters != null) {
+            for (ProductParameterRequest paramReq : parameters) {
+                ProductParameters parameter = new ProductParameters();
+                parameter.setName(paramReq.getName());
+                parameter.setProduct(product);
+
+                List<ProductSubParameters> subParams = new ArrayList<>();
+                for (ProductSubParameterRequest sub : paramReq.getSubParameters()) {
+                    ProductSubParameters s = new ProductSubParameters();
+                    s.setName(sub.getName());
+                    s.setValue(sub.getValue());
+                    s.setProductParameter(parameter);
+                    subParams.add(s);
+                }
+
+                parameter.setProductSubParameters(subParams);
+                productParametersRepository.save(parameter);
+            }
+        }
+
+
         Product finalProduct = productRepository.findByIdWithImagesAndStatuses(savedProduct.getId())
                 .orElseThrow(() -> new RuntimeException("Product not found after creation"));
 
@@ -296,6 +336,36 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                         .image(fileEntity)
                         .build();
                 productImageRepository.save(productImage);
+            }
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        List<ProductParameterRequest> parameters = new ArrayList<>();
+
+        if (dto.getParametersJson() != null && !dto.getParametersJson().isEmpty()) {
+            parameters = mapper.readValue(
+                    dto.getParametersJson(),
+                    new TypeReference<List<ProductParameterRequest>>() {}
+            );
+        }
+
+
+        if (parameters != null) {
+            for (ProductParameterRequest paramReq : parameters) {
+                ProductParameters parameter = new ProductParameters();
+                parameter.setName(paramReq.getName());
+                parameter.setProduct(product);
+
+                List<ProductSubParameters> subParams = new ArrayList<>();
+                for (ProductSubParameterRequest sub : paramReq.getSubParameters()) {
+                    ProductSubParameters s = new ProductSubParameters();
+                    s.setName(sub.getName());
+                    s.setValue(sub.getValue());
+                    s.setProductParameter(parameter);
+                    subParams.add(s);
+                }
+
+                parameter.setProductSubParameters(subParams);
+                productParametersRepository.save(parameter);
             }
         }
 

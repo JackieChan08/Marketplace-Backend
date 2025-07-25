@@ -35,7 +35,7 @@ public class AdminCategoryController {
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(categoryService.findAll(pageable));
+        return ResponseEntity.ok(categoryService.findAllActive(pageable).map(converterService::convertToCategoryResponse));
     }
 
     @GetMapping("/inactive")

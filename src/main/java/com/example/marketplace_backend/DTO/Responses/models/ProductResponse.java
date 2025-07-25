@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +27,10 @@ public class ProductResponse {
     private String title;
     private String description;
 
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
+
     private String subcategoryName;
     private UUID subcategoryId;
 
@@ -36,4 +41,7 @@ public class ProductResponse {
 
     private List<FileResponse> images;
     private List<String> statuses;
+
+    private List<ProductParameterResponse> parameters;
+
 }
