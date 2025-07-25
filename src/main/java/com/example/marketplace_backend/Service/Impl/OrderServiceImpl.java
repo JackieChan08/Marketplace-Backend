@@ -110,7 +110,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
             }
         } else {
             // Устанавливаем статус по умолчанию, если не указан
-            Statuses defaultStatus = statusRepository.findByName("Активен")
+            Statuses defaultStatus = statusRepository.findByName("Без статуса")
                     .orElseThrow(() -> new RuntimeException("Default status not found"));
 
             OrderStatuses orderStatuses = OrderStatuses.builder()
@@ -119,6 +119,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
                     .build();
             orderStatusRepository.save(orderStatuses);
         }
+        cart.getCartItems().removeIf(item -> selectedItemIds.contains(item.getId()));
+        cartRepository.save(cart);
+
         return OrderMapper.toOrderResponse(savedOrder);
     }
 

@@ -1,0 +1,2 @@
+id;name;price;discounted_price;created_at;updated_at;deleted_at;availability;brand_id;subcategory_id;title;description
+a57e96e9-64c8-4ad0-8425-77b094543f42;iPhone 15;95000.00;;2025-07-25 16:05:10.040845;2025-07-25 16:05:10.040845;;t;6d9a3c1c-e1e6-445b-8cad-0136f3808205;c7e6b016-b850-4ed2-8491-268ed022cbc5;Здесь должен быть заголовок;Здесь должен быть полное описание

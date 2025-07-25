@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="Categories" author="JekiChan08">
+        <loadData tableName="categories" file="data/categories.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+    <changeSet id="Files" author="JekiChan08">
+        <loadData tableName="files" file="data/files.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+    <changeSet id="brand" author="JekiChan08">
+        <loadData tableName="brand" file="data/brand.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+    <changeSet id="ci" author="JekiChan08">
+        <loadData tableName="category_image" file="data/category_image.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+    <changeSet id="ci2" author="JekiChan08">
+        <loadData tableName="category_icons" file="data/category_icon.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+    <changeSet id="subcategories" author="JekiChan08">
+        <loadData tableName="subcategories" file="data/subcategories.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+    <changeSet id="bi" author="JekiChan08">
+        <loadData tableName="brand_images" file="data/brand_images.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+    <changeSet id="product" author="JekiChan08">
+        <loadData tableName="products" file="data/products.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+    <changeSet id="pi" author="JekiChan08">
+        <loadData tableName="product_images" file="data/product_images.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+    <changeSet id="pp" author="JekiChan08">
+        <loadData tableName="product_parameters" file="data/product_parameters.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+    <changeSet id="statuses" author="JekiChan08">
+        <loadData tableName="statuses" file="data/statuses.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+    <changeSet id="ps" author="JekiChan08">
+        <loadData tableName="product_statuses" file="data/product_statuses.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+    <changeSet id="psp" author="JekiChan08">
+        <loadData tableName="product_sub_parameters" file="data/product_sub_parameters.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+
+
+</databaseChangeLog>
