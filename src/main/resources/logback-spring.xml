@@ -20,12 +20,14 @@
         </encoder>
     </appender>
 
-    <!-- Файловый аппендер -->
+    <!-- Файловый аппендер с улучшенной ролинг политикой -->
     <appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/app.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/app-%d{yyyy-MM-dd}.log</fileNamePattern>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/app-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
             <maxHistory>7</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
         </rollingPolicy>
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
@@ -33,10 +35,69 @@
         </encoder>
     </appender>
 
-    <!-- Корневой логгер -->
+    <!-- Отдельный аппендер для ошибок -->
+    <appender name="ErrorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/error.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/error-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>300MB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- Профили для разных окружений -->
+    <springProfile name="dev,local">
+        <logger name="com.example.marketplace_backend" level="DEBUG" additivity="false">
+            <appender-ref ref="Console" />
+            <appender-ref ref="File" />
+        </logger>
+        <root level="INFO">
+            <appender-ref ref="Console" />
+            <appender-ref ref="File" />
+        </root>
+    </springProfile>
+
+    <springProfile name="test">
+        <logger name="com.example.marketplace_backend" level="DEBUG" additivity="false">
+            <appender-ref ref="Console" />
+        </logger>
+        <root level="WARN">
+            <appender-ref ref="Console" />
+        </root>
+    </springProfile>
+
+    <springProfile name="prod,production">
+        <logger name="com.example.marketplace_backend" level="INFO" additivity="false">
+            <appender-ref ref="File" />
+            <appender-ref ref="ErrorFile" />
+        </logger>
+        <root level="WARN">
+            <appender-ref ref="File" />
+            <appender-ref ref="ErrorFile" />
+        </root>
+    </springProfile>
+
+    <!-- Настройки для специфических логгеров -->
+    <logger name="org.springframework.security" level="WARN" />
+    <logger name="org.springframework.web" level="WARN" />
+    <logger name="org.hibernate" level="WARN" />
+    <logger name="com.zaxxer.hikari" level="WARN" />
+
+    <!-- Дефолтная конфигурация (если профиль не указан) -->
     <root level="INFO">
         <appender-ref ref="Console" />
         <appender-ref ref="File" />
+        <appender-ref ref="ErrorFile" />
     </root>
 
 </configuration>
