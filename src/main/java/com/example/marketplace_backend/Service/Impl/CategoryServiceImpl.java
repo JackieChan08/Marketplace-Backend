@@ -194,12 +194,9 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
             category.setName(request.getName());
         }
 
-        if (request.isPriority()) {
-            category.setPriority(true);
-        }
+        category.setPriority(request.isPriority());
 
         if (request.getImage() != null && !request.getImage().isEmpty()) {
-
 
             // Сохраняем новое изображение
             FileEntity savedImage = fileUploadService.saveImage(request.getImage());
@@ -223,9 +220,6 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
         }
 
         if (request.getIcon() != null && !request.getIcon().isEmpty()) {
-            if (category.getCategoryIcons() != null && !category.getCategoryIcons().isEmpty()) {
-                deleteOldCategoryIcon(category);
-            }
 
             FileEntity savedIcon = fileUploadService.saveImage(request.getIcon());
 

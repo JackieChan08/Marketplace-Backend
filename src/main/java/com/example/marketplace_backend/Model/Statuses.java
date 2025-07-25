@@ -29,8 +29,11 @@ public class Statuses {
     @Column
     private String name;
 
-    @Column
-    private String color;
+    @Column(name = "primary_color")
+    private String primaryColor;
+
+    @Column(name = "background_color")
+    private String backgroundColor;
 
     @Column(name = "order_flag")
     private boolean orderFlag;

@@ -5,5 +5,6 @@ import lombok.Data;
 @Data
 public class OrderStatusResponse {
     private String name;
-    private String color;
+    private String primaryColor;
+    private String backgroundColor;
 }
