@@ -128,45 +128,57 @@ public class FileUploadService {
             return false;
         }
 
+        boolean dbDeleted = false;
+        boolean fileDeleted = false;
+
         try {
+            // Сначала удаляем запись из БД
             Optional<FileEntity> fileEntityOpt = fileRepository.findByUniqueName(uniqueName);
 
-            if (fileEntityOpt.isEmpty()) {
+            if (fileEntityOpt.isPresent()) {
+                FileEntity fileEntity = fileEntityOpt.get();
+                fileRepository.delete(fileEntity);
+                dbDeleted = true;
+                log.info("Запись файла удалена из БД: {}", uniqueName);
+            } else {
                 log.warn("Файл не найден в базе данных: {}", uniqueName);
-                return false;
             }
 
-            FileEntity fileEntity = fileEntityOpt.get();
-
-            // Удаление файла с диска
+            // Затем удаляем файл с диска
             Path filePath = Paths.get(uploadsDir).resolve(uniqueName).normalize();
 
             // Проверка на path traversal атаки
             Path uploadPath = Paths.get(uploadsDir);
             if (!filePath.startsWith(uploadPath)) {
                 log.error("Недопустимый путь к файлу при удалении: {}", filePath);
-                return false;
+                return dbDeleted; // Возвращаем результат удаления из БД
             }
 
-            boolean fileDeleted = Files.deleteIfExists(filePath);
-
-            // Удаление записи из БД
-            fileRepository.delete(fileEntity);
-
-            if (fileDeleted) {
-                log.info("Файл успешно удален: {}", uniqueName);
+            if (Files.exists(filePath)) {
+                fileDeleted = Files.deleteIfExists(filePath);
+                if (fileDeleted) {
+                    log.info("Файл успешно удален с диска: {}", uniqueName);
+                }
             } else {
-                log.warn("Файл не найден на диске, но запись из БД удалена: {}", uniqueName);
+                log.warn("Файл не найден на диске: {}", uniqueName);
+                fileDeleted = true; // Считаем успешным, если файла и не было
             }
 
-            return true;
+            // Успешным считается удаление, если либо из БД удалили, либо файл удалили
+            boolean success = dbDeleted || fileDeleted;
+
+            if (success) {
+                log.info("Файл успешно обработан для удаления: {}", uniqueName);
+            }
+
+            return success;
 
         } catch (IOException e) {
             log.error("Ошибка при удалении файла: {}", uniqueName, e);
-            return false;
+            return dbDeleted; // Возвращаем хотя бы результат удаления из БД
         } catch (Exception e) {
             log.error("Неожиданная ошибка при удалении файла: {}", uniqueName, e);
-            return false;
+            return dbDeleted;
         }
     }
 

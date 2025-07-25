@@ -8,6 +8,7 @@ import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
 import com.example.marketplace_backend.Repositories.BrandImageRepository;
 import com.example.marketplace_backend.Repositories.BrandRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Slf4j
 @Service
 public class BrandServiceImpl extends BaseServiceImpl<Brand, UUID>{
     private final BrandRepository brandRepository;
@@ -98,19 +100,12 @@ public class BrandServiceImpl extends BaseServiceImpl<Brand, UUID>{
     @Override
     public void delete(UUID id) {
         try {
-            List<BrandImage> brandImages = brandImageRepository.findByBrandId(id);
-
-            for (BrandImage brandImage : brandImages) {
-                if (brandImage.getImage() != null && brandImage.getImage().getUniqueName() != null) {
-                    fileUploadService.deleteImage(brandImage.getImage().getUniqueName());
-                }
-            }
-
             brandRepository.deleteById(id);
-
         } catch (Exception e) {
+            log.error("Ошибка при удалении бренда с ID: {}", id, e);  // <-- обязательно с `e`
             throw new RuntimeException("Ошибка при удалении бренда с ID: " + id, e);
         }
+
     }
 
     @Transactional(readOnly = true)
@@ -153,9 +148,12 @@ public class BrandServiceImpl extends BaseServiceImpl<Brand, UUID>{
                 .image(savedImage)
                 .build();
 
+        brandImageRepository.save(brandImage);
+
         List<BrandImage> images = new ArrayList<>();
         images.add(brandImage);
         brand.setBrandImages(images);
+
 
         brand = save(brand);
         return brand;

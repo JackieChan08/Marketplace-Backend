@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Подключаем настройки Spring Boot для цветных логов -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!-- Цветной шаблон для консоли -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr([%thread]){faint} %clr(%-40.40logger{39}){cyan} : %m%n%wEx"/>
+
+    <!-- Простой шаблон для файла (без цветов) -->
+    <property name="FILE_LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %-40.40logger{39} : %msg%n"/>
+
+    <!-- Консольный аппендер с цветами -->
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- Файловый аппендер -->
+    <appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/app-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- Корневой логгер -->
+    <root level="INFO">
+        <appender-ref ref="Console" />
+        <appender-ref ref="File" />
+    </root>
+
+</configuration>

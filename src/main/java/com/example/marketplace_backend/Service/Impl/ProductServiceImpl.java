@@ -309,14 +309,6 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     @Override
     public void delete(UUID id) {
         try {
-            List<ProductImage> productImages = productImageRepository.findByProductId(id);
-
-            for (ProductImage productImage : productImages) {
-                if (productImage.getImage() != null && productImage.getImage().getUniqueName() != null) {
-                    fileUploadService.deleteImage(productImage.getImage().getUniqueName());
-                }
-            }
-
             productRepository.deleteById(id);
         } catch (Exception e) {
             throw new RuntimeException("Ошибка при удалении продукта с ID: " + id, e);

@@ -108,12 +108,10 @@ public class AdminBrandController {
 
     @DeleteMapping("/{id}/permanent")
     public ResponseEntity<Void> permanentDeleteBrand(@PathVariable UUID id) {
-        try {
+
             brandService.delete(id);
             return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+
     }
 
     @DeleteMapping("/purge")
