@@ -267,7 +267,8 @@ public class ConverterService {
         return statuses.stream().map(status -> {
             OrderStatusResponse response = new OrderStatusResponse();
             response.setName(status.getStatus().getName());
-            response.setColor(status.getStatus().getColor());
+            response.setPrimaryColor(status.getStatus().getPrimaryColor());
+            response.setBackgroundColor(status.getStatus().getBackgroundColor());
             return response;
         }).collect(Collectors.toList());
     }

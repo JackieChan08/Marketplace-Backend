@@ -34,7 +34,8 @@ public class StatusServiceImpl {
 
         Statuses statuses = new Statuses();
         statuses.setName(request.getName());
-        statuses.setColor(request.getColor());
+        statuses.setPrimaryColor(request.getPrimaryColor());
+        statuses.setBackgroundColor(request.getBackgroundColor());
         statuses.setOrderFlag(request.isOrderFlag());
         statuses.setProductFlag(request.isProductFlag());
 
