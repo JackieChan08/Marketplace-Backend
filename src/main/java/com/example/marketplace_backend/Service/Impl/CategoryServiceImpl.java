@@ -124,23 +124,7 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
     @Override
     public void delete(UUID id) {
         try {
-            List<CategoryImage> categoryImages = categoryImageRepository.findByCategoryId(id);
-            List<CategoryIcon> categoryIcons = categoryIconRepository.findByCategoryId(id);
-
-            for (CategoryImage categoryImage : categoryImages) {
-                if (categoryImage.getImage() != null && categoryImage.getImage().getUniqueName() != null) {
-                    fileUploadService.deleteImage(categoryImage.getImage().getUniqueName());
-                }
-            }
-
-            for (CategoryIcon categoryIcon : categoryIcons) {
-                if (categoryIcon.getIcon() != null && categoryIcon.getIcon().getUniqueName() != null) {
-                    fileUploadService.deleteImage(categoryIcon.getIcon().getUniqueName());
-                }
-            }
-
             categoryRepository.deleteById(id);
-
         } catch (Exception e) {
             throw new RuntimeException("Ошибка при удалении категории с ID: " + id, e);
         }

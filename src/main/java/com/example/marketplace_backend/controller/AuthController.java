@@ -152,7 +152,7 @@ public class AuthController {
 
     private void setCookie(HttpServletResponse response, String name, String value, int maxAgeSeconds) {
         String cookie = String.format(
-                "%s=%s; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=%d",
+                "%s=%s; HttpOnly; Path=/; Max-Age=%d",
                 name, value, maxAgeSeconds
         );
         response.addHeader("Set-Cookie", cookie);
@@ -160,7 +160,7 @@ public class AuthController {
 
     private void clearCookie(HttpServletResponse response, String name) {
         String cookie = String.format(
-                "%s=; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=0",
+                "%s=; HttpOnly; Path=/; Max-Age=0",
                 name
         );
         response.addHeader("Set-Cookie", cookie);

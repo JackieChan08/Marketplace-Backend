@@ -28,7 +28,7 @@ public class BrandImage {
     @JsonBackReference
     private Brand brand;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", nullable = false)
     private FileEntity image;
 }
