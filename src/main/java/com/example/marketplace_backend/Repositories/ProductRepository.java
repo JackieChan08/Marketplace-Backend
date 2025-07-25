@@ -30,16 +30,16 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
     @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%'))")
     Page<Product> findByNameContainingActive(@Param("query") String name, Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE p.deletedAt IS NULL")
+    @Query("SELECT p FROM Product p WHERE p.deletedAt IS NULL ORDER BY p.createdAt DESC")
     List<Product> findAllActive();
 
-    @Query("SELECT p FROM Product p WHERE p.deletedAt IS NULL")
+    @Query("SELECT p FROM Product p WHERE p.deletedAt IS NULL ORDER BY p.createdAt DESC")
     Page<Product> findAllActive(Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE p.deletedAt IS NOT NULL")
+    @Query("SELECT p FROM Product p WHERE p.deletedAt IS NOT NULL ORDER BY p.createdAt DESC")
     List<Product> findAllDeActive();
 
-    @Query("SELECT p FROM Product p WHERE p.deletedAt IS NOT NULL")
+    @Query("SELECT p FROM Product p WHERE p.deletedAt IS NOT NULL ORDER BY p.createdAt DESC")
     Page<Product> findAllDeActive(Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.subcategory = :subcategory and p.deletedAt IS NULL")
