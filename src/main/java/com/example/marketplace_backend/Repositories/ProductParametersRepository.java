@@ -17,6 +17,10 @@ import java.util.UUID;
 public interface ProductParametersRepository extends JpaRepository<ProductParameters, UUID> {
     List<ProductParameters> findByProductId(@Param("productId") UUID productId);
 
+    @Query("SELECT p FROM ProductParameters p LEFT JOIN FETCH p.productSubParameters WHERE p.product.id = :productId")
+    List<ProductParameters> findAllByProductIdWithSubParams(@Param("productId") UUID productId);
+
+
     Optional<ProductParameters> findByNameAndProductId(@Param("name") String name, @Param("productId") UUID productId);
 
     @Query("SELECT COUNT(pp) FROM ProductParameters pp WHERE pp.product.id = :productId")

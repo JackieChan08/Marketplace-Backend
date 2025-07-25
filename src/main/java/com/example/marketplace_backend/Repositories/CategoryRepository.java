@@ -23,6 +23,9 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
     @Query("SELECT c FROM Category c WHERE c.deletedAt IS NULL")
     List<Category> findAllActive();
 
+    @Query("SELECT c FROM Category c WHERE c.deletedAt IS NULL")
+    Page<Category> findAllActive(Pageable  pageable);
+
     @Query("SELECT c FROM Category c WHERE c.deletedAt IS NOT NULL")
     List<Category> findAllDeActive();
 

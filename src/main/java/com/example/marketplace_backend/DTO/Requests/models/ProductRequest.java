@@ -27,4 +27,7 @@ public class ProductRequest {
 
     private List<MultipartFile> images;
     private List<UUID> statusId;
+
+    private String parametersJson;
+
 }

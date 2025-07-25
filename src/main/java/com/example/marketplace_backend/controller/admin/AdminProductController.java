@@ -33,7 +33,7 @@ public class AdminProductController {
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Product> products = productService.findAll(pageable);
+        Page<Product> products = productService.findAllActive(pageable);
 
         Page<ProductResponse> responses = products.map(converterService::convertToProductResponse);
         return ResponseEntity.ok(responses);
@@ -160,6 +160,19 @@ public class AdminProductController {
     @PostMapping("/filter")
     public ResponseEntity<Page<ProductResponse>> filterProducts(@RequestBody ProductFilterRequest filterRequest) {
         return ResponseEntity.ok(productService.filterProducts(filterRequest));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<ProductResponse>> findByNameContaining(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productService.findByNameContaining(query, pageable);
+
+        Page<ProductResponse> responses = products.map(converterService::convertToProductResponse);
+        return ResponseEntity.ok(responses);
     }
 
 

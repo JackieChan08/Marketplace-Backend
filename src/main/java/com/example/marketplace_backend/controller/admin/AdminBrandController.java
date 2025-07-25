@@ -32,7 +32,7 @@ public class AdminBrandController {
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Brand> brands = brandService.findAll(pageable);
+        Page<Brand> brands = brandService.findAllActive(pageable);
 
         Page<BrandResponse> responses = brands.map(converterService::convertToBrandResponse);
         return ResponseEntity.ok(responses);

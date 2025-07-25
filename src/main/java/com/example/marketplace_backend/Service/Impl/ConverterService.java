@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ConverterService {
+    private final ProductParametersServiceImpl  productParametersService;
 
     @Value("${app.base-url}")
     private String baseUrl;
@@ -29,32 +30,29 @@ public class ConverterService {
         response.setAvailability(product.isAvailability());
         response.setTitle(product.getTitle());
         response.setDescription(product.getDescription());
+        response.setCreatedAt(product.getCreatedAt());
+        response.setUpdatedAt(product.getUpdatedAt());
+        response.setDeletedAt(product.getDeletedAt());
 
         // Обработка подкатегории
         if (product.getSubcategory() != null) {
             response.setSubcategoryId(product.getSubcategory().getId());
             response.setSubcategoryName(product.getSubcategory().getName());
 
-            // Обработка категории через подкатегорию
             if (product.getSubcategory().getCategory() != null) {
                 response.setCategoryId(product.getSubcategory().getCategory().getId());
                 response.setCategoryName(product.getSubcategory().getCategory().getName());
             }
         }
-        if (product.getPrice() != null) {
-            response.setPrice(product.getPrice());
-        }
+
         if (product.getDiscountedPrice() != null) {
             response.setDiscountedPrice(product.getDiscountedPrice());
         }
 
-        // Обработка бренда
         if (product.getBrand() != null) {
             response.setBrandId(product.getBrand().getId());
             response.setBrandName(product.getBrand().getName());
         }
-
-
 
         // Обработка изображений
         if (product.getProductImages() != null && !product.getProductImages().isEmpty()) {
@@ -72,7 +70,6 @@ public class ConverterService {
             response.setImages(images);
         }
 
-
         // Обработка статусов
         if (product.getProductStatuses() != null && !product.getProductStatuses().isEmpty()) {
             List<String> statuses = product.getProductStatuses().stream()
@@ -81,8 +78,35 @@ public class ConverterService {
             response.setStatuses(statuses);
         }
 
+        // Добавление параметров
+        List<ProductParameterResponse> parameterResponses = productParametersService
+                .getParametersWithSubParams(product.getId())
+                .stream()
+                .map(param -> {
+                    ProductParameterResponse paramResponse = new ProductParameterResponse();
+                    paramResponse.setId(param.getId());
+                    paramResponse.setName(param.getName());
+
+                    List<ProductSubParameterResponse> subParamResponses = param.getProductSubParameters().stream()
+                            .map(sub -> {
+                                ProductSubParameterResponse subResponse = new ProductSubParameterResponse();
+                                subResponse.setId(sub.getId());
+                                subResponse.setName(sub.getName());
+                                subResponse.setValue(sub.getValue());
+                                return subResponse;
+                            }).toList();
+
+                    paramResponse.setSubParameters(subParamResponses);
+                    return paramResponse;
+                })
+                .toList();
+
+        response.setParameters(parameterResponses);
+
+
         return response;
     }
+
 
     public SubcategoryResponse convertToSubcategoryResponse(Subcategory subcategory) {
         SubcategoryResponse response = new SubcategoryResponse();

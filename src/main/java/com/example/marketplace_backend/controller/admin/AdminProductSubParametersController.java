@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,19 +28,6 @@ public class AdminProductSubParametersController {
         return ResponseEntity.ok(stats);
     }
 
-
-    @PostMapping("/create")
-    public ResponseEntity<ProductSubParameters> createProductSubParameter(@ModelAttribute ProductSubParameters productSubParameters) {
-        try {
-            ProductSubParameters created = productSubParametersService.create(productSubParameters);
-            return ResponseEntity.ok(created);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
     @PostMapping("/create/batch")
     public ResponseEntity<List<ProductSubParameters>> createProductSubParametersBatch(@ModelAttribute List<ProductSubParameters> productSubParameters) {
         try {
@@ -52,50 +40,14 @@ public class AdminProductSubParametersController {
         }
     }
 
-    @PostMapping("/edit/{id}")
-    public ResponseEntity<ProductSubParameters> editProductSubParameter(
-            @PathVariable UUID id,
-            @ModelAttribute ProductSubParameters updatedSubParameters) {
-        try {
-            ProductSubParameters updated = productSubParametersService.update(id, updatedSubParameters);
-            return ResponseEntity.ok(updated);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    @GetMapping("/template")
+    public ResponseEntity<Set<String>> getProductSubParametersTemplate() {
+        List<ProductSubParameters> subParameters = productSubParametersService.findAll();
+        Set<String> template = subParameters.stream()
+                .map(ProductSubParameters::getName)
+                .collect(Collectors.toSet());
+        return ResponseEntity.ok(template);
     }
 
-    @PostMapping("/edit/{id}/value")
-    public ResponseEntity<ProductSubParameters> editProductSubParameterValue(
-            @PathVariable UUID id,
-            @RequestParam String value) {
-        try {
-            ProductSubParameters updated = productSubParametersService.updateValue(id, value);
-            return ResponseEntity.ok(updated);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProductSubParameter(@PathVariable UUID id) {
-        try {
-            productSubParametersService.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @DeleteMapping("/parameter/{parameterId}")
-    public ResponseEntity<Void> deleteAllProductSubParametersByParameterId(@PathVariable UUID parameterId) {
-        try {
-            if (!productSubParametersService.productParameterExists(parameterId)) {
-                return ResponseEntity.notFound().build();
-            }
-            productSubParametersService.deleteByProductParameterId(parameterId);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 }

@@ -26,6 +26,9 @@ public interface BrandRepository extends JpaRepository<Brand, UUID> {
     @Query("SELECT b FROM Brand b WHERE b.deletedAt IS NOT NULL")
     Page<Brand> findAllDeActive(Pageable pageable);
 
+    @Query("SELECT b FROM Brand b WHERE b.deletedAt IS NULL")
+    Page<Brand> findAllActive(Pageable pageable);
+
     // бренды с продуктами
     @Query("SELECT b FROM Brand b LEFT JOIN FETCH b.products WHERE b.deletedAt IS NULL")
     List<Brand> findAllWithProducts();

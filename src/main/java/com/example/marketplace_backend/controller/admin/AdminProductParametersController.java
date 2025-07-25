@@ -29,51 +29,5 @@ public class AdminProductParametersController {
         return ResponseEntity.ok(stats);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<ProductParameters> createProductParameter(@ModelAttribute ProductParameters productParameters) {
-        try {
-            ProductParameters created = productParametersService.create(productParameters);
-            return ResponseEntity.ok(created);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @PostMapping("/edit/{id}")
-    public ResponseEntity<ProductParameters> editProductParameter(
-            @PathVariable UUID id,
-            @ModelAttribute ProductParameters updatedParameters) {
-        try {
-            ProductParameters updated = productParametersService.update(id, updatedParameters);
-            return ResponseEntity.ok(updated);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProductParameter(@PathVariable UUID id) {
-        try {
-            productParametersService.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @DeleteMapping("/product/{productId}")
-    public ResponseEntity<Void> deleteAllProductParametersByProductId(@PathVariable UUID productId) {
-        try {
-            if (!productParametersService.productExists(productId)) {
-                return ResponseEntity.notFound().build();
-            }
-            productParametersService.deleteByProductId(productId);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 
 }

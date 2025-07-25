@@ -108,4 +108,9 @@ public class ProductParametersServiceImpl extends BaseServiceImpl<ProductParamet
     public Optional<ProductParameters> findById(UUID id) {
         return productParametersRepository.findById(id);
     }
+
+    public List<ProductParameters> getParametersWithSubParams(UUID productId) {
+        return productParametersRepository.findAllByProductIdWithSubParams(productId);
+    }
+
 }

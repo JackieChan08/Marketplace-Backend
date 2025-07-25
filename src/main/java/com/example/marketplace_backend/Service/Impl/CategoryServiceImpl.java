@@ -61,6 +61,10 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
     public Page<Category> findAllDeActive(Pageable pageable) {
         return categoryRepository.findAllDeActive(pageable);
     }
+    @Transactional
+    public Page<Category> findAllActive(Pageable pageable) {
+        return categoryRepository.findAllActive(pageable);
+    }
 
     @Transactional(readOnly = true)
     public List<Category> findAllActive() {
