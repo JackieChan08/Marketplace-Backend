@@ -20,16 +20,16 @@ import java.util.UUID;
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
     Category findByName(String name);
 
-    @Query("SELECT c FROM Category c WHERE c.deletedAt IS NULL")
+    @Query("SELECT c FROM Category c WHERE c.deletedAt IS NULL ORDER BY c.createdAt DESC")
     List<Category> findAllActive();
 
-    @Query("SELECT c FROM Category c WHERE c.deletedAt IS NULL")
+    @Query("SELECT c FROM Category c WHERE c.deletedAt IS NULL ORDER BY c.createdAt DESC")
     Page<Category> findAllActive(Pageable  pageable);
 
-    @Query("SELECT c FROM Category c WHERE c.deletedAt IS NOT NULL")
+    @Query("SELECT c FROM Category c WHERE c.deletedAt IS NOT NULL ORDER BY c.createdAt DESC")
     List<Category> findAllDeActive();
 
-    @Query("SELECT c FROM Category c WHERE c.deletedAt IS NOT NULL")
+    @Query("SELECT c FROM Category c WHERE c.deletedAt IS NOT NULL ORDER BY c.createdAt DESC")
     Page<Category> findAllDeActive(Pageable  pageable);
 
     @Modifying

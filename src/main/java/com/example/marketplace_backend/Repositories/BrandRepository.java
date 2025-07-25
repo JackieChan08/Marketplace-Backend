@@ -17,16 +17,16 @@ import java.util.UUID;
 
 @Repository
 public interface BrandRepository extends JpaRepository<Brand, UUID> {
-    @Query("SELECT b FROM Brand b WHERE b.deletedAt IS NULL")
+    @Query("SELECT b FROM Brand b WHERE b.deletedAt IS NULL ORDER BY b.createdAt DESC")
     List<Brand> findAllActive();
 
-    @Query("SELECT b FROM Brand b WHERE b.deletedAt IS NOT NULL")
+    @Query("SELECT b FROM Brand b WHERE b.deletedAt IS NOT NULL ORDER BY b.createdAt DESC")
     List<Brand> findAllDeActive();
 
-    @Query("SELECT b FROM Brand b WHERE b.deletedAt IS NOT NULL")
+    @Query("SELECT b FROM Brand b WHERE b.deletedAt IS NOT NULL ORDER BY b.createdAt DESC")
     Page<Brand> findAllDeActive(Pageable pageable);
 
-    @Query("SELECT b FROM Brand b WHERE b.deletedAt IS NULL")
+    @Query("SELECT b FROM Brand b WHERE b.deletedAt IS NULL ORDER BY b.createdAt DESC")
     Page<Brand> findAllActive(Pageable pageable);
 
     // бренды с продуктами

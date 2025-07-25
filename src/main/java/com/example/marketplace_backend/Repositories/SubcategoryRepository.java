@@ -22,14 +22,13 @@ public interface SubcategoryRepository extends JpaRepository<Subcategory, UUID> 
 
     Subcategory findByIdAndDeletedAtIsNotNull(UUID id);
 
-    @Query("SELECT s FROM Subcategory s WHERE s.deletedAt IS NOT NULL")
+    @Query("SELECT s FROM Subcategory s WHERE s.deletedAt IS NOT NULL ORDER BY s.createdAt DESC")
     Page<Subcategory> findAllDeActive(Pageable pageable);
 
-    @Query("SELECT s FROM Subcategory s WHERE s.deletedAt IS NOT NULL")
+    @Query("SELECT s FROM Subcategory s WHERE s.deletedAt IS NOT NULL ORDER BY s.createdAt DESC")
     List<Subcategory> findAllDeActiveList();
 
-
-    @Query("SELECT s FROM Subcategory s WHERE s.deletedAt IS NULL")
+    @Query("SELECT s FROM Subcategory s WHERE s.deletedAt IS NULL ORDER BY s.createdAt DESC")
     List<Subcategory> findAllActive();
 
     @Query("SELECT s FROM Subcategory s WHERE s.category = :category AND s.deletedAt IS NULL")
