@@ -13,7 +13,8 @@ import java.util.UUID;
 @Builder
 public class StatusRequest {
     private String name;
-    private String color;
+    private String primaryColor;
+    private String backgroundColor;
     private boolean orderFlag;
     private boolean productFlag;
 }
