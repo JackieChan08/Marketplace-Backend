@@ -3,6 +3,7 @@ package com.example.marketplace_backend.controller.admin;
 import com.example.marketplace_backend.DTO.Requests.models.ProductFilterRequest;
 import com.example.marketplace_backend.DTO.Requests.models.ProductRequest;
 import com.example.marketplace_backend.DTO.Responses.models.ProductResponse;
+import com.example.marketplace_backend.Model.Intermediate_objects.ProductStatuses;
 import com.example.marketplace_backend.Model.Product;
 import com.example.marketplace_backend.Service.Impl.ConverterService;
 import com.example.marketplace_backend.Service.Impl.FileUploadService;
@@ -160,6 +161,18 @@ public class AdminProductController {
     @PostMapping("/filter")
     public ResponseEntity<Page<ProductResponse>> filterProducts(@RequestBody ProductFilterRequest filterRequest) {
         return ResponseEntity.ok(productService.filterProducts(filterRequest));
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<Page<ProductResponse>> getAllProductsByStatus(
+            @RequestParam UUID statusId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productService.findAllByStatus(statusId, pageable);
+        Page<ProductResponse> responses = products.map(converterService::convertToProductResponse);
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/search")

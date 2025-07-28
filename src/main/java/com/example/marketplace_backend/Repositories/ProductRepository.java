@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.Repositories;
 
 import com.example.marketplace_backend.Model.Brand;
+import com.example.marketplace_backend.Model.Intermediate_objects.ProductStatuses;
 import com.example.marketplace_backend.Model.Product;
 import com.example.marketplace_backend.Model.Subcategory;
 import org.springframework.data.domain.Page;
@@ -62,6 +63,9 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
 
     @Query("SELECT p FROM Product p WHERE p.brand = :brand and p.deletedAt IS NOT NULL")
     List<Product> findDeActiveByBrand(@Param("brand") Brand brand);
+
+    @Query("SELECT DISTINCT p FROM Product p JOIN p.productStatuses ps WHERE ps.status.id = :statusId AND p.deletedAt IS NULL")
+    Page<Product> findAllByStatusId(@Param("statusId") UUID statusId, Pageable pageable);
 
     @Query("SELECT p FROM Product p " +
             "LEFT JOIN FETCH p.productImages pi " +
