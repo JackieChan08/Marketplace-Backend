@@ -133,6 +133,11 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         return productRepository.findAll(pageable);
     }
 
+    public Page<Product> findAllByStatus(UUID statusId, Pageable pageable) {
+        return productRepository.findAllByStatusId(statusId, pageable);
+    }
+
+
     public void deActiveProductsBySubcategory(Subcategory subcategory){
         List<Product> products = productRepository.findActiveBySubcategory(subcategory);
         for(Product product : products){
