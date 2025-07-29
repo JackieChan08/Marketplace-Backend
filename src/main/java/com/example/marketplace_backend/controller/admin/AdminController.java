@@ -1,18 +1,16 @@
 package com.example.marketplace_backend.controller.admin;
 
-import com.example.marketplace_backend.Repositories.BrandRepository;
-import com.example.marketplace_backend.Repositories.SubcategoryRepository;
-import com.example.marketplace_backend.Service.Impl.*;
 import com.example.marketplace_backend.DTO.Responses.models.UserResponse;
-import com.example.marketplace_backend.Service.Impl.ProductParametersServiceImpl;
-import com.example.marketplace_backend.Service.Impl.ProductSubParametersServiceImpl;
 import com.example.marketplace_backend.Service.Impl.auth.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
@@ -20,16 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/admin")
 public class AdminController {
     private final UserServiceImpl userService;
-    private final OrderServiceImpl orderService;
-    private final ProductServiceImpl productService;
-    private final CategoryServiceImpl categoryService;
-    private final BrandServiceImpl brandService;
-    private final FileUploadService fileUploadService;
-    private final BrandRepository brandRepository;
-    private final SubcategoryRepository subcategoryRepository;
-    private final SubcategoryServiceImpl subcategoryService;
-    private final ProductParametersServiceImpl productParametersService;
-    private final ProductSubParametersServiceImpl productSubParametersService;
+
 
 
     //User

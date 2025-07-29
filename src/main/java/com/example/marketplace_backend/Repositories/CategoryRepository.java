@@ -37,4 +37,6 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
     @Query("UPDATE Category c SET c.deletedAt = :deletedAt WHERE c.id = :id")
     void softDeleteById(@Param("id") UUID id, @Param("deletedAt") LocalDateTime deletedAt);
 
+    @Query("select c from Category c where c.priority = true")
+    Page<Category> findCategoriesByPriority(Pageable pageable);
 }

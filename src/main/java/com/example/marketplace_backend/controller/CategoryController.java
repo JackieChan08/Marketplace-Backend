@@ -31,9 +31,7 @@ import java.util.UUID;
 @Tag(name = "Category Controller", description = "API для управления категориями товаров")
 public class CategoryController {
 
-    private final ProductServiceImpl productService;
     private final CategoryServiceImpl categoryService;
-    private final CategoryRepository categoryRepository;
     private final ConverterService  converter;
 
     @Value("${app.base-url}")

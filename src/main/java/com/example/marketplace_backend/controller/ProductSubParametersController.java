@@ -1,7 +1,6 @@
 package com.example.marketplace_backend.controller;
 
 import com.example.marketplace_backend.Model.ProductSubParameters;
-import com.example.marketplace_backend.Service.Impl.ProductParametersServiceImpl;
 import com.example.marketplace_backend.Service.Impl.ProductSubParametersServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
