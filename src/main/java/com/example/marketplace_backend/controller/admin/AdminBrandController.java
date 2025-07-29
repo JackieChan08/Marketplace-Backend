@@ -5,25 +5,25 @@ import com.example.marketplace_backend.DTO.Responses.models.BrandResponse;
 import com.example.marketplace_backend.Model.Brand;
 import com.example.marketplace_backend.Service.Impl.BrandServiceImpl;
 import com.example.marketplace_backend.Service.Impl.ConverterService;
-import com.example.marketplace_backend.Service.Impl.FileUploadService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/brands")
 public class AdminBrandController {
     private final BrandServiceImpl brandService;
-    private final FileUploadService fileUploadService;
     private final ConverterService converterService;
 
     @GetMapping

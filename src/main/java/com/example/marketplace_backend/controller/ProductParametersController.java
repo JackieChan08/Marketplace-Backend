@@ -1,7 +1,6 @@
 package com.example.marketplace_backend.controller;
 
 import com.example.marketplace_backend.Model.ProductParameters;
-import com.example.marketplace_backend.Repositories.ProductParametersRepository;
 import com.example.marketplace_backend.Service.Impl.ProductParametersServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,7 @@ public class ProductParametersController {
     private final ProductParametersServiceImpl productParametersService;
 
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<ProductParameters>> getAllProductParameters() {
         return ResponseEntity.ok(productParametersService.findAll());
     }

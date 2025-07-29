@@ -1,38 +1,26 @@
 package com.example.marketplace_backend.controller;
 
+import com.example.marketplace_backend.DTO.Requests.models.CartRequest;
+import com.example.marketplace_backend.DTO.Responses.models.CartResponse;
 import com.example.marketplace_backend.Model.Cart;
 import com.example.marketplace_backend.Model.Intermediate_objects.CartItem;
 import com.example.marketplace_backend.Service.Impl.CartService;
 import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
 import com.example.marketplace_backend.Service.Impl.auth.UserServiceImpl;
-import com.example.marketplace_backend.DTO.Requests.models.CartRequest;
-import com.example.marketplace_backend.DTO.Responses.models.CartResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/cart")
+@RequiredArgsConstructor
 @Tag(name = "Cart API", description = "API для управления корзиной пользователей")
 public class CartController {
 
     private final CartService cartService;
-    private final ProductServiceImpl productService;
-    private final UserServiceImpl userService;
-
-    public CartController(CartService cartService,
-                          ProductServiceImpl productService,
-                          UserServiceImpl userService) {
-        this.cartService = cartService;
-        this.productService = productService;
-        this.userService = userService;
-    }
-
 
     @PostMapping(value = "/add", consumes = {"multipart/form-data"})
     public ResponseEntity<CartResponse> addItem(@ModelAttribute CartRequest request) {

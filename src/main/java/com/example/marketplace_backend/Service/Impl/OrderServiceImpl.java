@@ -170,4 +170,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
     public Page<Order> findOrdersByUserId(Pageable pageable, UUID userId) {
         return orderRepository.findOrdersByUser(pageable, userId);
     }
+
+    public Page<Order> findOrdersByStatus(Pageable pageable, UUID statusId) {
+        return orderRepository.findOrdersByStatusId(pageable, statusId);
+    }
 }

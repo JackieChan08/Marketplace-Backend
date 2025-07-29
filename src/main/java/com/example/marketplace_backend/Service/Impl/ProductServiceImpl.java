@@ -37,7 +37,6 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     private final StatusRepository statusRepository;
     private final ProductStatusRepository productStatusRepository;
     private final ConverterService converter;
-    private final ProductParametersRepository pproductParametersRepository;
     private final ProductParametersRepository productParametersRepository;
 
     @Value("${app.base-url}")
@@ -61,7 +60,6 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         this.statusRepository = statusRepository;
         this.productStatusRepository = productStatusRepository;
         this.converter = converter;
-        this.pproductParametersRepository = pproductParametersRepository;
         this.productParametersRepository = productParametersRepository;
     }
 
