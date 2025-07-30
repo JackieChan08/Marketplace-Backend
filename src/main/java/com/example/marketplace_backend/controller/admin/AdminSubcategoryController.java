@@ -3,12 +3,9 @@ package com.example.marketplace_backend.controller.admin;
 import com.example.marketplace_backend.DTO.Requests.models.SubcategoryRequest;
 import com.example.marketplace_backend.DTO.Responses.models.SubcategoryResponse;
 import com.example.marketplace_backend.Model.Category;
-import com.example.marketplace_backend.Model.FileEntity;
-import com.example.marketplace_backend.Model.Intermediate_objects.SubcategoryImage;
 import com.example.marketplace_backend.Model.Subcategory;
 import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
 import com.example.marketplace_backend.Service.Impl.ConverterService;
-import com.example.marketplace_backend.Service.Impl.FileUploadService;
 import com.example.marketplace_backend.Service.Impl.SubcategoryServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,10 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -29,7 +24,6 @@ import java.util.*;
 public class AdminSubcategoryController {
 
     private final SubcategoryServiceImpl  subcategoryService;
-    private final FileUploadService  fileUploadService;
     private final CategoryServiceImpl categoryService;
     private final ConverterService converter;
 

@@ -1,25 +1,25 @@
 package com.example.marketplace_backend.controller.admin;
 
-import com.example.marketplace_backend.DTO.Requests.models.BrandRequest;
+import com.example.marketplace_backend.DTO.Requests.models.CategoryRequest;
 import com.example.marketplace_backend.DTO.Responses.models.CategoryResponse;
-import com.example.marketplace_backend.Model.Brand;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
 import com.example.marketplace_backend.Service.Impl.ConverterService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.*;
+
 import java.io.IOException;
-import com.example.marketplace_backend.DTO.Requests.models.CategoryRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.multipart.MultipartFile;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -136,5 +136,17 @@ public class AdminCategoryController {
     ) throws IOException {
         CategoryResponse categoryResponse = converterService.convertToCategoryResponse(categoryService.updateCategory(id, request));
         return ResponseEntity.ok(categoryResponse);
+    }
+
+    @GetMapping("/priority")
+    public ResponseEntity<Page<CategoryResponse>> getCategoryByPriority(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        if (categoryService.findCategoriesByPriority(pageable) == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(categoryService.findCategoriesByPriority(pageable).map(converterService::convertToCategoryResponse));
     }
 }

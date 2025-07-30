@@ -2,9 +2,10 @@ package com.example.marketplace_backend.controller.admin;
 
 import com.example.marketplace_backend.DTO.Responses.models.OrderResponse;
 import com.example.marketplace_backend.Model.Order;
-import com.example.marketplace_backend.Model.Statuses;
 import com.example.marketplace_backend.Service.Impl.ConverterService;
 import com.example.marketplace_backend.Service.Impl.OrderServiceImpl;
+import com.example.marketplace_backend.Service.Impl.StatusServiceImpl;
+import com.example.marketplace_backend.Service.Impl.auth.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,7 @@ import java.util.UUID;
 public class AdminOrderController {
     private final OrderServiceImpl orderService;
     private final ConverterService converterService;
+    private final StatusServiceImpl statusService;
     @GetMapping
     public ResponseEntity<Page<OrderResponse>> getAllOrdersPaginated(
             @RequestParam(defaultValue = "0") int page,
@@ -84,6 +86,23 @@ public class AdminOrderController {
                 .map(converterService::convertToOrderResponse)
                 .toList();
         return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<Page<OrderResponse>> getAllOrdersByStatus(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam UUID statusId
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        if(statusService.getStatusById(statusId) == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Page<Order> orders = orderService.findOrdersByStatus(pageable, statusId);
+        Page<OrderResponse> responsePage = orders.map(converterService::convertToOrderResponse);
+        return ResponseEntity.ok(responsePage);
     }
 
 }

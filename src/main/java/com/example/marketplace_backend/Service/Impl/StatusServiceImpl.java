@@ -1,27 +1,19 @@
 package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.DTO.Requests.models.StatusRequest;
-import com.example.marketplace_backend.Model.Category;
-import com.example.marketplace_backend.Model.Order;
-import com.example.marketplace_backend.Model.Product;
 import com.example.marketplace_backend.Model.Statuses;
 import com.example.marketplace_backend.Repositories.StatusRepository;
-import lombok.RequiredArgsConstructor; // Добавил аннотацию
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor // Добавил аннотацию Lombok
+@RequiredArgsConstructor
 public class StatusServiceImpl {
-
     private final StatusRepository statusRepository;
-    private final ProductServiceImpl productServiceImpl;
-    private final OrderServiceImpl orderServiceImpl;
 
     public List<Statuses> getAllStatuses() {
         return statusRepository.findAll();
@@ -57,5 +49,9 @@ public class StatusServiceImpl {
 
     public List<Statuses> getAllStatusesByProduct() {
         return statusRepository.findAllByProductFlag();
+    }
+
+    public Statuses getStatusById(UUID id) {
+        return statusRepository.findById(id).orElse(null);
     }
 }

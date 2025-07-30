@@ -358,4 +358,8 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
         }
     }
 
+    public Page<Category> findCategoriesByPriority(Pageable pageable) {
+        return categoryRepository.findCategoriesByPriority(pageable);
+    }
+
 }

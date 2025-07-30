@@ -1,0 +1,1428 @@
+2025-07-25 17:04:49.275 INFO  [restartedMain] c.e.m.MarketplaceBackendApplication      : Starting MarketplaceBackendApplication using Java 17.0.14 with PID 6540 (C:\Jackie\Project\Marketplace_Backend\target\classes started by Jackie in C:\Jackie\Project\Marketplace_Backend)
+2025-07-25 17:04:49.277 INFO  [restartedMain] c.e.m.MarketplaceBackendApplication      : No active profile set, falling back to 1 default profile: "default"
+2025-07-25 17:04:49.314 INFO  [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-07-25 17:04:49.314 INFO  [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-07-25 17:04:50.139 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-25 17:04:50.140 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2025-07-25 17:04:50.181 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.BrandImageRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.183 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.BrandRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.184 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.CartItemRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.185 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.CartRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.186 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.CategoryIconRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.187 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.CategoryImageRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.188 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.CategoryRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.189 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.FavoriteItemRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.190 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.FavoriteRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.192 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.FileRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.194 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.OrderRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.195 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.OrderStatusRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.197 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.ProductImageRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.197 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.ProductParametersRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.199 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.ProductRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.200 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.ProductStatusRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.202 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.ProductSubParametersRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.204 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.RefreshTokenRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.205 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.StatusRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.206 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.SubcategoryImageRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.207 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.SubcategoryRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.208 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:04:50.208 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 63 ms. Found 0 JDBC repository interfaces.
+2025-07-25 17:04:50.220 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-25 17:04:50.220 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-07-25 17:04:50.291 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 66 ms. Found 22 JPA repository interfaces.
+2025-07-25 17:04:50.785 INFO  [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-07-25 17:04:50.795 INFO  [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-07-25 17:04:50.795 INFO  [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.41]
+2025-07-25 17:04:50.835 INFO  [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-07-25 17:04:50.835 INFO  [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1520 ms
+2025-07-25 17:04:50.930 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-07-25 17:04:51.121 INFO  [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@19e02150
+2025-07-25 17:04:51.122 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-07-25 17:04:51.281 INFO  [restartedMain] liquibase.database                       : Set default schema name to public
+2025-07-25 17:04:51.880 INFO  [restartedMain] liquibase.changelog                      : Reading from public.databasechangelog
+2025-07-25 17:04:52.039 INFO  [restartedMain] liquibase.lockservice                    : Successfully acquired change log lock
+2025-07-25 17:04:52.040 INFO  [restartedMain] liquibase.command                        : Using deploymentId: 3441492040
+2025-07-25 17:04:52.041 INFO  [restartedMain] liquibase.changelog                      : Reading from public.databasechangelog
+2025-07-25 17:04:52.068 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/22_07_2025.xml::add-icon-columns-to-category::aiteginbaratov
+2025-07-25 17:04:52.083 INFO  [restartedMain] liquibase.changelog                      : Table category_icons created
+2025-07-25 17:04:52.090 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to category_icons (category_id)
+2025-07-25 17:04:52.092 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to category_icons (icon_id)
+2025-07-25 17:04:52.094 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/22_07_2025.xml::add-icon-columns-to-category::aiteginbaratov ran successfully in 25ms
+2025-07-25 17:04:52.103 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::ci2::JekiChan08
+2025-07-25 17:04:52.145 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/category_icon.csv' into table 'category_icons'
+2025-07-25 17:04:52.146 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::ci2::JekiChan08 ran successfully in 41ms
+2025-07-25 17:04:52.148 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::subcategories::JekiChan08
+2025-07-25 17:04:52.181 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/subcategories.csv' into table 'subcategories'
+2025-07-25 17:04:52.182 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::subcategories::JekiChan08 ran successfully in 33ms
+2025-07-25 17:04:52.185 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::bi::JekiChan08
+2025-07-25 17:04:52.196 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/brand_images.csv' into table 'brand_images'
+2025-07-25 17:04:52.197 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::bi::JekiChan08 ran successfully in 12ms
+2025-07-25 17:04:52.199 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::product::JekiChan08
+2025-07-25 17:04:52.223 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/products.csv' into table 'products'
+2025-07-25 17:04:52.224 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::product::JekiChan08 ran successfully in 24ms
+2025-07-25 17:04:52.226 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::pi::JekiChan08
+2025-07-25 17:04:52.235 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/product_images.csv' into table 'product_images'
+2025-07-25 17:04:52.236 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::pi::JekiChan08 ran successfully in 10ms
+2025-07-25 17:04:52.238 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::pp::JekiChan08
+2025-07-25 17:04:52.248 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/product_parameters.csv' into table 'product_parameters'
+2025-07-25 17:04:52.250 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::pp::JekiChan08 ran successfully in 11ms
+2025-07-25 17:04:52.252 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::statuses::JekiChan08
+2025-07-25 17:04:52.260 ERROR [restartedMain] liquibase.change                         : Unable to find column 'color' in table 'statuses'
+2025-07-25 17:04:52.268 ERROR [restartedMain] liquibase.change                         : Unable to find column 'color' in table 'statuses'
+2025-07-25 17:04:52.275 ERROR [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::statuses::JekiChan08 encountered an exception.
+liquibase.exception.DatabaseException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99 [Failed SQL: (0) INSERT INTO public.statuses (id, name, primary_color, order_flag, product_flag, background_color, color) VALUES ('59a406aa-c855-4b70-8a2c-94e1af724a2b', 'Новинки', '', FALSE, TRUE, '', 'blue'),('e7d2e68f-9808-48b1-87d7-b626adf5ba2d', 'Скидки', '', FALSE, TRUE, '', 'blue'),('d560b45b-3b20-49e4-bb36-82acf2f1bd1d', 'Без статуса', '', TRUE, FALSE, '', '#ccc');]
+	at liquibase.executor.jvm.JdbcExecutor$ExecuteStatementCallback.doInStatement(JdbcExecutor.java:497)
+	at liquibase.executor.jvm.JdbcExecutor.execute(JdbcExecutor.java:83)
+	at liquibase.executor.jvm.JdbcExecutor.execute(JdbcExecutor.java:185)
+	at liquibase.executor.AbstractExecutor.execute(AbstractExecutor.java:141)
+	at liquibase.database.AbstractJdbcDatabase.executeStatements(AbstractJdbcDatabase.java:1189)
+	at liquibase.changelog.ChangeSet.execute(ChangeSet.java:777)
+	at liquibase.changelog.visitor.UpdateVisitor.executeAcceptedChange(UpdateVisitor.java:126)
+	at liquibase.changelog.visitor.UpdateVisitor.visit(UpdateVisitor.java:70)
+	at liquibase.changelog.ChangeLogIterator.lambda$run$0(ChangeLogIterator.java:133)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.changelog.ChangeLogIterator.lambda$run$1(ChangeLogIterator.java:122)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.Scope.child(Scope.java:260)
+	at liquibase.Scope.child(Scope.java:264)
+	at liquibase.changelog.ChangeLogIterator.run(ChangeLogIterator.java:91)
+	at liquibase.command.core.AbstractUpdateCommandStep.lambda$run$0(AbstractUpdateCommandStep.java:114)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.command.core.AbstractUpdateCommandStep.run(AbstractUpdateCommandStep.java:112)
+	at liquibase.command.core.UpdateCommandStep.run(UpdateCommandStep.java:100)
+	at liquibase.command.CommandScope.lambda$execute$6(CommandScope.java:231)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.command.CommandScope.execute(CommandScope.java:219)
+	at liquibase.Liquibase.lambda$update$0(Liquibase.java:216)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.Liquibase.runInScope(Liquibase.java:1329)
+	at liquibase.Liquibase.update(Liquibase.java:205)
+	at liquibase.Liquibase.update(Liquibase.java:188)
+	at liquibase.integration.spring.SpringLiquibase.performUpdate(SpringLiquibase.java:310)
+	at liquibase.integration.spring.SpringLiquibase.lambda$afterPropertiesSet$0(SpringLiquibase.java:262)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:255)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:315)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:691)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:513)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1375)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1205)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1725)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1474)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1682)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1628)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1740)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1628)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:230)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:184)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:179)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAdaptableBeans(ServletContextInitializerBeans.java:164)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:96)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:271)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:245)
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:52)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:4464)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1203)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1193)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:749)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:772)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1203)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1193)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:749)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:203)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:412)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:870)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:438)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:128)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:107)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:517)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:219)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:193)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:167)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:753)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1362)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1351)
+	at com.example.marketplace_backend.MarketplaceBackendApplication.main(MarketplaceBackendApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.postgresql.util.PSQLException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2713)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2401)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:368)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:498)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:415)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:335)
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:321)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:297)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:292)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at liquibase.executor.jvm.JdbcExecutor$ExecuteStatementCallback.doInStatement(JdbcExecutor.java:491)
+	... 155 common frames omitted
+2025-07-25 17:04:52.283 INFO  [restartedMain] liquibase.util                           : UPDATE SUMMARY
+2025-07-25 17:04:52.283 INFO  [restartedMain] liquibase.util                           : Run:                          7
+2025-07-25 17:04:52.283 INFO  [restartedMain] liquibase.util                           : Previously run:              31
+2025-07-25 17:04:52.283 INFO  [restartedMain] liquibase.util                           : Filtered out:                 0
+2025-07-25 17:04:52.283 INFO  [restartedMain] liquibase.util                           : -------------------------------
+2025-07-25 17:04:52.283 INFO  [restartedMain] liquibase.util                           : Total change sets:           41
+2025-07-25 17:04:52.284 INFO  [restartedMain] liquibase.util                           : Update summary generated
+2025-07-25 17:04:52.285 INFO  [restartedMain] liquibase.command                        : Update command encountered an exception.
+2025-07-25 17:04:52.288 INFO  [restartedMain] liquibase.lockservice                    : Successfully released change log lock
+2025-07-25 17:04:52.290 INFO  [restartedMain] liquibase.command                        : Logging exception.
+2025-07-25 17:04:52.290 INFO  [restartedMain] liquibase.ui                             : ERROR: Exception Details
+2025-07-25 17:04:52.290 INFO  [restartedMain] liquibase.ui                             : ERROR: Exception Primary Class:  PSQLException
+2025-07-25 17:04:52.290 INFO  [restartedMain] liquibase.ui                             : ERROR: Exception Primary Reason:  ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99
+2025-07-25 17:04:52.290 INFO  [restartedMain] liquibase.ui                             : ERROR: Exception Primary Source:  PostgreSQL 17.4
+2025-07-25 17:04:52.290 INFO  [restartedMain] liquibase.command                        : Command execution complete
+2025-07-25 17:04:53.805 ERROR [restartedMain] o.s.b.web.embedded.tomcat.TomcatStarter  : Error starting Tomcat context. Exception: org.springframework.beans.factory.UnsatisfiedDependencyException. Message: Error creating bean with name 'jwtAuthenticationFilter' defined in file [C:\Jackie\Project\Marketplace_Backend\target\classes\com\example\marketplace_backend\config\JwtAuthenticationFilter.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'customUserDetailsService' defined in file [C:\Jackie\Project\Marketplace_Backend\target\classes\com\example\marketplace_backend\Service\Impl\auth\CustomUserDetailsService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'userRepository' defined in com.example.marketplace_backend.Repositories.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+2025-07-25 17:04:53.833 INFO  [restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2025-07-25 17:04:53.836 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [HikariPool-1:housekeeper] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.14/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@17.0.14/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
+ java.base@17.0.14/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1679)
+ java.base@17.0.14/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+ java.base@17.0.14/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+ java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1062)
+ java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
+ java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+ java.base@17.0.14/java.lang.Thread.run(Thread.java:840)
+2025-07-25 17:04:53.836 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [HikariPool-1:connection-adder] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.14/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@17.0.14/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
+ java.base@17.0.14/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1679)
+ java.base@17.0.14/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:460)
+ java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1061)
+ java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
+ java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+ java.base@17.0.14/java.lang.Thread.run(Thread.java:840)
+2025-07-25 17:04:53.836 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [Thread-4] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.14/sun.nio.ch.SocketDispatcher.read0(Native Method)
+ java.base@17.0.14/sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:46)
+ java.base@17.0.14/sun.nio.ch.NioSocketImpl.tryRead(NioSocketImpl.java:266)
+ java.base@17.0.14/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:317)
+ java.base@17.0.14/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:355)
+ java.base@17.0.14/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:808)
+ java.base@17.0.14/java.net.Socket$SocketInputStream.read(Socket.java:966)
+ java.base@17.0.14/sun.security.ssl.SSLSocketInputRecord.read(SSLSocketInputRecord.java:484)
+ java.base@17.0.14/sun.security.ssl.SSLSocketInputRecord.readHeader(SSLSocketInputRecord.java:478)
+ java.base@17.0.14/sun.security.ssl.SSLSocketInputRecord.bytesInCompletePacket(SSLSocketInputRecord.java:70)
+ java.base@17.0.14/sun.security.ssl.SSLSocketImpl.readApplicationRecord(SSLSocketImpl.java:1465)
+ java.base@17.0.14/sun.security.ssl.SSLSocketImpl$AppInputStream.read(SSLSocketImpl.java:1069)
+ java.base@17.0.14/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+ java.base@17.0.14/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+ java.base@17.0.14/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+ java.base@17.0.14/sun.net.www.http.HttpClient.parseHTTPHeader(HttpClient.java:826)
+ java.base@17.0.14/sun.net.www.http.HttpClient.parseHTTP(HttpClient.java:761)
+ java.base@17.0.14/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1725)
+ java.base@17.0.14/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1626)
+ java.base@17.0.14/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:224)
+ java.base@17.0.14/java.net.URL.openStream(URL.java:1161)
+ app//liquibase.analytics.configuration.LiquibaseRemoteAnalyticsConfiguration.lambda$static$0(LiquibaseRemoteAnalyticsConfiguration.java:46)
+ app//liquibase.analytics.configuration.LiquibaseRemoteAnalyticsConfiguration$$Lambda$1249/0x00000224936a55e8.run(Unknown Source)
+ java.base@17.0.14/java.lang.Thread.run(Thread.java:840)
+2025-07-25 17:04:53.839 WARN  [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server
+2025-07-25 17:04:53.840 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-07-25 17:04:53.845 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-07-25 17:04:53.858 INFO  [restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-07-25 17:04:53.882 ERROR [restartedMain] o.s.boot.SpringApplication               : Application run failed
+org.springframework.context.ApplicationContextException: Unable to start web server
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:170)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:753)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1362)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1351)
+	at com.example.marketplace_backend.MarketplaceBackendApplication.main(MarketplaceBackendApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:147)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:107)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:517)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:219)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:193)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:167)
+	... 13 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'jwtAuthenticationFilter' defined in file [C:\Jackie\Project\Marketplace_Backend\target\classes\com\example\marketplace_backend\config\JwtAuthenticationFilter.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'customUserDetailsService' defined in file [C:\Jackie\Project\Marketplace_Backend\target\classes\com\example\marketplace_backend\Service\Impl\auth\CustomUserDetailsService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'userRepository' defined in com.example.marketplace_backend.Repositories.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:230)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:184)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:179)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAdaptableBeans(ServletContextInitializerBeans.java:164)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:96)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:271)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:245)
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:52)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:4464)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1203)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1193)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:749)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:772)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1203)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1193)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:749)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:203)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:412)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:870)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:438)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:128)
+	... 18 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'customUserDetailsService' defined in file [C:\Jackie\Project\Marketplace_Backend\target\classes\com\example\marketplace_backend\Service\Impl\auth\CustomUserDetailsService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'userRepository' defined in com.example.marketplace_backend.Repositories.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1740)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1628)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 59 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'userRepository' defined in com.example.marketplace_backend.Repositories.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:377)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1725)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1474)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1682)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1628)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 73 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jpaSharedEM_entityManagerFactory': Cannot resolve reference to bean 'entityManagerFactory' while setting constructor argument
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:377)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:691)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:513)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1375)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1205)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	... 86 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/autoconfigure/liquibase/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: liquibase.exception.CommandExecutionException: liquibase.exception.LiquibaseException: liquibase.exception.MigrationFailedException: Migration failed for changeset db/changeLogs/25_07_2025.xml::statuses::JekiChan08:
+     Reason: liquibase.exception.DatabaseException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99 [Failed SQL: (0) INSERT INTO public.statuses (id, name, primary_color, order_flag, product_flag, background_color, color) VALUES ('59a406aa-c855-4b70-8a2c-94e1af724a2b', 'Новинки', '', FALSE, TRUE, '', 'blue'),('e7d2e68f-9808-48b1-87d7-b626adf5ba2d', 'Скидки', '', FALSE, TRUE, '', 'blue'),('d560b45b-3b20-49e4-bb36-82acf2f1bd1d', 'Без статуса', '', TRUE, FALSE, '', '#ccc');]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1826)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:315)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	... 98 common frames omitted
+Caused by: liquibase.exception.LiquibaseException: liquibase.exception.CommandExecutionException: liquibase.exception.LiquibaseException: liquibase.exception.MigrationFailedException: Migration failed for changeset db/changeLogs/25_07_2025.xml::statuses::JekiChan08:
+     Reason: liquibase.exception.DatabaseException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99 [Failed SQL: (0) INSERT INTO public.statuses (id, name, primary_color, order_flag, product_flag, background_color, color) VALUES ('59a406aa-c855-4b70-8a2c-94e1af724a2b', 'Новинки', '', FALSE, TRUE, '', 'blue'),('e7d2e68f-9808-48b1-87d7-b626adf5ba2d', 'Скидки', '', FALSE, TRUE, '', 'blue'),('d560b45b-3b20-49e4-bb36-82acf2f1bd1d', 'Без статуса', '', TRUE, FALSE, '', '#ccc');]
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:272)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	... 107 common frames omitted
+Caused by: liquibase.exception.CommandExecutionException: liquibase.exception.LiquibaseException: liquibase.exception.MigrationFailedException: Migration failed for changeset db/changeLogs/25_07_2025.xml::statuses::JekiChan08:
+     Reason: liquibase.exception.DatabaseException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99 [Failed SQL: (0) INSERT INTO public.statuses (id, name, primary_color, order_flag, product_flag, background_color, color) VALUES ('59a406aa-c855-4b70-8a2c-94e1af724a2b', 'Новинки', '', FALSE, TRUE, '', 'blue'),('e7d2e68f-9808-48b1-87d7-b626adf5ba2d', 'Скидки', '', FALSE, TRUE, '', 'blue'),('d560b45b-3b20-49e4-bb36-82acf2f1bd1d', 'Без статуса', '', TRUE, FALSE, '', '#ccc');]
+	at liquibase.command.CommandScope.lambda$execute$6(CommandScope.java:278)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.command.CommandScope.execute(CommandScope.java:219)
+	at liquibase.Liquibase.lambda$update$0(Liquibase.java:216)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.Liquibase.runInScope(Liquibase.java:1329)
+	at liquibase.Liquibase.update(Liquibase.java:205)
+	at liquibase.Liquibase.update(Liquibase.java:188)
+	at liquibase.integration.spring.SpringLiquibase.performUpdate(SpringLiquibase.java:310)
+	at liquibase.integration.spring.SpringLiquibase.lambda$afterPropertiesSet$0(SpringLiquibase.java:262)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:255)
+	... 109 common frames omitted
+Caused by: liquibase.exception.LiquibaseException: liquibase.exception.MigrationFailedException: Migration failed for changeset db/changeLogs/25_07_2025.xml::statuses::JekiChan08:
+     Reason: liquibase.exception.DatabaseException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99 [Failed SQL: (0) INSERT INTO public.statuses (id, name, primary_color, order_flag, product_flag, background_color, color) VALUES ('59a406aa-c855-4b70-8a2c-94e1af724a2b', 'Новинки', '', FALSE, TRUE, '', 'blue'),('e7d2e68f-9808-48b1-87d7-b626adf5ba2d', 'Скидки', '', FALSE, TRUE, '', 'blue'),('d560b45b-3b20-49e4-bb36-82acf2f1bd1d', 'Без статуса', '', TRUE, FALSE, '', '#ccc');]
+	at liquibase.changelog.ChangeLogIterator.run(ChangeLogIterator.java:155)
+	at liquibase.command.core.AbstractUpdateCommandStep.lambda$run$0(AbstractUpdateCommandStep.java:114)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.command.core.AbstractUpdateCommandStep.run(AbstractUpdateCommandStep.java:112)
+	at liquibase.command.core.UpdateCommandStep.run(UpdateCommandStep.java:100)
+	at liquibase.command.CommandScope.lambda$execute$6(CommandScope.java:231)
+	... 127 common frames omitted
+Caused by: liquibase.exception.MigrationFailedException: Migration failed for changeset db/changeLogs/25_07_2025.xml::statuses::JekiChan08:
+     Reason: liquibase.exception.DatabaseException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99 [Failed SQL: (0) INSERT INTO public.statuses (id, name, primary_color, order_flag, product_flag, background_color, color) VALUES ('59a406aa-c855-4b70-8a2c-94e1af724a2b', 'Новинки', '', FALSE, TRUE, '', 'blue'),('e7d2e68f-9808-48b1-87d7-b626adf5ba2d', 'Скидки', '', FALSE, TRUE, '', 'blue'),('d560b45b-3b20-49e4-bb36-82acf2f1bd1d', 'Без статуса', '', TRUE, FALSE, '', '#ccc');]
+	at liquibase.changelog.ChangeSet.execute(ChangeSet.java:821)
+	at liquibase.changelog.visitor.UpdateVisitor.executeAcceptedChange(UpdateVisitor.java:126)
+	at liquibase.changelog.visitor.UpdateVisitor.visit(UpdateVisitor.java:70)
+	at liquibase.changelog.ChangeLogIterator.lambda$run$0(ChangeLogIterator.java:133)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.changelog.ChangeLogIterator.lambda$run$1(ChangeLogIterator.java:122)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.Scope.child(Scope.java:260)
+	at liquibase.Scope.child(Scope.java:264)
+	at liquibase.changelog.ChangeLogIterator.run(ChangeLogIterator.java:91)
+	... 135 common frames omitted
+Caused by: liquibase.exception.DatabaseException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99 [Failed SQL: (0) INSERT INTO public.statuses (id, name, primary_color, order_flag, product_flag, background_color, color) VALUES ('59a406aa-c855-4b70-8a2c-94e1af724a2b', 'Новинки', '', FALSE, TRUE, '', 'blue'),('e7d2e68f-9808-48b1-87d7-b626adf5ba2d', 'Скидки', '', FALSE, TRUE, '', 'blue'),('d560b45b-3b20-49e4-bb36-82acf2f1bd1d', 'Без статуса', '', TRUE, FALSE, '', '#ccc');]
+	at liquibase.executor.jvm.JdbcExecutor$ExecuteStatementCallback.doInStatement(JdbcExecutor.java:497)
+	at liquibase.executor.jvm.JdbcExecutor.execute(JdbcExecutor.java:83)
+	at liquibase.executor.jvm.JdbcExecutor.execute(JdbcExecutor.java:185)
+	at liquibase.executor.AbstractExecutor.execute(AbstractExecutor.java:141)
+	at liquibase.database.AbstractJdbcDatabase.executeStatements(AbstractJdbcDatabase.java:1189)
+	at liquibase.changelog.ChangeSet.execute(ChangeSet.java:777)
+	... 150 common frames omitted
+Caused by: org.postgresql.util.PSQLException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2713)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2401)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:368)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:498)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:415)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:335)
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:321)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:297)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:292)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at liquibase.executor.jvm.JdbcExecutor$ExecuteStatementCallback.doInStatement(JdbcExecutor.java:491)
+	... 155 common frames omitted
+2025-07-25 17:05:09.670 INFO  [restartedMain] c.e.m.MarketplaceBackendApplication      : Starting MarketplaceBackendApplication using Java 17.0.14 with PID 4016 (C:\Jackie\Project\Marketplace_Backend\target\classes started by Jackie in C:\Jackie\Project\Marketplace_Backend)
+2025-07-25 17:05:09.672 INFO  [restartedMain] c.e.m.MarketplaceBackendApplication      : No active profile set, falling back to 1 default profile: "default"
+2025-07-25 17:05:09.717 INFO  [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-07-25 17:05:09.717 INFO  [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-07-25 17:05:10.390 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-25 17:05:10.392 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2025-07-25 17:05:10.423 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.BrandImageRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.424 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.BrandRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.425 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.CartItemRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.426 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.CartRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.427 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.CategoryIconRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.427 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.CategoryImageRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.428 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.CategoryRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.429 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.FavoriteItemRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.429 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.FavoriteRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.430 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.FileRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.431 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.OrderRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.433 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.OrderStatusRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.433 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.ProductImageRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.434 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.ProductParametersRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.435 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.ProductRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.436 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.ProductStatusRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.437 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.ProductSubParametersRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.438 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.RefreshTokenRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.438 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.StatusRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.439 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.SubcategoryImageRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.440 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.SubcategoryRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.440 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:05:10.441 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 43 ms. Found 0 JDBC repository interfaces.
+2025-07-25 17:05:10.448 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-25 17:05:10.448 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-07-25 17:05:10.489 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 37 ms. Found 22 JPA repository interfaces.
+2025-07-25 17:05:10.878 INFO  [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-07-25 17:05:10.887 INFO  [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-07-25 17:05:10.887 INFO  [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.41]
+2025-07-25 17:05:10.919 INFO  [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-07-25 17:05:10.919 INFO  [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1201 ms
+2025-07-25 17:05:10.987 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-07-25 17:05:11.108 INFO  [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@363734ab
+2025-07-25 17:05:11.109 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-07-25 17:05:11.227 INFO  [restartedMain] liquibase.database                       : Set default schema name to public
+2025-07-25 17:05:11.737 INFO  [restartedMain] liquibase.changelog                      : Creating database history table with name: public.databasechangelog
+2025-07-25 17:05:11.766 INFO  [restartedMain] liquibase.changelog                      : Reading from public.databasechangelog
+2025-07-25 17:05:11.779 INFO  [restartedMain] liquibase.snapshot                       : Creating snapshot
+2025-07-25 17:05:11.893 INFO  [restartedMain] liquibase.lockservice                    : Successfully acquired change log lock
+2025-07-25 17:05:11.894 INFO  [restartedMain] liquibase.command                        : Using deploymentId: 3441511894
+2025-07-25 17:05:11.895 INFO  [restartedMain] liquibase.changelog                      : Reading from public.databasechangelog
+2025-07-25 17:05:11.942 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::1::JekiChan08
+2025-07-25 17:05:11.950 INFO  [restartedMain] liquibase.changelog                      : Table files created
+2025-07-25 17:05:11.952 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::1::JekiChan08 ran successfully in 9ms
+2025-07-25 17:05:11.957 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::2::JekiChan08
+2025-07-25 17:05:11.963 INFO  [restartedMain] liquibase.changelog                      : Table users created
+2025-07-25 17:05:11.965 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::2::JekiChan08 ran successfully in 8ms
+2025-07-25 17:05:11.968 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::3::JekiChan08
+2025-07-25 17:05:11.972 INFO  [restartedMain] liquibase.changelog                      : Table brand created
+2025-07-25 17:05:11.973 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::3::JekiChan08 ran successfully in 5ms
+2025-07-25 17:05:11.976 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::4::JekiChan08
+2025-07-25 17:05:11.980 INFO  [restartedMain] liquibase.changelog                      : Table categories created
+2025-07-25 17:05:11.981 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::4::JekiChan08 ran successfully in 5ms
+2025-07-25 17:05:11.985 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::5::JekiChan08
+2025-07-25 17:05:11.989 INFO  [restartedMain] liquibase.changelog                      : Table subcategories created
+2025-07-25 17:05:11.993 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to subcategories (category_id)
+2025-07-25 17:05:11.994 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::5::JekiChan08 ran successfully in 9ms
+2025-07-25 17:05:11.998 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::7::JekiChan08
+2025-07-25 17:05:12.007 INFO  [restartedMain] liquibase.changelog                      : Table products created
+2025-07-25 17:05:12.009 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to products (brand_id)
+2025-07-25 17:05:12.011 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to products (subcategory_id)
+2025-07-25 17:05:12.012 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::7::JekiChan08 ran successfully in 13ms
+2025-07-25 17:05:12.014 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::9::JekiChan08
+2025-07-25 17:05:12.017 INFO  [restartedMain] liquibase.changelog                      : Table product_parameters created
+2025-07-25 17:05:12.019 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to product_parameters (product_id)
+2025-07-25 17:05:12.020 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::9::JekiChan08 ran successfully in 6ms
+2025-07-25 17:05:12.022 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::10::JekiChan08
+2025-07-25 17:05:12.028 INFO  [restartedMain] liquibase.changelog                      : Table product_sub_parameters created
+2025-07-25 17:05:12.030 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to product_sub_parameters (product_parameter_id)
+2025-07-25 17:05:12.031 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::10::JekiChan08 ran successfully in 9ms
+2025-07-25 17:05:12.034 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::11::JekiChan08
+2025-07-25 17:05:12.037 INFO  [restartedMain] liquibase.changelog                      : Table user_image created
+2025-07-25 17:05:12.039 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to user_image (user_id)
+2025-07-25 17:05:12.040 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to user_image (image_id)
+2025-07-25 17:05:12.041 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::11::JekiChan08 ran successfully in 7ms
+2025-07-25 17:05:12.042 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::12::JekiChan08
+2025-07-25 17:05:12.045 INFO  [restartedMain] liquibase.changelog                      : Table brand_images created
+2025-07-25 17:05:12.047 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to brand_images (brand_id)
+2025-07-25 17:05:12.049 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to brand_images (image_id)
+2025-07-25 17:05:12.049 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::12::JekiChan08 ran successfully in 6ms
+2025-07-25 17:05:12.052 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::13::JekiChan08
+2025-07-25 17:05:12.055 INFO  [restartedMain] liquibase.changelog                      : Table category_image created
+2025-07-25 17:05:12.057 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to category_image (category_id)
+2025-07-25 17:05:12.058 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to category_image (image_id)
+2025-07-25 17:05:12.059 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::13::JekiChan08 ran successfully in 7ms
+2025-07-25 17:05:12.061 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::14::JekiChan08
+2025-07-25 17:05:12.064 INFO  [restartedMain] liquibase.changelog                      : Table subcategory_images created
+2025-07-25 17:05:12.065 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to subcategory_images (subcategory_id)
+2025-07-25 17:05:12.066 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to subcategory_images (image_id)
+2025-07-25 17:05:12.067 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::14::JekiChan08 ran successfully in 6ms
+2025-07-25 17:05:12.069 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::15::JekiChan08
+2025-07-25 17:05:12.072 INFO  [restartedMain] liquibase.changelog                      : Table product_images created
+2025-07-25 17:05:12.074 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to product_images (product_id)
+2025-07-25 17:05:12.076 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to product_images (image_id)
+2025-07-25 17:05:12.076 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::15::JekiChan08 ran successfully in 6ms
+2025-07-25 17:05:12.079 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::16::JekiChan08
+2025-07-25 17:05:12.083 INFO  [restartedMain] liquibase.changelog                      : Table carts created
+2025-07-25 17:05:12.085 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to carts (user_id)
+2025-07-25 17:05:12.086 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::16::JekiChan08 ran successfully in 6ms
+2025-07-25 17:05:12.088 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::17::JekiChan08
+2025-07-25 17:05:12.091 INFO  [restartedMain] liquibase.changelog                      : Table cart_items created
+2025-07-25 17:05:12.093 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to cart_items (cart_id)
+2025-07-25 17:05:12.094 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to cart_items (product_id)
+2025-07-25 17:05:12.095 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::17::JekiChan08 ran successfully in 7ms
+2025-07-25 17:05:12.097 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::18::JekiChan08
+2025-07-25 17:05:12.100 INFO  [restartedMain] liquibase.changelog                      : Table favorites created
+2025-07-25 17:05:12.102 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to favorites (user_id)
+2025-07-25 17:05:12.102 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::18::JekiChan08 ran successfully in 4ms
+2025-07-25 17:05:12.104 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::19::JekiChan08
+2025-07-25 17:05:12.108 INFO  [restartedMain] liquibase.changelog                      : Table favorite_item created
+2025-07-25 17:05:12.109 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to favorite_item (favorite_id)
+2025-07-25 17:05:12.110 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to favorite_item (product_id)
+2025-07-25 17:05:12.111 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::19::JekiChan08 ran successfully in 7ms
+2025-07-25 17:05:12.113 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::20::JekiChan08
+2025-07-25 17:05:12.117 INFO  [restartedMain] liquibase.changelog                      : Table orders created
+2025-07-25 17:05:12.118 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to orders (user_id)
+2025-07-25 17:05:12.119 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::20::JekiChan08 ran successfully in 5ms
+2025-07-25 17:05:12.120 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::21::JekiChan08
+2025-07-25 17:05:12.124 INFO  [restartedMain] liquibase.changelog                      : Table order_items created
+2025-07-25 17:05:12.125 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to order_items (order_id)
+2025-07-25 17:05:12.126 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to order_items (product_id)
+2025-07-25 17:05:12.127 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::21::JekiChan08 ran successfully in 6ms
+2025-07-25 17:05:12.129 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::22::JekiChan08
+2025-07-25 17:05:12.134 INFO  [restartedMain] liquibase.changelog                      : Table refresh_tokens created
+2025-07-25 17:05:12.135 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to refresh_tokens (user_id)
+2025-07-25 17:05:12.136 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::22::JekiChan08 ran successfully in 7ms
+2025-07-25 17:05:12.137 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::update-products-name-index::JekiChan08
+2025-07-25 17:05:12.147 WARN  [restartedMain] liquibase.executor                       : extension "pg_trgm" already exists, skipping
+2025-07-25 17:05:12.150 INFO  [restartedMain] liquibase.changelog                      : Custom SQL executed
+2025-07-25 17:05:12.151 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::update-products-name-index::JekiChan08 ran successfully in 13ms
+2025-07-25 17:05:12.153 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::add-user-indexes::JekiChan08
+2025-07-25 17:05:12.157 WARN  [restartedMain] liquibase.executor                       : extension "pg_trgm" already exists, skipping
+2025-07-25 17:05:12.164 INFO  [restartedMain] liquibase.changelog                      : Custom SQL executed
+2025-07-25 17:05:12.165 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::add-user-indexes::JekiChan08 ran successfully in 12ms
+2025-07-25 17:05:12.169 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::Admin::JekiChan08
+2025-07-25 17:05:12.211 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/users.csv' into table 'users'
+2025-07-25 17:05:12.213 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::Admin::JekiChan08 ran successfully in 44ms
+2025-07-25 17:05:12.217 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/07_07_2025.xml::statuses::aiteginbaratov
+2025-07-25 17:05:12.224 INFO  [restartedMain] liquibase.changelog                      : Table statuses created
+2025-07-25 17:05:12.225 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/07_07_2025.xml::statuses::aiteginbaratov ran successfully in 8ms
+2025-07-25 17:05:12.228 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/07_07_2025.xml::create-order-statuses-table::developer
+2025-07-25 17:05:12.233 INFO  [restartedMain] liquibase.changelog                      : Table order_statuses created
+2025-07-25 17:05:12.235 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to order_statuses (order_id)
+2025-07-25 17:05:12.238 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to order_statuses (status_id)
+2025-07-25 17:05:12.238 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/07_07_2025.xml::create-order-statuses-table::developer ran successfully in 10ms
+2025-07-25 17:05:12.242 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/07_07_2025.xml::create-product-statuses-table::developer
+2025-07-25 17:05:12.247 INFO  [restartedMain] liquibase.changelog                      : Table product_statuses created
+2025-07-25 17:05:12.250 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to product_statuses (product_id)
+2025-07-25 17:05:12.253 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to product_statuses (status_id)
+2025-07-25 17:05:12.253 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/07_07_2025.xml::create-product-statuses-table::developer ran successfully in 10ms
+2025-07-25 17:05:12.259 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/17_07_2025.xml::add-order-and-product-columns-to-statuses::aiteginbaratov
+2025-07-25 17:05:12.264 INFO  [restartedMain] liquibase.changelog                      : Columns order_flag(BOOLEAN),product_flag(BOOLEAN),background_color(VARCHAR(255)) added to statuses
+2025-07-25 17:05:12.265 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/17_07_2025.xml::add-order-and-product-columns-to-statuses::aiteginbaratov ran successfully in 6ms
+2025-07-25 17:05:12.269 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/22_07_2025.xml::add-icon-columns-to-category::aiteginbaratov
+2025-07-25 17:05:12.272 INFO  [restartedMain] liquibase.changelog                      : Table category_icons created
+2025-07-25 17:05:12.274 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to category_icons (category_id)
+2025-07-25 17:05:12.276 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to category_icons (icon_id)
+2025-07-25 17:05:12.276 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/22_07_2025.xml::add-icon-columns-to-category::aiteginbaratov ran successfully in 7ms
+2025-07-25 17:05:12.279 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::Categories::JekiChan08
+2025-07-25 17:05:12.300 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/categories.csv' into table 'categories'
+2025-07-25 17:05:12.301 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::Categories::JekiChan08 ran successfully in 22ms
+2025-07-25 17:05:12.303 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::Files::JekiChan08
+2025-07-25 17:05:12.320 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/files.csv' into table 'files'
+2025-07-25 17:05:12.321 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::Files::JekiChan08 ran successfully in 18ms
+2025-07-25 17:05:12.323 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::brand::JekiChan08
+2025-07-25 17:05:12.340 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/brand.csv' into table 'brand'
+2025-07-25 17:05:12.340 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::brand::JekiChan08 ran successfully in 17ms
+2025-07-25 17:05:12.342 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::ci::JekiChan08
+2025-07-25 17:05:12.352 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/category_image.csv' into table 'category_image'
+2025-07-25 17:05:12.353 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::ci::JekiChan08 ran successfully in 11ms
+2025-07-25 17:05:12.356 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::ci2::JekiChan08
+2025-07-25 17:05:12.367 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/category_icon.csv' into table 'category_icons'
+2025-07-25 17:05:12.368 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::ci2::JekiChan08 ran successfully in 12ms
+2025-07-25 17:05:12.371 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::subcategories::JekiChan08
+2025-07-25 17:05:12.398 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/subcategories.csv' into table 'subcategories'
+2025-07-25 17:05:12.399 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::subcategories::JekiChan08 ran successfully in 27ms
+2025-07-25 17:05:12.402 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::bi::JekiChan08
+2025-07-25 17:05:12.413 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/brand_images.csv' into table 'brand_images'
+2025-07-25 17:05:12.415 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::bi::JekiChan08 ran successfully in 12ms
+2025-07-25 17:05:12.418 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::product::JekiChan08
+2025-07-25 17:05:12.438 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/products.csv' into table 'products'
+2025-07-25 17:05:12.439 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::product::JekiChan08 ran successfully in 21ms
+2025-07-25 17:05:12.441 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::pi::JekiChan08
+2025-07-25 17:05:12.452 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/product_images.csv' into table 'product_images'
+2025-07-25 17:05:12.453 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::pi::JekiChan08 ran successfully in 12ms
+2025-07-25 17:05:12.457 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::pp::JekiChan08
+2025-07-25 17:05:12.468 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/product_parameters.csv' into table 'product_parameters'
+2025-07-25 17:05:12.468 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::pp::JekiChan08 ran successfully in 11ms
+2025-07-25 17:05:12.471 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::statuses::JekiChan08
+2025-07-25 17:05:12.477 ERROR [restartedMain] liquibase.change                         : Unable to find column 'color' in table 'statuses'
+2025-07-25 17:05:12.485 ERROR [restartedMain] liquibase.change                         : Unable to find column 'color' in table 'statuses'
+2025-07-25 17:05:12.486 ERROR [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::statuses::JekiChan08 encountered an exception.
+liquibase.exception.DatabaseException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99 [Failed SQL: (0) INSERT INTO public.statuses (id, name, primary_color, order_flag, product_flag, background_color, color) VALUES ('59a406aa-c855-4b70-8a2c-94e1af724a2b', 'Новинки', '', FALSE, TRUE, '', 'blue'),('e7d2e68f-9808-48b1-87d7-b626adf5ba2d', 'Скидки', '', FALSE, TRUE, '', 'blue'),('d560b45b-3b20-49e4-bb36-82acf2f1bd1d', 'Без статуса', '', TRUE, FALSE, '', '#ccc');]
+	at liquibase.executor.jvm.JdbcExecutor$ExecuteStatementCallback.doInStatement(JdbcExecutor.java:497)
+	at liquibase.executor.jvm.JdbcExecutor.execute(JdbcExecutor.java:83)
+	at liquibase.executor.jvm.JdbcExecutor.execute(JdbcExecutor.java:185)
+	at liquibase.executor.AbstractExecutor.execute(AbstractExecutor.java:141)
+	at liquibase.database.AbstractJdbcDatabase.executeStatements(AbstractJdbcDatabase.java:1189)
+	at liquibase.changelog.ChangeSet.execute(ChangeSet.java:777)
+	at liquibase.changelog.visitor.UpdateVisitor.executeAcceptedChange(UpdateVisitor.java:126)
+	at liquibase.changelog.visitor.UpdateVisitor.visit(UpdateVisitor.java:70)
+	at liquibase.changelog.ChangeLogIterator.lambda$run$0(ChangeLogIterator.java:133)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.changelog.ChangeLogIterator.lambda$run$1(ChangeLogIterator.java:122)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.Scope.child(Scope.java:260)
+	at liquibase.Scope.child(Scope.java:264)
+	at liquibase.changelog.ChangeLogIterator.run(ChangeLogIterator.java:91)
+	at liquibase.command.core.AbstractUpdateCommandStep.lambda$run$0(AbstractUpdateCommandStep.java:114)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.command.core.AbstractUpdateCommandStep.run(AbstractUpdateCommandStep.java:112)
+	at liquibase.command.core.UpdateCommandStep.run(UpdateCommandStep.java:100)
+	at liquibase.command.CommandScope.lambda$execute$6(CommandScope.java:231)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.command.CommandScope.execute(CommandScope.java:219)
+	at liquibase.Liquibase.lambda$update$0(Liquibase.java:216)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.Liquibase.runInScope(Liquibase.java:1329)
+	at liquibase.Liquibase.update(Liquibase.java:205)
+	at liquibase.Liquibase.update(Liquibase.java:188)
+	at liquibase.integration.spring.SpringLiquibase.performUpdate(SpringLiquibase.java:310)
+	at liquibase.integration.spring.SpringLiquibase.lambda$afterPropertiesSet$0(SpringLiquibase.java:262)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:255)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:315)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:691)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:513)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1375)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1205)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1725)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1474)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1682)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1628)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1740)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1628)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:230)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:184)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:179)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAdaptableBeans(ServletContextInitializerBeans.java:164)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:96)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:271)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:245)
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:52)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:4464)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1203)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1193)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:749)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:772)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1203)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1193)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:749)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:203)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:412)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:870)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:438)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:128)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:107)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:517)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:219)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:193)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:167)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:753)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1362)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1351)
+	at com.example.marketplace_backend.MarketplaceBackendApplication.main(MarketplaceBackendApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.postgresql.util.PSQLException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2713)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2401)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:368)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:498)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:415)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:335)
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:321)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:297)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:292)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at liquibase.executor.jvm.JdbcExecutor$ExecuteStatementCallback.doInStatement(JdbcExecutor.java:491)
+	... 155 common frames omitted
+2025-07-25 17:05:12.494 INFO  [restartedMain] liquibase.util                           : UPDATE SUMMARY
+2025-07-25 17:05:12.494 INFO  [restartedMain] liquibase.util                           : Run:                         38
+2025-07-25 17:05:12.494 INFO  [restartedMain] liquibase.util                           : Previously run:               0
+2025-07-25 17:05:12.494 INFO  [restartedMain] liquibase.util                           : Filtered out:                 0
+2025-07-25 17:05:12.494 INFO  [restartedMain] liquibase.util                           : -------------------------------
+2025-07-25 17:05:12.494 INFO  [restartedMain] liquibase.util                           : Total change sets:           41
+2025-07-25 17:05:12.494 INFO  [restartedMain] liquibase.util                           : Update summary generated
+2025-07-25 17:05:12.496 INFO  [restartedMain] liquibase.command                        : Update command encountered an exception.
+2025-07-25 17:05:12.497 INFO  [restartedMain] liquibase.lockservice                    : Successfully released change log lock
+2025-07-25 17:05:12.499 INFO  [restartedMain] liquibase.command                        : Logging exception.
+2025-07-25 17:05:12.499 INFO  [restartedMain] liquibase.ui                             : ERROR: Exception Details
+2025-07-25 17:05:12.499 INFO  [restartedMain] liquibase.ui                             : ERROR: Exception Primary Class:  PSQLException
+2025-07-25 17:05:12.499 INFO  [restartedMain] liquibase.ui                             : ERROR: Exception Primary Reason:  ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99
+2025-07-25 17:05:12.499 INFO  [restartedMain] liquibase.ui                             : ERROR: Exception Primary Source:  PostgreSQL 17.4
+2025-07-25 17:05:12.500 INFO  [restartedMain] liquibase.command                        : Command execution complete
+2025-07-25 17:05:14.021 ERROR [restartedMain] o.s.b.web.embedded.tomcat.TomcatStarter  : Error starting Tomcat context. Exception: org.springframework.beans.factory.UnsatisfiedDependencyException. Message: Error creating bean with name 'jwtAuthenticationFilter' defined in file [C:\Jackie\Project\Marketplace_Backend\target\classes\com\example\marketplace_backend\config\JwtAuthenticationFilter.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'customUserDetailsService' defined in file [C:\Jackie\Project\Marketplace_Backend\target\classes\com\example\marketplace_backend\Service\Impl\auth\CustomUserDetailsService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'userRepository' defined in com.example.marketplace_backend.Repositories.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+2025-07-25 17:05:14.039 INFO  [restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2025-07-25 17:05:14.042 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [HikariPool-1:housekeeper] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.14/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@17.0.14/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
+ java.base@17.0.14/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1679)
+ java.base@17.0.14/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+ java.base@17.0.14/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+ java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1062)
+ java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
+ java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+ java.base@17.0.14/java.lang.Thread.run(Thread.java:840)
+2025-07-25 17:05:14.042 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [HikariPool-1:connection-adder] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.14/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@17.0.14/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
+ java.base@17.0.14/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1679)
+ java.base@17.0.14/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:460)
+ java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1061)
+ java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
+ java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+ java.base@17.0.14/java.lang.Thread.run(Thread.java:840)
+2025-07-25 17:05:14.042 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [Thread-4] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.14/sun.nio.ch.SocketDispatcher.read0(Native Method)
+ java.base@17.0.14/sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:46)
+ java.base@17.0.14/sun.nio.ch.NioSocketImpl.tryRead(NioSocketImpl.java:266)
+ java.base@17.0.14/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:317)
+ java.base@17.0.14/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:355)
+ java.base@17.0.14/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:808)
+ java.base@17.0.14/java.net.Socket$SocketInputStream.read(Socket.java:966)
+ java.base@17.0.14/sun.security.ssl.SSLSocketInputRecord.read(SSLSocketInputRecord.java:484)
+ java.base@17.0.14/sun.security.ssl.SSLSocketInputRecord.readHeader(SSLSocketInputRecord.java:478)
+ java.base@17.0.14/sun.security.ssl.SSLSocketInputRecord.bytesInCompletePacket(SSLSocketInputRecord.java:70)
+ java.base@17.0.14/sun.security.ssl.SSLSocketImpl.readApplicationRecord(SSLSocketImpl.java:1465)
+ java.base@17.0.14/sun.security.ssl.SSLSocketImpl$AppInputStream.read(SSLSocketImpl.java:1069)
+ java.base@17.0.14/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+ java.base@17.0.14/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+ java.base@17.0.14/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+ java.base@17.0.14/sun.net.www.http.HttpClient.parseHTTPHeader(HttpClient.java:826)
+ java.base@17.0.14/sun.net.www.http.HttpClient.parseHTTP(HttpClient.java:761)
+ java.base@17.0.14/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1725)
+ java.base@17.0.14/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1626)
+ java.base@17.0.14/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:224)
+ java.base@17.0.14/java.net.URL.openStream(URL.java:1161)
+ app//liquibase.analytics.configuration.LiquibaseRemoteAnalyticsConfiguration.lambda$static$0(LiquibaseRemoteAnalyticsConfiguration.java:46)
+ app//liquibase.analytics.configuration.LiquibaseRemoteAnalyticsConfiguration$$Lambda$1251/0x0000025b816a8800.run(Unknown Source)
+ java.base@17.0.14/java.lang.Thread.run(Thread.java:840)
+2025-07-25 17:05:14.044 WARN  [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server
+2025-07-25 17:05:14.044 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-07-25 17:05:14.049 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-07-25 17:05:14.060 INFO  [restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-07-25 17:05:14.074 ERROR [restartedMain] o.s.boot.SpringApplication               : Application run failed
+org.springframework.context.ApplicationContextException: Unable to start web server
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:170)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:753)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1362)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1351)
+	at com.example.marketplace_backend.MarketplaceBackendApplication.main(MarketplaceBackendApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:147)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:107)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:517)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:219)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:193)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:167)
+	... 13 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'jwtAuthenticationFilter' defined in file [C:\Jackie\Project\Marketplace_Backend\target\classes\com\example\marketplace_backend\config\JwtAuthenticationFilter.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'customUserDetailsService' defined in file [C:\Jackie\Project\Marketplace_Backend\target\classes\com\example\marketplace_backend\Service\Impl\auth\CustomUserDetailsService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'userRepository' defined in com.example.marketplace_backend.Repositories.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:230)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:184)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:179)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAdaptableBeans(ServletContextInitializerBeans.java:164)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:96)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:271)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:245)
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:52)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:4464)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1203)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1193)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:749)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:772)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1203)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1193)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:749)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:203)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:412)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:870)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:438)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:128)
+	... 18 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'customUserDetailsService' defined in file [C:\Jackie\Project\Marketplace_Backend\target\classes\com\example\marketplace_backend\Service\Impl\auth\CustomUserDetailsService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'userRepository' defined in com.example.marketplace_backend.Repositories.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1740)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1628)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 59 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'userRepository' defined in com.example.marketplace_backend.Repositories.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:377)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1725)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1474)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1682)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1628)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 73 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jpaSharedEM_entityManagerFactory': Cannot resolve reference to bean 'entityManagerFactory' while setting constructor argument
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:377)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:691)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:513)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1375)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1205)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	... 86 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/autoconfigure/liquibase/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: liquibase.exception.CommandExecutionException: liquibase.exception.LiquibaseException: liquibase.exception.MigrationFailedException: Migration failed for changeset db/changeLogs/25_07_2025.xml::statuses::JekiChan08:
+     Reason: liquibase.exception.DatabaseException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99 [Failed SQL: (0) INSERT INTO public.statuses (id, name, primary_color, order_flag, product_flag, background_color, color) VALUES ('59a406aa-c855-4b70-8a2c-94e1af724a2b', 'Новинки', '', FALSE, TRUE, '', 'blue'),('e7d2e68f-9808-48b1-87d7-b626adf5ba2d', 'Скидки', '', FALSE, TRUE, '', 'blue'),('d560b45b-3b20-49e4-bb36-82acf2f1bd1d', 'Без статуса', '', TRUE, FALSE, '', '#ccc');]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1826)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:315)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	... 98 common frames omitted
+Caused by: liquibase.exception.LiquibaseException: liquibase.exception.CommandExecutionException: liquibase.exception.LiquibaseException: liquibase.exception.MigrationFailedException: Migration failed for changeset db/changeLogs/25_07_2025.xml::statuses::JekiChan08:
+     Reason: liquibase.exception.DatabaseException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99 [Failed SQL: (0) INSERT INTO public.statuses (id, name, primary_color, order_flag, product_flag, background_color, color) VALUES ('59a406aa-c855-4b70-8a2c-94e1af724a2b', 'Новинки', '', FALSE, TRUE, '', 'blue'),('e7d2e68f-9808-48b1-87d7-b626adf5ba2d', 'Скидки', '', FALSE, TRUE, '', 'blue'),('d560b45b-3b20-49e4-bb36-82acf2f1bd1d', 'Без статуса', '', TRUE, FALSE, '', '#ccc');]
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:272)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	... 107 common frames omitted
+Caused by: liquibase.exception.CommandExecutionException: liquibase.exception.LiquibaseException: liquibase.exception.MigrationFailedException: Migration failed for changeset db/changeLogs/25_07_2025.xml::statuses::JekiChan08:
+     Reason: liquibase.exception.DatabaseException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99 [Failed SQL: (0) INSERT INTO public.statuses (id, name, primary_color, order_flag, product_flag, background_color, color) VALUES ('59a406aa-c855-4b70-8a2c-94e1af724a2b', 'Новинки', '', FALSE, TRUE, '', 'blue'),('e7d2e68f-9808-48b1-87d7-b626adf5ba2d', 'Скидки', '', FALSE, TRUE, '', 'blue'),('d560b45b-3b20-49e4-bb36-82acf2f1bd1d', 'Без статуса', '', TRUE, FALSE, '', '#ccc');]
+	at liquibase.command.CommandScope.lambda$execute$6(CommandScope.java:278)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.command.CommandScope.execute(CommandScope.java:219)
+	at liquibase.Liquibase.lambda$update$0(Liquibase.java:216)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.Liquibase.runInScope(Liquibase.java:1329)
+	at liquibase.Liquibase.update(Liquibase.java:205)
+	at liquibase.Liquibase.update(Liquibase.java:188)
+	at liquibase.integration.spring.SpringLiquibase.performUpdate(SpringLiquibase.java:310)
+	at liquibase.integration.spring.SpringLiquibase.lambda$afterPropertiesSet$0(SpringLiquibase.java:262)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:255)
+	... 109 common frames omitted
+Caused by: liquibase.exception.LiquibaseException: liquibase.exception.MigrationFailedException: Migration failed for changeset db/changeLogs/25_07_2025.xml::statuses::JekiChan08:
+     Reason: liquibase.exception.DatabaseException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99 [Failed SQL: (0) INSERT INTO public.statuses (id, name, primary_color, order_flag, product_flag, background_color, color) VALUES ('59a406aa-c855-4b70-8a2c-94e1af724a2b', 'Новинки', '', FALSE, TRUE, '', 'blue'),('e7d2e68f-9808-48b1-87d7-b626adf5ba2d', 'Скидки', '', FALSE, TRUE, '', 'blue'),('d560b45b-3b20-49e4-bb36-82acf2f1bd1d', 'Без статуса', '', TRUE, FALSE, '', '#ccc');]
+	at liquibase.changelog.ChangeLogIterator.run(ChangeLogIterator.java:155)
+	at liquibase.command.core.AbstractUpdateCommandStep.lambda$run$0(AbstractUpdateCommandStep.java:114)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.command.core.AbstractUpdateCommandStep.run(AbstractUpdateCommandStep.java:112)
+	at liquibase.command.core.UpdateCommandStep.run(UpdateCommandStep.java:100)
+	at liquibase.command.CommandScope.lambda$execute$6(CommandScope.java:231)
+	... 127 common frames omitted
+Caused by: liquibase.exception.MigrationFailedException: Migration failed for changeset db/changeLogs/25_07_2025.xml::statuses::JekiChan08:
+     Reason: liquibase.exception.DatabaseException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99 [Failed SQL: (0) INSERT INTO public.statuses (id, name, primary_color, order_flag, product_flag, background_color, color) VALUES ('59a406aa-c855-4b70-8a2c-94e1af724a2b', 'Новинки', '', FALSE, TRUE, '', 'blue'),('e7d2e68f-9808-48b1-87d7-b626adf5ba2d', 'Скидки', '', FALSE, TRUE, '', 'blue'),('d560b45b-3b20-49e4-bb36-82acf2f1bd1d', 'Без статуса', '', TRUE, FALSE, '', '#ccc');]
+	at liquibase.changelog.ChangeSet.execute(ChangeSet.java:821)
+	at liquibase.changelog.visitor.UpdateVisitor.executeAcceptedChange(UpdateVisitor.java:126)
+	at liquibase.changelog.visitor.UpdateVisitor.visit(UpdateVisitor.java:70)
+	at liquibase.changelog.ChangeLogIterator.lambda$run$0(ChangeLogIterator.java:133)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.changelog.ChangeLogIterator.lambda$run$1(ChangeLogIterator.java:122)
+	at liquibase.Scope.lambda$child$0(Scope.java:194)
+	at liquibase.Scope.child(Scope.java:203)
+	at liquibase.Scope.child(Scope.java:193)
+	at liquibase.Scope.child(Scope.java:172)
+	at liquibase.Scope.child(Scope.java:260)
+	at liquibase.Scope.child(Scope.java:264)
+	at liquibase.changelog.ChangeLogIterator.run(ChangeLogIterator.java:91)
+	... 135 common frames omitted
+Caused by: liquibase.exception.DatabaseException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99 [Failed SQL: (0) INSERT INTO public.statuses (id, name, primary_color, order_flag, product_flag, background_color, color) VALUES ('59a406aa-c855-4b70-8a2c-94e1af724a2b', 'Новинки', '', FALSE, TRUE, '', 'blue'),('e7d2e68f-9808-48b1-87d7-b626adf5ba2d', 'Скидки', '', FALSE, TRUE, '', 'blue'),('d560b45b-3b20-49e4-bb36-82acf2f1bd1d', 'Без статуса', '', TRUE, FALSE, '', '#ccc');]
+	at liquibase.executor.jvm.JdbcExecutor$ExecuteStatementCallback.doInStatement(JdbcExecutor.java:497)
+	at liquibase.executor.jvm.JdbcExecutor.execute(JdbcExecutor.java:83)
+	at liquibase.executor.jvm.JdbcExecutor.execute(JdbcExecutor.java:185)
+	at liquibase.executor.AbstractExecutor.execute(AbstractExecutor.java:141)
+	at liquibase.database.AbstractJdbcDatabase.executeStatements(AbstractJdbcDatabase.java:1189)
+	at liquibase.changelog.ChangeSet.execute(ChangeSet.java:777)
+	... 150 common frames omitted
+Caused by: org.postgresql.util.PSQLException: ERROR: column "color" of relation "statuses" does not exist
+  Позиция: 99
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2713)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2401)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:368)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:498)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:415)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:335)
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:321)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:297)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:292)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at liquibase.executor.jvm.JdbcExecutor$ExecuteStatementCallback.doInStatement(JdbcExecutor.java:491)
+	... 155 common frames omitted
+2025-07-25 17:16:09.105 INFO  [restartedMain] c.e.m.MarketplaceBackendApplication      : Starting MarketplaceBackendApplication using Java 17.0.14 with PID 4756 (C:\Jackie\Project\Marketplace_Backend\target\classes started by Jackie in C:\Jackie\Project\Marketplace_Backend)
+2025-07-25 17:16:09.107 INFO  [restartedMain] c.e.m.MarketplaceBackendApplication      : No active profile set, falling back to 1 default profile: "default"
+2025-07-25 17:16:09.146 INFO  [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-07-25 17:16:09.146 INFO  [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-07-25 17:16:09.940 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-25 17:16:09.941 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2025-07-25 17:16:09.970 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.BrandImageRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.971 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.BrandRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.972 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.CartItemRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.973 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.CartRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.974 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.CategoryIconRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.974 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.CategoryImageRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.975 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.CategoryRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.976 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.FavoriteItemRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.977 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.FavoriteRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.978 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.FileRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.979 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.OrderRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.980 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.OrderStatusRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.980 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.ProductImageRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.981 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.ProductParametersRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.982 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.ProductRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.984 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.ProductStatusRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.984 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.ProductSubParametersRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.985 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.RefreshTokenRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.986 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.StatusRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.986 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.SubcategoryImageRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.987 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.SubcategoryRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.988 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2025-07-25 17:16:09.988 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 42 ms. Found 0 JDBC repository interfaces.
+2025-07-25 17:16:09.995 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-25 17:16:09.996 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-07-25 17:16:10.043 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 43 ms. Found 22 JPA repository interfaces.
+2025-07-25 17:16:10.486 INFO  [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-07-25 17:16:10.496 INFO  [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-07-25 17:16:10.496 INFO  [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.41]
+2025-07-25 17:16:10.535 INFO  [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-07-25 17:16:10.535 INFO  [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1388 ms
+2025-07-25 17:16:10.626 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-07-25 17:16:10.774 INFO  [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@440b2995
+2025-07-25 17:16:10.775 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-07-25 17:16:10.915 INFO  [restartedMain] liquibase.database                       : Set default schema name to public
+2025-07-25 17:16:11.355 INFO  [restartedMain] liquibase.changelog                      : Creating database history table with name: public.databasechangelog
+2025-07-25 17:16:11.391 INFO  [restartedMain] liquibase.changelog                      : Reading from public.databasechangelog
+2025-07-25 17:16:11.410 INFO  [restartedMain] liquibase.snapshot                       : Creating snapshot
+2025-07-25 17:16:11.504 INFO  [restartedMain] liquibase.lockservice                    : Successfully acquired change log lock
+2025-07-25 17:16:11.505 INFO  [restartedMain] liquibase.command                        : Using deploymentId: 3442171505
+2025-07-25 17:16:11.507 INFO  [restartedMain] liquibase.changelog                      : Reading from public.databasechangelog
+2025-07-25 17:16:11.550 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::1::JekiChan08
+2025-07-25 17:16:11.559 INFO  [restartedMain] liquibase.changelog                      : Table files created
+2025-07-25 17:16:11.561 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::1::JekiChan08 ran successfully in 10ms
+2025-07-25 17:16:11.567 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::2::JekiChan08
+2025-07-25 17:16:11.573 INFO  [restartedMain] liquibase.changelog                      : Table users created
+2025-07-25 17:16:11.574 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::2::JekiChan08 ran successfully in 6ms
+2025-07-25 17:16:11.577 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::3::JekiChan08
+2025-07-25 17:16:11.581 INFO  [restartedMain] liquibase.changelog                      : Table brand created
+2025-07-25 17:16:11.582 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::3::JekiChan08 ran successfully in 5ms
+2025-07-25 17:16:11.585 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::4::JekiChan08
+2025-07-25 17:16:11.589 INFO  [restartedMain] liquibase.changelog                      : Table categories created
+2025-07-25 17:16:11.590 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::4::JekiChan08 ran successfully in 3ms
+2025-07-25 17:16:11.592 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::5::JekiChan08
+2025-07-25 17:16:11.597 INFO  [restartedMain] liquibase.changelog                      : Table subcategories created
+2025-07-25 17:16:11.602 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to subcategories (category_id)
+2025-07-25 17:16:11.602 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::5::JekiChan08 ran successfully in 10ms
+2025-07-25 17:16:11.606 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::7::JekiChan08
+2025-07-25 17:16:11.613 INFO  [restartedMain] liquibase.changelog                      : Table products created
+2025-07-25 17:16:11.614 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to products (brand_id)
+2025-07-25 17:16:11.617 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to products (subcategory_id)
+2025-07-25 17:16:11.617 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::7::JekiChan08 ran successfully in 10ms
+2025-07-25 17:16:11.620 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::9::JekiChan08
+2025-07-25 17:16:11.623 INFO  [restartedMain] liquibase.changelog                      : Table product_parameters created
+2025-07-25 17:16:11.624 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to product_parameters (product_id)
+2025-07-25 17:16:11.625 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::9::JekiChan08 ran successfully in 5ms
+2025-07-25 17:16:11.627 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::10::JekiChan08
+2025-07-25 17:16:11.631 INFO  [restartedMain] liquibase.changelog                      : Table product_sub_parameters created
+2025-07-25 17:16:11.633 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to product_sub_parameters (product_parameter_id)
+2025-07-25 17:16:11.633 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::10::JekiChan08 ran successfully in 6ms
+2025-07-25 17:16:11.635 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::11::JekiChan08
+2025-07-25 17:16:11.638 INFO  [restartedMain] liquibase.changelog                      : Table user_image created
+2025-07-25 17:16:11.639 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to user_image (user_id)
+2025-07-25 17:16:11.640 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to user_image (image_id)
+2025-07-25 17:16:11.641 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::11::JekiChan08 ran successfully in 6ms
+2025-07-25 17:16:11.642 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::12::JekiChan08
+2025-07-25 17:16:11.645 INFO  [restartedMain] liquibase.changelog                      : Table brand_images created
+2025-07-25 17:16:11.646 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to brand_images (brand_id)
+2025-07-25 17:16:11.648 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to brand_images (image_id)
+2025-07-25 17:16:11.648 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::12::JekiChan08 ran successfully in 6ms
+2025-07-25 17:16:11.651 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::13::JekiChan08
+2025-07-25 17:16:11.654 INFO  [restartedMain] liquibase.changelog                      : Table category_image created
+2025-07-25 17:16:11.656 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to category_image (category_id)
+2025-07-25 17:16:11.658 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to category_image (image_id)
+2025-07-25 17:16:11.658 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::13::JekiChan08 ran successfully in 7ms
+2025-07-25 17:16:11.660 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::14::JekiChan08
+2025-07-25 17:16:11.663 INFO  [restartedMain] liquibase.changelog                      : Table subcategory_images created
+2025-07-25 17:16:11.664 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to subcategory_images (subcategory_id)
+2025-07-25 17:16:11.665 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to subcategory_images (image_id)
+2025-07-25 17:16:11.666 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::14::JekiChan08 ran successfully in 6ms
+2025-07-25 17:16:11.668 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::15::JekiChan08
+2025-07-25 17:16:11.670 INFO  [restartedMain] liquibase.changelog                      : Table product_images created
+2025-07-25 17:16:11.672 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to product_images (product_id)
+2025-07-25 17:16:11.673 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to product_images (image_id)
+2025-07-25 17:16:11.673 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::15::JekiChan08 ran successfully in 5ms
+2025-07-25 17:16:11.675 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::16::JekiChan08
+2025-07-25 17:16:11.678 INFO  [restartedMain] liquibase.changelog                      : Table carts created
+2025-07-25 17:16:11.679 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to carts (user_id)
+2025-07-25 17:16:11.679 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::16::JekiChan08 ran successfully in 4ms
+2025-07-25 17:16:11.681 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::17::JekiChan08
+2025-07-25 17:16:11.684 INFO  [restartedMain] liquibase.changelog                      : Table cart_items created
+2025-07-25 17:16:11.685 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to cart_items (cart_id)
+2025-07-25 17:16:11.686 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to cart_items (product_id)
+2025-07-25 17:16:11.686 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::17::JekiChan08 ran successfully in 5ms
+2025-07-25 17:16:11.688 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::18::JekiChan08
+2025-07-25 17:16:11.691 INFO  [restartedMain] liquibase.changelog                      : Table favorites created
+2025-07-25 17:16:11.693 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to favorites (user_id)
+2025-07-25 17:16:11.693 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::18::JekiChan08 ran successfully in 5ms
+2025-07-25 17:16:11.695 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::19::JekiChan08
+2025-07-25 17:16:11.697 INFO  [restartedMain] liquibase.changelog                      : Table favorite_item created
+2025-07-25 17:16:11.698 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to favorite_item (favorite_id)
+2025-07-25 17:16:11.699 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to favorite_item (product_id)
+2025-07-25 17:16:11.700 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::19::JekiChan08 ran successfully in 5ms
+2025-07-25 17:16:11.702 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::20::JekiChan08
+2025-07-25 17:16:11.705 INFO  [restartedMain] liquibase.changelog                      : Table orders created
+2025-07-25 17:16:11.706 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to orders (user_id)
+2025-07-25 17:16:11.707 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::20::JekiChan08 ran successfully in 5ms
+2025-07-25 17:16:11.709 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::21::JekiChan08
+2025-07-25 17:16:11.711 INFO  [restartedMain] liquibase.changelog                      : Table order_items created
+2025-07-25 17:16:11.712 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to order_items (order_id)
+2025-07-25 17:16:11.713 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to order_items (product_id)
+2025-07-25 17:16:11.714 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::21::JekiChan08 ran successfully in 4ms
+2025-07-25 17:16:11.716 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::22::JekiChan08
+2025-07-25 17:16:11.720 INFO  [restartedMain] liquibase.changelog                      : Table refresh_tokens created
+2025-07-25 17:16:11.721 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to refresh_tokens (user_id)
+2025-07-25 17:16:11.721 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::22::JekiChan08 ran successfully in 5ms
+2025-07-25 17:16:11.723 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::update-products-name-index::JekiChan08
+2025-07-25 17:16:11.730 WARN  [restartedMain] liquibase.executor                       : extension "pg_trgm" already exists, skipping
+2025-07-25 17:16:11.735 INFO  [restartedMain] liquibase.changelog                      : Custom SQL executed
+2025-07-25 17:16:11.737 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::update-products-name-index::JekiChan08 ran successfully in 13ms
+2025-07-25 17:16:11.738 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::add-user-indexes::JekiChan08
+2025-07-25 17:16:11.741 WARN  [restartedMain] liquibase.executor                       : extension "pg_trgm" already exists, skipping
+2025-07-25 17:16:11.744 INFO  [restartedMain] liquibase.changelog                      : Custom SQL executed
+2025-07-25 17:16:11.745 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::add-user-indexes::JekiChan08 ran successfully in 6ms
+2025-07-25 17:16:11.747 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/01_07_2025.xml::Admin::JekiChan08
+2025-07-25 17:16:11.774 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/users.csv' into table 'users'
+2025-07-25 17:16:11.775 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/01_07_2025.xml::Admin::JekiChan08 ran successfully in 28ms
+2025-07-25 17:16:11.778 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/07_07_2025.xml::statuses::aiteginbaratov
+2025-07-25 17:16:11.783 INFO  [restartedMain] liquibase.changelog                      : Table statuses created
+2025-07-25 17:16:11.783 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/07_07_2025.xml::statuses::aiteginbaratov ran successfully in 5ms
+2025-07-25 17:16:11.785 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/07_07_2025.xml::create-order-statuses-table::developer
+2025-07-25 17:16:11.789 INFO  [restartedMain] liquibase.changelog                      : Table order_statuses created
+2025-07-25 17:16:11.791 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to order_statuses (order_id)
+2025-07-25 17:16:11.793 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to order_statuses (status_id)
+2025-07-25 17:16:11.793 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/07_07_2025.xml::create-order-statuses-table::developer ran successfully in 7ms
+2025-07-25 17:16:11.796 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/07_07_2025.xml::create-product-statuses-table::developer
+2025-07-25 17:16:11.799 INFO  [restartedMain] liquibase.changelog                      : Table product_statuses created
+2025-07-25 17:16:11.800 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to product_statuses (product_id)
+2025-07-25 17:16:11.802 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to product_statuses (status_id)
+2025-07-25 17:16:11.802 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/07_07_2025.xml::create-product-statuses-table::developer ran successfully in 6ms
+2025-07-25 17:16:11.806 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/17_07_2025.xml::add-order-and-product-columns-to-statuses::aiteginbaratov
+2025-07-25 17:16:11.810 INFO  [restartedMain] liquibase.changelog                      : Columns order_flag(BOOLEAN),product_flag(BOOLEAN),background_color(VARCHAR(255)) added to statuses
+2025-07-25 17:16:11.810 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/17_07_2025.xml::add-order-and-product-columns-to-statuses::aiteginbaratov ran successfully in 4ms
+2025-07-25 17:16:11.812 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/22_07_2025.xml::add-icon-columns-to-category::aiteginbaratov
+2025-07-25 17:16:11.817 INFO  [restartedMain] liquibase.changelog                      : Table category_icons created
+2025-07-25 17:16:11.818 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to category_icons (category_id)
+2025-07-25 17:16:11.820 INFO  [restartedMain] liquibase.changelog                      : Foreign key constraint added to category_icons (icon_id)
+2025-07-25 17:16:11.820 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/22_07_2025.xml::add-icon-columns-to-category::aiteginbaratov ran successfully in 7ms
+2025-07-25 17:16:11.823 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::Categories::JekiChan08
+2025-07-25 17:16:11.840 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/categories.csv' into table 'categories'
+2025-07-25 17:16:11.841 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::Categories::JekiChan08 ran successfully in 18ms
+2025-07-25 17:16:11.844 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::Files::JekiChan08
+2025-07-25 17:16:11.864 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/files.csv' into table 'files'
+2025-07-25 17:16:11.865 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::Files::JekiChan08 ran successfully in 21ms
+2025-07-25 17:16:11.868 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::brand::JekiChan08
+2025-07-25 17:16:11.895 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/brand.csv' into table 'brand'
+2025-07-25 17:16:11.895 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::brand::JekiChan08 ran successfully in 26ms
+2025-07-25 17:16:11.897 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::ci::JekiChan08
+2025-07-25 17:16:11.910 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/category_image.csv' into table 'category_image'
+2025-07-25 17:16:11.911 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::ci::JekiChan08 ran successfully in 13ms
+2025-07-25 17:16:11.913 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::ci2::JekiChan08
+2025-07-25 17:16:11.925 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/category_icon.csv' into table 'category_icons'
+2025-07-25 17:16:11.926 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::ci2::JekiChan08 ran successfully in 13ms
+2025-07-25 17:16:11.928 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::subcategories::JekiChan08
+2025-07-25 17:16:11.946 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/subcategories.csv' into table 'subcategories'
+2025-07-25 17:16:11.946 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::subcategories::JekiChan08 ran successfully in 18ms
+2025-07-25 17:16:11.949 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::bi::JekiChan08
+2025-07-25 17:16:11.958 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/brand_images.csv' into table 'brand_images'
+2025-07-25 17:16:11.959 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::bi::JekiChan08 ran successfully in 9ms
+2025-07-25 17:16:11.960 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::product::JekiChan08
+2025-07-25 17:16:11.975 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/products.csv' into table 'products'
+2025-07-25 17:16:11.975 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::product::JekiChan08 ran successfully in 15ms
+2025-07-25 17:16:11.977 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::pi::JekiChan08
+2025-07-25 17:16:11.987 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/product_images.csv' into table 'product_images'
+2025-07-25 17:16:11.988 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::pi::JekiChan08 ran successfully in 11ms
+2025-07-25 17:16:11.992 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::pp::JekiChan08
+2025-07-25 17:16:12.006 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/product_parameters.csv' into table 'product_parameters'
+2025-07-25 17:16:12.006 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::pp::JekiChan08 ran successfully in 14ms
+2025-07-25 17:16:12.010 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::statuses::JekiChan08
+2025-07-25 17:16:12.028 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/statuses.csv' into table 'statuses'
+2025-07-25 17:16:12.029 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::statuses::JekiChan08 ran successfully in 19ms
+2025-07-25 17:16:12.034 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::ps::JekiChan08
+2025-07-25 17:16:12.051 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/product_statuses.csv' into table 'product_statuses'
+2025-07-25 17:16:12.052 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::ps::JekiChan08 ran successfully in 18ms
+2025-07-25 17:16:12.056 INFO  [restartedMain] liquibase.ui                             : Running Changeset: db/changeLogs/25_07_2025.xml::psp::JekiChan08
+2025-07-25 17:16:12.071 INFO  [restartedMain] liquibase.changelog                      : Data loaded from 'data/product_sub_parameters.csv' into table 'product_sub_parameters'
+2025-07-25 17:16:12.072 INFO  [restartedMain] liquibase.changelog                      : ChangeSet db/changeLogs/25_07_2025.xml::psp::JekiChan08 ran successfully in 16ms
+2025-07-25 17:16:12.078 INFO  [restartedMain] liquibase.util                           : UPDATE SUMMARY
+2025-07-25 17:16:12.078 INFO  [restartedMain] liquibase.util                           : Run:                         41
+2025-07-25 17:16:12.078 INFO  [restartedMain] liquibase.util                           : Previously run:               0
+2025-07-25 17:16:12.078 INFO  [restartedMain] liquibase.util                           : Filtered out:                 0
+2025-07-25 17:16:12.078 INFO  [restartedMain] liquibase.util                           : -------------------------------
+2025-07-25 17:16:12.078 INFO  [restartedMain] liquibase.util                           : Total change sets:           41
+2025-07-25 17:16:12.079 INFO  [restartedMain] liquibase.util                           : Update summary generated
+2025-07-25 17:16:12.083 INFO  [restartedMain] liquibase.command                        : Update command completed successfully.
+2025-07-25 17:16:12.084 INFO  [restartedMain] liquibase.ui                             : Liquibase: Update has been successful. Rows affected: 100
+2025-07-25 17:16:12.086 INFO  [restartedMain] liquibase.lockservice                    : Successfully released change log lock
+2025-07-25 17:16:12.087 INFO  [restartedMain] liquibase.command                        : Command execution complete
+2025-07-25 17:16:13.666 INFO  [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-07-25 17:16:13.717 INFO  [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.15.Final
+2025-07-25 17:16:13.751 INFO  [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-07-25 17:16:13.977 INFO  [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-07-25 17:16:14.017 WARN  [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-07-25 17:16:14.031 INFO  [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.4
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-07-25 17:16:15.022 INFO  [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-07-25 17:16:15.273 INFO  [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-07-25 17:16:15.480 INFO  [restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-07-25 17:16:16.521 WARN  [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-07-25 17:16:16.546 INFO  [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-07-25 17:16:16.811 WARN  [restartedMain] thorizationManagerRequestMatcherRegistry : One of the patterns in [/auth/**, **/token/**, **/oauth2/**, /login, /auth/oauth2/token-login, /api/products/**, /api/categories/**, /api/subcategories/**, /api/orders/**, /auth/oauth2/token, /uploads/**, /auth/logout, /error, /error/**] is missing a leading slash. This is discouraged; please include the leading slash in all your request matcher patterns. In future versions of Spring Security, leaving out the leading slash will result in an exception.
+2025-07-25 17:16:16.900 INFO  [restartedMain] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2025-07-25 17:16:17.141 INFO  [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-07-25 17:16:17.183 INFO  [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-07-25 17:16:17.192 INFO  [restartedMain] c.e.m.MarketplaceBackendApplication      : Started MarketplaceBackendApplication in 8.764 seconds (process running for 9.725)
+2025-07-25 17:19:20.732 INFO  [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-07-25 17:19:20.824 INFO  [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-07-25 17:19:20.854 INFO  [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-07-25 17:19:20.882 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-07-25 17:19:20.904 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
