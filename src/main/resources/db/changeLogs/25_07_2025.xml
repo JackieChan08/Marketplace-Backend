@@ -28,9 +28,6 @@
     <changeSet id="product" author="JekiChan08">
         <loadData tableName="products" file="data/products.csv" relativeToChangelogFile="true" separator=";"/>
     </changeSet>
-    <changeSet id="pi" author="JekiChan08">
-        <loadData tableName="product_images" file="data/product_images.csv" relativeToChangelogFile="true" separator=";"/>
-    </changeSet>
     <changeSet id="pp" author="JekiChan08">
         <loadData tableName="product_parameters" file="data/product_parameters.csv" relativeToChangelogFile="true" separator=";"/>
     </changeSet>
@@ -43,6 +40,4 @@
     <changeSet id="psp" author="JekiChan08">
         <loadData tableName="product_sub_parameters" file="data/product_sub_parameters.csv" relativeToChangelogFile="true" separator=";"/>
     </changeSet>
-
-
 </databaseChangeLog>

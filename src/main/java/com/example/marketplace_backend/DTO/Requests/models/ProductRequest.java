@@ -30,4 +30,6 @@ public class ProductRequest {
 
     private String parametersJson;
 
+    private List<ColorRequest> colors;
+
 }

@@ -68,8 +68,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
     Page<Product> findAllByStatusId(@Param("statusId") UUID statusId, Pageable pageable);
 
     @Query("SELECT p FROM Product p " +
-            "LEFT JOIN FETCH p.productImages pi " +
-            "LEFT JOIN FETCH pi.image " +
             "LEFT JOIN FETCH p.productStatuses ps " +
             "LEFT JOIN FETCH ps.status " +
             "WHERE p.id = :id")

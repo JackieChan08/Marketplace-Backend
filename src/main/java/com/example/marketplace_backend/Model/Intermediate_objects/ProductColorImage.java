@@ -1,29 +1,28 @@
 package com.example.marketplace_backend.Model.Intermediate_objects;
 
 import com.example.marketplace_backend.Model.FileEntity;
-import com.example.marketplace_backend.Model.Product;
+import com.example.marketplace_backend.Model.ProductColor;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.UUID;
 
 @Entity
-@Table(name = "product_images")
+@Table(name = "product_color_images") // Переименовать таблицу для ясности
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductImage {
+public class ProductColorImage {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "color_id", nullable = false)
     @JsonBackReference
-    private Product product;
+    private ProductColor color;
 
     @ManyToOne
     @JoinColumn(name = "image_id", nullable = false)

@@ -20,7 +20,6 @@ public interface ProductParametersRepository extends JpaRepository<ProductParame
     @Query("SELECT p FROM ProductParameters p LEFT JOIN FETCH p.productSubParameters WHERE p.product.id = :productId")
     List<ProductParameters> findAllByProductIdWithSubParams(@Param("productId") UUID productId);
 
-
     Optional<ProductParameters> findByNameAndProductId(@Param("name") String name, @Param("productId") UUID productId);
 
     @Query("SELECT COUNT(pp) FROM ProductParameters pp WHERE pp.product.id = :productId")
@@ -30,5 +29,4 @@ public interface ProductParametersRepository extends JpaRepository<ProductParame
     @Transactional
     @Query("DELETE FROM ProductParameters pp WHERE pp.product.id = :productId")
     void deleteByProductId(@Param("productId") UUID productId);
-
 }
