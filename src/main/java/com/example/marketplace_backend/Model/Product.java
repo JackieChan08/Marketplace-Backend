@@ -1,7 +1,6 @@
 package com.example.marketplace_backend.Model;
 
-
-import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
+import com.example.marketplace_backend.Model.Intermediate_objects.ProductColorImage;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductStatuses;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -10,9 +9,9 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.naming.Name;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -43,17 +42,10 @@ public class Product {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
+    // Добавить связь с цветами
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("product-images")
-    private List<ProductImage> productImages;
-
-    // Закомментированный старый код:
-    // @JoinTable(
-    //         name = "product_images",
-    //         joinColumns = @JoinColumn(name = "product_id"),
-    //         inverseJoinColumns = @JoinColumn(name = "image_id")
-    // )
-    // private List<FileEntity> images;
+    @JsonManagedReference("product-colors")
+    private List<ProductColor> colors = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
@@ -72,7 +64,7 @@ public class Product {
     private Subcategory subcategory;
 
     @Column(name = "availability", columnDefinition = "true")
-    private boolean availability; // true - в наличии, false - не в наличии
+    private boolean availability;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("product-statuses")

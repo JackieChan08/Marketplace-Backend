@@ -101,10 +101,6 @@ public class AdminProductController {
         if (request.getImages() == null || request.getImages().isEmpty()) {
             return ResponseEntity.badRequest().body("Изображение обязательно для создания продукта");
         }
-
-        // Старый код:
-        // return ResponseEntity.ok(productService.createProduct(request));
-
         ProductResponse productResponse = converterService.convertToProductResponse(productService.createProduct(request));
         return ResponseEntity.ok(productResponse);
     }
@@ -134,29 +130,27 @@ public class AdminProductController {
             @PathVariable UUID id,
             @ModelAttribute ProductRequest request
     ) throws Exception {
-        // Старый код:
-        // return ResponseEntity.ok(productService.editProduct(id, request));
         ProductResponse productResponse = converterService.convertToProductResponse(productService.editProduct(id, request));
         return ResponseEntity.ok(productResponse);
     }
 
-    @DeleteMapping("{productId}/images/{imageId}")
-    public ResponseEntity<Void> deleteProductImage(
-            @PathVariable UUID productId,
-            @PathVariable UUID imageId
-    ) {
-        try {
-            boolean deleted = productService.deleteProductImage(productId, imageId);
-
-            if (!deleted) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+//    @DeleteMapping("{productId}/images/{imageId}")
+//    public ResponseEntity<Void> deleteProductImage(
+//            @PathVariable UUID productId,
+//            @PathVariable UUID imageId
+//    ) {
+//        try {
+//            boolean deleted = productService.deleteProductImage(productId, imageId);
+//
+//            if (!deleted) {
+//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//            }
+//
+//            return ResponseEntity.noContent().build();
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
 
     @PostMapping("/filter")
     public ResponseEntity<Page<ProductResponse>> filterProducts(@RequestBody ProductFilterRequest filterRequest) {

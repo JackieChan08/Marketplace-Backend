@@ -7,6 +7,7 @@ import com.example.marketplace_backend.Model.Intermediate_objects.CategoryIcon;
 import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
 import com.example.marketplace_backend.Model.Intermediate_objects.OrderItem;
 import com.example.marketplace_backend.Model.Intermediate_objects.OrderStatuses;
+import com.example.marketplace_backend.Model.Intermediate_objects.ProductColorImage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ConverterService {
-    private final ProductParametersServiceImpl  productParametersService;
+    private final ProductParametersServiceImpl productParametersService;
 
     @Value("${app.base-url}")
     private String baseUrl;
@@ -54,11 +55,43 @@ public class ConverterService {
             response.setBrandName(product.getBrand().getName());
         }
 
-        // Обработка изображений
-        if (product.getProductImages() != null && !product.getProductImages().isEmpty()) {
-            List<FileResponse> images = product.getProductImages().stream()
-                    .map(productImage -> {
-                        FileEntity image = productImage.getImage();
+        // ИСПРАВЛЕНО: Обработка цветов и их изображений
+        if (product.getColors() != null && !product.getColors().isEmpty()) {
+            List<ColorResponse> colors = product.getColors().stream()
+                    .map(productColor -> {
+                        ColorResponse colorResponse = new ColorResponse();
+                        colorResponse.setName(productColor.getName());
+                        colorResponse.setHex(productColor.getHex());
+
+                        // Обработка изображений для каждого цвета
+                        if (productColor.getImages() != null && !productColor.getImages().isEmpty()) {
+                            List<FileResponse> colorImages = productColor.getImages().stream()
+                                    .map(productColorImage -> {
+                                        FileEntity image = productColorImage.getImage();
+                                        FileResponse fileResponse = new FileResponse();
+                                        fileResponse.setUniqueName(image.getUniqueName());
+                                        fileResponse.setOriginalName(image.getOriginalName());
+                                        fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
+                                        fileResponse.setFileType(image.getFileType());
+                                        return fileResponse;
+                                    })
+                                    .toList();
+                            colorResponse.setImages(colorImages);
+                        }
+                        return colorResponse;
+                    })
+                    .toList();
+            response.setColors(colors);
+        }
+
+        // ИСПРАВЛЕНО: Обработка всех изображений продукта (для совместимости с фронтендом)
+        // Собираем все изображения из всех цветов в один список
+        if (product.getColors() != null && !product.getColors().isEmpty()) {
+            List<FileResponse> allImages = product.getColors().stream()
+                    .filter(color -> color.getImages() != null)
+                    .flatMap(color -> color.getImages().stream())
+                    .map(productColorImage -> {
+                        FileEntity image = productColorImage.getImage();
                         FileResponse fileResponse = new FileResponse();
                         fileResponse.setUniqueName(image.getUniqueName());
                         fileResponse.setOriginalName(image.getOriginalName());
@@ -67,7 +100,7 @@ public class ConverterService {
                         return fileResponse;
                     })
                     .toList();
-            response.setImages(images);
+            response.setImages(allImages);
         }
 
         // Обработка статусов
@@ -103,10 +136,8 @@ public class ConverterService {
 
         response.setParameters(parameterResponses);
 
-
         return response;
     }
-
 
     public SubcategoryResponse convertToSubcategoryResponse(Subcategory subcategory) {
         SubcategoryResponse response = new SubcategoryResponse();
@@ -120,7 +151,6 @@ public class ConverterService {
 
         return response;
     }
-
 
     public CategoryResponse convertToCategoryResponse(Category category) {
         CategoryResponse response = new CategoryResponse();
@@ -174,7 +204,6 @@ public class ConverterService {
         return response;
     }
 
-
     public UserResponse convertToUserResponse(User user) {
         UserResponse response = new UserResponse();
         response.setId(user.getId());
@@ -221,8 +250,8 @@ public class ConverterService {
                 fileResponse.setOriginalName(image.getOriginalName());
                 fileResponse.setUniqueName(image.getUniqueName());
                 fileResponse.setFileType(image.getFileType());
-                fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName())
-                ;
+                fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
+
                 brandImageResponse.setId(firstImage.getId());
                 brandImageResponse.setImage(fileResponse);
             }
@@ -272,5 +301,4 @@ public class ConverterService {
             return response;
         }).collect(Collectors.toList());
     }
-
 }

@@ -2,16 +2,12 @@ package com.example.marketplace_backend.Model;
 
 import com.example.marketplace_backend.Model.Intermediate_objects.CategoryIcon;
 import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
-import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
-import com.example.marketplace_backend.Model.Intermediate_objects.SubcategoryImage;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 import java.util.List;
