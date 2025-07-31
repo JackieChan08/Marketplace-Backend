@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -27,6 +29,7 @@ public class BrandController {
     private final BrandServiceImpl brandService;
     private final BrandRepository brandRepository;
     private final ConverterService converter;
+    private final BrandServiceImpl brandServiceImpl;
 
     @Value("${app.base-url}")
     private String baseUrl;
@@ -55,4 +58,18 @@ public class BrandController {
         Page<BrandResponse> responses = brandService.findAllActive(pageable).map(converter::convertToBrandResponse);
         return ResponseEntity.ok(responses);
     }
+
+    @GetMapping("all")
+    public ResponseEntity<?> getAll() {
+        try {
+            List<BrandResponse> responses = brandService.getAll().stream()
+                    .map(converter::convertToBrandResponse)
+                    .toList();
+            return ResponseEntity.ok(responses);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка при получении брендов: " + e.getMessage());
+        }
+    }
+
 }

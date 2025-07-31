@@ -62,7 +62,16 @@ public class CategoryController {
         return ResponseEntity.ok(responses);
     }
 
-
-
-
+    @GetMapping("/all")
+    public ResponseEntity<?> getAll() {
+        try {
+            List<CategoryResponse> responses = categoryService.getAll().stream()
+                    .map(converter::convertToCategoryResponse)
+                    .toList();
+            return ResponseEntity.ok(responses);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка при получении категории" + e.getMessage());
+        }
+    }
 }
