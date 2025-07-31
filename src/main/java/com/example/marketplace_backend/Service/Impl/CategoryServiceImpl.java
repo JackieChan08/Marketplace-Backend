@@ -2,6 +2,7 @@ package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.DTO.Requests.models.CategoryRequest;
 import com.example.marketplace_backend.DTO.Responses.models.CategoryResponse;
+import com.example.marketplace_backend.DTO.Responses.models.CategoryWithSubcategoryResponse;
 import com.example.marketplace_backend.Model.Category;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Intermediate_objects.CategoryIcon;
@@ -362,4 +363,20 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
         return categoryRepository.findCategoriesByPriority(pageable);
     }
 
+    @Transactional(readOnly = true)
+    public List<CategoryWithSubcategoryResponse> getAllCategoriesWithSubcategories() {
+        List<Category> categories = categoryRepository.findAllActive();
+        return categories.stream()
+                .map(converterService::convertToCategoryWithSubcategoryResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public CategoryWithSubcategoryResponse getCategoryWithSubcategoriesById(UUID id) {
+        Category category = getById(id);
+        if (category == null || category.getDeletedAt() != null) {
+            throw new EntityNotFoundException("Category not found or deleted: " + id);
+        }
+        return converterService.convertToCategoryWithSubcategoryResponse(category);
+    }
 }

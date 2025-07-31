@@ -19,9 +19,10 @@ public class VipProduct {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
     @OneToOne
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
     private FileEntity image;
 }

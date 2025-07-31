@@ -32,6 +32,9 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
     @Query("SELECT c FROM Category c WHERE c.deletedAt IS NOT NULL ORDER BY c.createdAt DESC")
     Page<Category> findAllDeActive(Pageable  pageable);
 
+    @Query("SELECT DISTINCT c FROM Category c LEFT JOIN FETCH c.subcategories s WHERE c.deletedAt IS NULL AND (s.deletedAt IS NULL OR s IS NULL) ORDER BY c.createdAt DESC")
+    List<Category> findAllActiveWithSubcategories();
+
     @Modifying
     @Transactional
     @Query("UPDATE Category c SET c.deletedAt = :deletedAt WHERE c.id = :id")

@@ -1,0 +1,39 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="create-vip-products-table" author="aiteginbaratov">
+
+        <createTable tableName="vip_products">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="image_id" type="UUID">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <!-- Внешний ключ добавляется отдельно -->
+        <addForeignKeyConstraint
+                baseTableName="vip_products"
+                baseColumnNames="image_id"
+                constraintName="fk_vip_products_image"
+                referencedTableName="files"
+                referencedColumnNames="id"
+                deferrable="false"
+                initiallyDeferred="false"
+                onDelete="SET NULL"/>
+    </changeSet>
+
+    <changeSet id="vps" author="aiteginbaratov">
+        <loadData tableName="vip_products" file="data/vip_products.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+</databaseChangeLog>
