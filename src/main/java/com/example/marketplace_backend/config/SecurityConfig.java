@@ -68,6 +68,7 @@ public class SecurityConfig {
                                 "/api/products/**",
                                 "/api/categories/**",
                                 "/api/subcategories/**",
+                                "/api/brands/**",
                                 "/api/orders/**",
                                 "/auth/oauth2/token",
                                 "/uploads/**",

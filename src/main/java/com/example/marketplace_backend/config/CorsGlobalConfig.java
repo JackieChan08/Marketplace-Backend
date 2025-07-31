@@ -11,7 +11,6 @@ public class CorsGlobalConfig {
 
     @Bean
     public CorsFilter corsFilter() {
-        System.out.println("🔥 CorsFilter loaded");
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true); // разрешает куки и авторизацию

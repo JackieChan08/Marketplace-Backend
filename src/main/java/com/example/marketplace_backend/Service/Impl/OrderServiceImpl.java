@@ -109,7 +109,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
                 orderStatusRepository.save(orderStatuses);
             }
         } else {
-            // Устанавливаем статус по умолчанию, если не указан
             Statuses defaultStatus = statusRepository.findByName("Без статуса")
                     .orElseThrow(() -> new RuntimeException("Default status not found"));
 
