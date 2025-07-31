@@ -329,4 +329,27 @@ public class ConverterService {
 
         return response;
     }
+
+    public CategoryWithSubcategoryResponse convertToCategoryWithSubcategoryResponse(Category category) {
+        CategoryWithSubcategoryResponse response = new CategoryWithSubcategoryResponse();
+        response.setId(category.getId());
+        response.setName(category.getName());
+
+        if (category.getSubcategories() != null && !category.getSubcategories().isEmpty()) {
+            List<SubcategoryResponseSimple> subcategoryResponsesSimple = category.getSubcategories().stream()
+                    .filter(subcategory -> subcategory.getDeletedAt() == null)
+                    .map(this::convertToSubcategoryResponseSimple)
+                    .toList();
+            response.setSubcategoryResponsesSimple(subcategoryResponsesSimple);
+        }
+
+        return response;
+    }
+
+    public SubcategoryResponseSimple convertToSubcategoryResponseSimple(Subcategory subcategory) {
+        SubcategoryResponseSimple response = new SubcategoryResponseSimple();
+        response.setId(subcategory.getId());
+        response.setName(subcategory.getName());
+        return response;
+    }
 }

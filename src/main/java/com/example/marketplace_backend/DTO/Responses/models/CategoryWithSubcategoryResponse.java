@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class SubcategoryResponse {
+public class CategoryWithSubcategoryResponse {
     private UUID id;
     private String name;
-    private String categoryName;
-    private UUID categoryId;
+
+    private List<SubcategoryResponseSimple> subcategoryResponsesSimple;
 }
