@@ -40,7 +40,7 @@ public class ProductResponse {
     private UUID categoryId;
 
     private List<FileResponse> images;
-    private List<String> statuses;
+    private List<StatusResponse> statuses;
 
     private List<ProductParameterResponse> parameters;
     private List<ColorResponse> colors;

@@ -85,4 +85,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UUID> {
         return users.map(converterService::convertToUserResponse);
     }
 
+    public User getCurrentUser(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+    }
+
 }
