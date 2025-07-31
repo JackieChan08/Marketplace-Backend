@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -75,5 +76,18 @@ public class SubcategoryController {
         Page<Subcategory> subcategories = subcategoryService.searchByName(query, pageable);
         Page<SubcategoryResponse> responses = subcategories.map(converter::convertToSubcategoryResponse);
         return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAll() {
+        try {
+            List<SubcategoryResponse> subcategoryResponses = subcategoryService.getAll().stream()
+                    .map(converter::convertToSubcategoryResponse)
+                    .toList();
+            return ResponseEntity.ok(subcategoryResponses);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка при получении подкатегории" + e.getMessage());
+        }
     }
 }
