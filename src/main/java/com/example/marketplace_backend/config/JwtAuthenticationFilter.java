@@ -42,7 +42,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = extractToken(request);
         String path = request.getRequestURI();
 
-        if (path.startsWith("/auth/login") || path.startsWith("/auth/register")) {
+        if (path.startsWith("/auth/login") ||
+                path.startsWith("/auth/register") ||
+                path.startsWith("/api/brands") ||
+                path.startsWith("/api/categories") ||
+                path.startsWith("/api/products") ||
+                path.startsWith("/api/vip-products") ||
+                path.startsWith("/api/subcategories")) {
+
             filterChain.doFilter(request, response);
             return;
         }

@@ -301,4 +301,27 @@ public class ConverterService {
             return response;
         }).collect(Collectors.toList());
     }
+
+    public VipProductResponse convertToVipProductResponse(VipProduct vipProduct) {
+        if (vipProduct == null) {
+            return null;
+        }
+
+        VipProductResponse response = new VipProductResponse();
+        response.setId(vipProduct.getId());
+        response.setName(vipProduct.getName());
+
+        FileEntity image = vipProduct.getImage();
+        if (image != null) {
+            FileResponse fileResponse = new FileResponse();
+            fileResponse.setOriginalName(image.getOriginalName());
+            fileResponse.setUniqueName(image.getUniqueName());
+            fileResponse.setFileType(image.getFileType());
+            fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
+
+            response.setImage(image);
+        }
+
+        return response;
+    }
 }
