@@ -98,6 +98,15 @@ public class ProductController {
         return ResponseEntity.ok(productService.filterProducts(filterRequest));
     }
 
-
-
+    @GetMapping("/status")
+    public ResponseEntity<Page<ProductResponse>> getAllProductsByStatus(
+            @RequestParam UUID statusId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productService.findAllByStatus(statusId, pageable);
+        Page<ProductResponse> responses = products.map(converter::convertToProductResponse);
+        return ResponseEntity.ok(responses);
+    }
 }

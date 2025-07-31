@@ -55,7 +55,6 @@ public class ConverterService {
             response.setBrandName(product.getBrand().getName());
         }
 
-        // ИСПРАВЛЕНО: Обработка цветов и их изображений
         if (product.getColors() != null && !product.getColors().isEmpty()) {
             List<ColorResponse> colors = product.getColors().stream()
                     .map(productColor -> {
@@ -84,7 +83,6 @@ public class ConverterService {
             response.setColors(colors);
         }
 
-        // ИСПРАВЛЕНО: Обработка всех изображений продукта (для совместимости с фронтендом)
         // Собираем все изображения из всех цветов в один список
         if (product.getColors() != null && !product.getColors().isEmpty()) {
             List<FileResponse> allImages = product.getColors().stream()
@@ -105,8 +103,15 @@ public class ConverterService {
 
         // Обработка статусов
         if (product.getProductStatuses() != null && !product.getProductStatuses().isEmpty()) {
-            List<String> statuses = product.getProductStatuses().stream()
-                    .map(productStatus -> productStatus.getStatus().getName())
+            List<StatusResponse> statuses = product.getProductStatuses().stream()
+                    .map(productStatus -> {
+                        Statuses status = productStatus.getStatus();
+                        return new StatusResponse(
+                                status.getName(),
+                                status.getPrimaryColor(),
+                                status.getBackgroundColor()
+                        );
+                    })
                     .toList();
             response.setStatuses(statuses);
         }
