@@ -1,7 +1,7 @@
 package com.example.marketplace_backend.Model;
 
+import com.example.marketplace_backend.Model.Enums.PaymentMethod;
 import com.example.marketplace_backend.Model.Intermediate_objects.OrderItem;
-import com.example.marketplace_backend.Model.Intermediate_objects.OrderStatuses;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -37,7 +37,7 @@ public class Order {
     @Column(name = "comment", columnDefinition = "TEXT")
     private String comment;
 
-    @Column(name = "total_price", nullable = false, precision = 15, scale = 2)
+    @Column(name = "total_price", precision = 15, scale = 2)
     private BigDecimal totalPrice;
 
     @JsonIgnore
@@ -60,8 +60,16 @@ public class Order {
     @Column(name = "is_wholesale")
     private boolean isWholesale;// true — опт, false — розница
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("order-statuses")
-    private List<OrderStatuses> orderStatuses;
+    @OneToOne
+    @JoinColumn(name = "status_id")
+    private Statuses status;
+
+    @Enumerated(EnumType.STRING) // Сохраняет в БД как строку ("CASH" или "TRANSFER")
+    @Column(name = "payment_method", nullable = false)
+    private PaymentMethod paymentMethod;
+
+    @Column(name = "order_number", unique = true, nullable = false)
+    private Long orderNumber;
+
 }
 

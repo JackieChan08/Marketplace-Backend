@@ -70,6 +70,13 @@ public class AdminOrderController {
         return ResponseEntity.ok(converterService.convertToOrderResponse(order));
     }
 
+    @PutMapping("{orderId}/status")
+    public ResponseEntity<OrderResponse> updateStatus(@PathVariable UUID orderId,
+                                                      @RequestParam UUID statusId) {
+        Order order = orderService.updateOrderStatus(orderId, statusId);
+        return ResponseEntity.ok(converterService.convertToOrderResponse(order));
+    }
+
     @GetMapping("/wholesale/all")
     public ResponseEntity<List<OrderResponse>> getAllWholesaleOrders() {
         List<Order> orders = orderService.getAllWholesaleOrders();

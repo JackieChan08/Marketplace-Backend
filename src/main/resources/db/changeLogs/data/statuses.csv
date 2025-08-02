@@ -1,2 +1,9 @@
 id;name;primary_color;order_flag;product_flag;background_color
-e7d2e68f-9808-48b1-87d7-b626adf5ba2d;Новинки;#fff;f;t;#ccc
+cb5389da-360e-42d8-a61e-bb8ea43e4c0c;Без статуса;#111111;false;true;#000000
+e7d2e68f-9808-48b1-87d7-b626adf5ba2d;Новинки;#111111;false;true;#000000
+b51f04dd-fabb-4d90-af27-52f8e16cbe0d;Акция;#111111;false;true;#000000
+4236e85c-a1e7-458c-99de-3c2005009918;Бестселлер;#111111;false;true;#000000
+3a20d137-4248-4e65-9c61-f3de98168ee5;Без статуса;#111111;true;false;#000000
+29d54723-c433-44e8-9495-31d44924989e;Новая;#111111;true;false;#000000
+54e901ac-7905-4048-870d-a7a522a53f50;В обработке;#111111;true;false;#000000
+5f9f1952-21b6-4841-946f-e763de6a79af;Отправлено;#111111;true;false;#000000

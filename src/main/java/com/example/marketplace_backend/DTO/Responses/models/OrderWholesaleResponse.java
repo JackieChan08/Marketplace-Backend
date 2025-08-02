@@ -12,15 +12,14 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class OrderResponse {
+public class OrderWholesaleResponse {
     private UUID id;
     private String address;
     private String phoneNumber;
     private String comment;
-    private BigDecimal totalPrice;
     private boolean isWholesale;
     private LocalDateTime createdAt;
     private PaymentMethod paymentMethod;
@@ -29,6 +28,5 @@ public class OrderResponse {
     private UUID userId;
     private String username;
 
-    private List<OrderItemResponse> orderItems;
     private OrderStatusResponse status;
 }

@@ -6,7 +6,6 @@ import com.example.marketplace_backend.Model.Intermediate_objects.BrandImage;
 import com.example.marketplace_backend.Model.Intermediate_objects.CategoryIcon;
 import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
 import com.example.marketplace_backend.Model.Intermediate_objects.OrderItem;
-import com.example.marketplace_backend.Model.Intermediate_objects.OrderStatuses;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductColorImage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -266,6 +265,7 @@ public class ConverterService {
         return response;
     }
 
+    // Обновленный метод для работы с единственным статусом
     public OrderResponse convertToOrderResponse(Order order) {
         return OrderResponse.builder()
                 .id(order.getId())
@@ -275,10 +275,26 @@ public class ConverterService {
                 .totalPrice(order.getTotalPrice())
                 .isWholesale(order.isWholesale())
                 .createdAt(order.getCreatedAt())
+                .paymentMethod(order.getPaymentMethod())
                 .userId(order.getUser().getId())
                 .username(order.getUser().getName())
                 .orderItems(convertOrderItems(order.getOrderItems()))
-                .statuses(convertStatuses(order.getOrderStatuses()))
+                .status(convertStatus(order.getStatus())) // Изменено на единственный статус
+                .build();
+    }
+
+    public OrderWholesaleResponse convertToOrderWholesaleResponse(Order order) {
+        return OrderWholesaleResponse.builder()
+                .id(order.getId())
+                .address(order.getAddress())
+                .phoneNumber(order.getPhoneNumber())
+                .comment(order.getComment())
+                .isWholesale(order.isWholesale())
+                .createdAt(order.getCreatedAt())
+                .paymentMethod(order.getPaymentMethod())
+                .userId(order.getUser().getId())
+                .username(order.getUser().getName())
+                .status(convertStatus(order.getStatus())) // Изменено на единственный статус
                 .build();
     }
 
@@ -287,6 +303,7 @@ public class ConverterService {
 
         return items.stream().map(item -> {
             OrderItemResponse response = new OrderItemResponse();
+            response.setId(item.getId());
             response.setProductId(item.getProduct().getId());
             response.setProductName(item.getProduct().getName());
             response.setQuantity(item.getQuantity());
@@ -295,16 +312,16 @@ public class ConverterService {
         }).collect(Collectors.toList());
     }
 
-    private List<OrderStatusResponse> convertStatuses(List<OrderStatuses> statuses) {
-        if (statuses == null) return List.of();
+    // Обновленный метод для работы с единственным статусом
+    private OrderStatusResponse convertStatus(Statuses status) {
+        if (status == null) return null;
 
-        return statuses.stream().map(status -> {
-            OrderStatusResponse response = new OrderStatusResponse();
-            response.setName(status.getStatus().getName());
-            response.setPrimaryColor(status.getStatus().getPrimaryColor());
-            response.setBackgroundColor(status.getStatus().getBackgroundColor());
-            return response;
-        }).collect(Collectors.toList());
+        OrderStatusResponse response = new OrderStatusResponse();
+        response.setId(status.getId());
+        response.setName(status.getName());
+        response.setPrimaryColor(status.getPrimaryColor());
+        response.setBackgroundColor(status.getBackgroundColor());
+        return response;
     }
 
     public VipProductResponse convertToVipProductResponse(VipProduct vipProduct) {

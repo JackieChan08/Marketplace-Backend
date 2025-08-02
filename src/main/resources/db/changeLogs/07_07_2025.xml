@@ -14,41 +14,28 @@
                 <constraints nullable="false"/>
             </column>
             <column name="primary_color" type="VARCHAR(255)"/>
+            <column name="background_color" type="VARCHAR(255)"/>
+            <column name="order_flag" type="BOOLEAN" defaultValue="false"/>
+            <column name="product_flag" type="BOOLEAN" defaultValue="false"/>
         </createTable>
     </changeSet>
 
-    <!-- Order status table -->
-    <changeSet id="create-order-statuses-table" author="developer">
-        <createTable tableName="order_statuses">
-            <column name="id" type="UUID">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="order_id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
-            <column name="status_id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
+    <!-- Добавляем колонку status_id в таблицу orders для OneToOne связи -->
+    <changeSet id="add-status-id-to-orders" author="developer">
+        <addColumn tableName="orders">
+            <column name="status_id" type="UUID"/>
+        </addColumn>
 
         <addForeignKeyConstraint
-                baseTableName="order_statuses"
-                baseColumnNames="order_id"
-                constraintName="fk_order_statuses_order"
-                referencedTableName="orders"
-                referencedColumnNames="id"
-                onDelete="CASCADE"/>
-
-        <addForeignKeyConstraint
-                baseTableName="order_statuses"
+                baseTableName="orders"
                 baseColumnNames="status_id"
-                constraintName="fk_order_statuses_status"
+                constraintName="fk_orders_status"
                 referencedTableName="statuses"
                 referencedColumnNames="id"
-                onDelete="CASCADE"/>
+                onDelete="SET NULL"/>
     </changeSet>
 
-    <!-- Product status table -->
+    <!-- Product status table (оставляем как есть для many-to-many связи продуктов со статусами) -->
     <changeSet id="create-product-statuses-table" author="developer">
         <createTable tableName="product_statuses">
             <column name="id" type="UUID">

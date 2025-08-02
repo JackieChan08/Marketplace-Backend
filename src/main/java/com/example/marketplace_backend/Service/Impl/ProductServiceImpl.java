@@ -261,7 +261,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
             }
         } else {
             // Устанавливаем статус по умолчанию, если не указан
-            Statuses defaultStatus = statusRepository.findByName("Активен")
+            Statuses defaultStatus = statusRepository.findByName("Без статуса")
                     .orElseThrow(() -> new RuntimeException("Default status not found"));
 
             ProductStatuses productStatus = ProductStatuses.builder()
