@@ -1,11 +1,10 @@
 package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.DTO.Responses.models.OrderResponse;
+import com.example.marketplace_backend.DTO.Responses.models.OrderWholesaleResponse;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.CartItem;
 import com.example.marketplace_backend.Model.Intermediate_objects.OrderItem;
-import com.example.marketplace_backend.Model.Intermediate_objects.OrderStatuses;
-import com.example.marketplace_backend.Model.Intermediate_objects.ProductStatuses;
 import com.example.marketplace_backend.Repositories.*;
 import com.example.marketplace_backend.DTO.Requests.models.OrderRequest;
 import org.springframework.data.domain.Page;
@@ -25,15 +24,15 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
     private final ProductRepository productRepository;
     private final StatusRepository statusRepository;
     private final CartService cartService;
-    private final OrderStatusRepository orderStatusRepository;
+    private final OrderNumberGeneratorService orderNumberGeneratorService;
 
     public OrderServiceImpl(OrderRepository orderRepository,
                             CartRepository cartRepository,
                             UserRepository userRepository,
                             ProductRepository productRepository,
                             StatusRepository statusRepository,
-                            OrderStatusRepository orderStatusRepository,
-                            CartService cartService) {
+                            CartService cartService,
+                            OrderNumberGeneratorService orderNumberGeneratorService) {
         super(orderRepository);
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
@@ -41,7 +40,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         this.productRepository = productRepository;
         this.statusRepository = statusRepository;
         this.cartService = cartService;
-        this.orderStatusRepository = orderStatusRepository;
+        this.orderNumberGeneratorService = orderNumberGeneratorService;
     }
 
     public OrderResponse createOrderFromCart(UUID userId, OrderRequest request) {
@@ -63,7 +62,20 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         order.setAddress(request.getAddress());
         order.setPhoneNumber(request.getPhoneNumber());
         order.setComment(request.getComment());
-        order.setWholesale(request.getIsWholesale());
+        order.setWholesale(false);
+        order.setPaymentMethod(request.getPaymentMethod());
+        order.setOrderNumber(orderNumberGeneratorService.generateOrderNumber());
+
+        // Устанавливаем статус
+        if (request.getStatusId() != null) {
+            Statuses status = statusRepository.findById(request.getStatusId())
+                    .orElseThrow(() -> new RuntimeException("Status not found with ID: " + request.getStatusId()));
+            order.setStatus(status);
+        } else {
+            Statuses defaultStatus = statusRepository.findByName("Без статуса")
+                    .orElseThrow(() -> new RuntimeException("Default status not found"));
+            order.setStatus(defaultStatus);
+        }
 
         List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
@@ -95,35 +107,34 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         order.setTotalPrice(total);
 
         Order savedOrder = orderRepository.save(order);
-
-        // Обрабатываем статусы
-        if (request.getStatusId() != null && !request.getStatusId().isEmpty()) {
-            for (UUID statusId : request.getStatusId()) {
-                Statuses status = statusRepository.findById(statusId)
-                        .orElseThrow(() -> new RuntimeException("Status not found with ID: " + statusId));
-
-                OrderStatuses orderStatuses = OrderStatuses.builder()
-                        .order(savedOrder)
-                        .status(status)
-                        .build();
-                orderStatusRepository.save(orderStatuses);
-            }
-        } else {
-            Statuses defaultStatus = statusRepository.findByName("Без статуса")
-                    .orElseThrow(() -> new RuntimeException("Default status not found"));
-
-            OrderStatuses orderStatuses = OrderStatuses.builder()
-                    .order(savedOrder)
-                    .status(defaultStatus)
-                    .build();
-            orderStatusRepository.save(orderStatuses);
-        }
-        cart.getCartItems().removeIf(item -> selectedItemIds.contains(item.getId()));
-        cartRepository.save(cart);
-
         return OrderMapper.toOrderResponse(savedOrder);
     }
 
+    public OrderWholesaleResponse createOrderWholesale(UUID userId, OrderRequest request) {
+        Order order = new Order();
+        order.setUser(userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found")));
+        order.setAddress(request.getAddress());
+        order.setPhoneNumber(request.getPhoneNumber());
+        order.setComment(request.getComment());
+        order.setWholesale(true);
+        order.setPaymentMethod(request.getPaymentMethod());
+        order.setOrderNumber(orderNumberGeneratorService.generateOrderNumber());
+
+        // Устанавливаем статус
+        if (request.getStatusId() != null) {
+            Statuses status = statusRepository.findById(request.getStatusId())
+                    .orElseThrow(() -> new RuntimeException("Status not found with ID: " + request.getStatusId()));
+            order.setStatus(status);
+        } else {
+            Statuses defaultStatus = statusRepository.findByName("Без статуса")
+                    .orElseThrow(() -> new RuntimeException("Default status not found"));
+            order.setStatus(defaultStatus);
+        }
+
+        Order savedOrder = orderRepository.save(order);
+        return OrderMapper.toOrderWholesaleResponse(savedOrder);
+    }
 
     // Методы без пагинации
     public List<Order> getAllOrders() {
@@ -163,6 +174,17 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         order.setAddress(address);
+        return orderRepository.save(order);
+    }
+
+    public Order updateOrderStatus(UUID orderId, UUID statusId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        Statuses status = statusRepository.findById(statusId)
+                .orElseThrow(() -> new RuntimeException("Status not found"));
+
+        order.setStatus(status);
         return orderRepository.save(order);
     }
 

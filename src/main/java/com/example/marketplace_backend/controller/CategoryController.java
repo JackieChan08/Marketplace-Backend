@@ -90,7 +90,7 @@ public class CategoryController {
 
     @GetMapping("/{id}/with-subcategories")
     public ResponseEntity<CategoryWithSubcategoryResponse> getCategoryWithSubcategoriesById(
-            @Parameter(description = "ID категории", required = true, example = "123")
+            @Parameter(description = "ID категории", required = true)
             @PathVariable UUID id
     ) {
         try {

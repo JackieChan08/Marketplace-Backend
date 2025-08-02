@@ -1,9 +1,6 @@
 package com.example.marketplace_backend.Model;
 
-import com.example.marketplace_backend.Model.Intermediate_objects.CartItem;
-import com.example.marketplace_backend.Model.Intermediate_objects.OrderStatuses;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductStatuses;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -44,8 +41,4 @@ public class Statuses {
     @OneToMany(mappedBy = "status", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("status-products")
     private List<ProductStatuses> productStatuses = new ArrayList<>();
-
-    @OneToMany(mappedBy = "status", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("status-orders")
-    private List<OrderStatuses> orderStatuses = new ArrayList<>();
 }

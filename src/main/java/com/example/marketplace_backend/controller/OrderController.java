@@ -2,6 +2,8 @@ package com.example.marketplace_backend.controller;
 
 import com.example.marketplace_backend.DTO.Requests.models.OrderRequest;
 import com.example.marketplace_backend.DTO.Responses.models.OrderResponse;
+import com.example.marketplace_backend.DTO.Responses.models.OrderWholesaleResponse;
+import com.example.marketplace_backend.Model.Enums.PaymentMethod;
 import com.example.marketplace_backend.Model.Order;
 import com.example.marketplace_backend.Model.User;
 import com.example.marketplace_backend.Service.Impl.CartService;
@@ -21,10 +23,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Tag(name = "Order Controller", description = "Управление заказами")
-@Controller
+@RestController
 @Data
 @RequestMapping("/api/orders")
 public class OrderController {
@@ -64,6 +69,14 @@ public class OrderController {
         return ResponseEntity.ok(orderService.createOrderFromCart(userId, request));
     }
 
+    @PostMapping(value = "/create/wholesale", consumes = {"multipart/form-data"})
+    public ResponseEntity<OrderWholesaleResponse> createOrderWholesale(@ModelAttribute OrderRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        UUID userId = userService.findByEmail(email).getId();
+        return ResponseEntity.ok(orderService.createOrderWholesale(userId, request));
+    }
+
     @PutMapping("/{orderId}/comment")
     public ResponseEntity<OrderResponse> updateComment(@PathVariable UUID orderId,
                                                        @RequestParam String comment) {
@@ -84,4 +97,15 @@ public class OrderController {
 
         return ResponseEntity.ok(orders.map(order -> converterService.convertToOrderResponse(order)));
     }
+
+    @GetMapping("/payment-methods")
+    public List<Map<String, String>> getPaymentMethods() {
+        return Arrays.stream(PaymentMethod.values())
+                .map(pm -> Map.of("key", pm.name(), "label", switch (pm) {
+                    case CASH -> "Наличными";
+                    case TRANSFER -> "Переводом";
+                }))
+                .toList();
+    }
+
 }

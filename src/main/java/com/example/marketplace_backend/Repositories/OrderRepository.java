@@ -38,14 +38,6 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Query("SELECT o from Order o where o.user.id = :userId")
     Page<Order> findOrdersByUser(Pageable pageable, @Param("userId") UUID userId);
 
-    @Query("select o.order from OrderStatuses o where o.status.id = :statusId")
+    @Query("select o from Order o where o.status.id = :statusId")
     Page<Order> findOrdersByStatusId(Pageable pageable, @Param("statusId") UUID statusId);
-
-
-    // Закомментированные методы для старой структуры OrderStatuses
-    // @Query("SELECT o FROM Order o WHERE o.orderStatuses.id = :statusId")
-    // Page<Order> findByOrderStatusesId(@Param("statusId") UUID statusId, Pageable pageable);
-
-    // @Query("SELECT o FROM Order o WHERE o.orderStatuses.name = :statusName")
-    // Page<Order> findByOrderStatusesName(@Param("statusName") String statusName, Pageable pageable);
 }
