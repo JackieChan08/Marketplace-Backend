@@ -25,6 +25,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
     private final StatusRepository statusRepository;
     private final CartService cartService;
     private final OrderNumberGeneratorService orderNumberGeneratorService;
+    private final ConverterService converterService;
 
     public OrderServiceImpl(OrderRepository orderRepository,
                             CartRepository cartRepository,
@@ -32,7 +33,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
                             ProductRepository productRepository,
                             StatusRepository statusRepository,
                             CartService cartService,
-                            OrderNumberGeneratorService orderNumberGeneratorService) {
+                            OrderNumberGeneratorService orderNumberGeneratorService, ConverterService converterService) {
         super(orderRepository);
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
@@ -41,6 +42,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         this.statusRepository = statusRepository;
         this.cartService = cartService;
         this.orderNumberGeneratorService = orderNumberGeneratorService;
+        this.converterService = converterService;
     }
 
     public OrderResponse createOrderFromCart(UUID userId, OrderRequest request) {
@@ -107,7 +109,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         order.setTotalPrice(total);
 
         Order savedOrder = orderRepository.save(order);
-        return OrderMapper.toOrderResponse(savedOrder);
+        return converterService.toOrderResponse(savedOrder);
     }
 
     public OrderWholesaleResponse createOrderWholesale(UUID userId, OrderRequest request) {
@@ -133,7 +135,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         }
 
         Order savedOrder = orderRepository.save(order);
-        return OrderMapper.toOrderWholesaleResponse(savedOrder);
+        return converterService.toOrderWholesaleResponse(savedOrder);
     }
 
     // Методы без пагинации

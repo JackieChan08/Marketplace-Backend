@@ -7,6 +7,9 @@ import com.example.marketplace_backend.DTO.Responses.models.CartItemResponse;
 import com.example.marketplace_backend.DTO.Responses.models.CartResponse;
 import com.example.marketplace_backend.Service.Impl.auth.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,13 +46,22 @@ public class CartService {
     }
 
     public Cart getCart() {
-        return cartRepository.findCartByUserId(extractUser().getId()).orElseGet(() -> {
+        UUID userId = extractUser().getId();
+
+        return cartRepository.findCartByUserId(userId).orElseGet(() -> {
             Cart newCart = new Cart();
             newCart.setUser(extractUser());
             newCart.setCartItems(new ArrayList<>());
-            return cartRepository.save(newCart);
+            try {
+                return cartRepository.save(newCart);
+            } catch (DataIntegrityViolationException e) {
+                // Если во время сохранения другой поток уже создал корзину, просто вернем её
+                return cartRepository.findCartByUserId(userId)
+                        .orElseThrow(() -> new RuntimeException("Failed to create or retrieve cart"));
+            }
         });
     }
+
 
     private User extractUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -109,27 +121,8 @@ public class CartService {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    public CartResponse convertToCartResponse(Cart cart) {
-        List<CartItemResponse> items = cart.getCartItems().stream().map(item -> {
-            BigDecimal totalPrice = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
-            return CartItemResponse.builder()
-                    .productId(item.getProduct().getId())
-                    .productName(productService.getById(item.getProduct().getId()).getName())
-                    .quantity(item.getQuantity())
-                    .pricePerItem(item.getPrice())
-                    .totalPrice(totalPrice)
-                    .cartItemId(item.getId())
-                    .build();
-        }).toList();
-
-        BigDecimal total = items.stream()
-                .map(CartItemResponse::getTotalPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        return CartResponse.builder()
-                .items(items)
-                .totalPrice(total)
-                .build();
+    public Page<CartItem> findAllItems (Pageable pageable) {
+        return cartItemRepository.findAll(pageable);
     }
 }
 

@@ -2,15 +2,12 @@ package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.DTO.Responses.models.*;
 import com.example.marketplace_backend.Model.*;
-import com.example.marketplace_backend.Model.Intermediate_objects.BrandImage;
-import com.example.marketplace_backend.Model.Intermediate_objects.CategoryIcon;
-import com.example.marketplace_backend.Model.Intermediate_objects.CategoryImage;
-import com.example.marketplace_backend.Model.Intermediate_objects.OrderItem;
-import com.example.marketplace_backend.Model.Intermediate_objects.ProductColorImage;
+import com.example.marketplace_backend.Model.Intermediate_objects.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -304,8 +301,7 @@ public class ConverterService {
         return items.stream().map(item -> {
             OrderItemResponse response = new OrderItemResponse();
             response.setId(item.getId());
-            response.setProductId(item.getProduct().getId());
-            response.setProductName(item.getProduct().getName());
+            response.setProductResponse(convertToProductResponse(item.getProduct()));
             response.setQuantity(item.getQuantity());
             response.setPrice(item.getPrice());
             return response;
@@ -369,4 +365,136 @@ public class ConverterService {
         response.setName(subcategory.getName());
         return response;
     }
+
+    public FavoriteResponse convertToFavoriteResponse(Favorite favorite) {
+        List<FavoriteItemResponse> items = favorite.getFavoriteItems().stream().map(item -> {
+            BigDecimal totalPrice = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+            return FavoriteItemResponse.builder()
+                    .productResponse(convertToProductResponse(item.getProduct())) // добавлено
+                    .quantity(item.getQuantity())
+                    .pricePerItem(item.getPrice())
+                    .totalPrice(totalPrice)
+                    .favoriteItemId(item.getId())
+                    .addedAt(item.getAddedAt())
+                    .build();
+        }).toList();
+
+        BigDecimal total = items.stream()
+                .map(FavoriteItemResponse::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return FavoriteResponse.builder()
+                .items(items)
+                .totalPrice(total)
+                .build();
+    }
+
+    public FavoriteItemResponse convertToFavoriteItemResponse(FavoriteItem item) {
+        BigDecimal totalPrice = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+
+        return FavoriteItemResponse.builder()
+                .favoriteItemId(item.getId())
+                .quantity(item.getQuantity())
+                .pricePerItem(item.getPrice())
+                .totalPrice(totalPrice)
+                .addedAt(item.getAddedAt())
+                .productResponse(convertToProductResponse(item.getProduct()))
+                .build();
+    }
+
+    public CartResponse convertToCartResponse(Cart cart) {
+        List<CartItemResponse> items = cart.getCartItems().stream().map(item -> {
+            BigDecimal totalPrice = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+            return CartItemResponse.builder()
+                    .cartItemId(item.getId())
+                    .quantity(item.getQuantity())
+                    .pricePerItem(item.getPrice())
+                    .totalPrice(totalPrice)
+                    .addedAt(item.getCreatedAt())
+                    .productResponse(convertToProductResponse(item.getProduct()))
+                    .build();
+        }).toList();
+
+        BigDecimal total = items.stream()
+                .map(CartItemResponse::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return CartResponse.builder()
+                .items(items)
+                .totalPrice(total)
+                .build();
+    }
+
+    public CartItemResponse convertToCartItemResponse(CartItem item) {
+        BigDecimal totalPrice = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+
+        return CartItemResponse.builder()
+                .cartItemId(item.getId())
+                .quantity(item.getQuantity())
+                .pricePerItem(item.getPrice())
+                .totalPrice(totalPrice)
+                .addedAt(item.getCreatedAt())
+                .productResponse(convertToProductResponse(item.getProduct()))
+                .build();
+    }
+
+    public OrderItemResponse toOrderItemResponse(OrderItem item) {
+        return OrderItemResponse.builder()
+                .id(item.getId())
+                .productResponse(convertToProductResponse(item.getProduct()))
+                .quantity(item.getQuantity())
+                .price(item.getPrice())
+                .build();
+    }
+
+    public OrderStatusResponse toOrderStatusResponse(com.example.marketplace_backend.Model.Statuses status) {
+        if (status == null) {
+            return null;
+        }
+        return OrderStatusResponse.builder()
+                .id(status.getId())
+                .name(status.getName())
+                .primaryColor(status.getPrimaryColor())
+                .backgroundColor(status.getBackgroundColor())
+                .build();
+    }
+
+    public OrderResponse toOrderResponse(Order order) {
+        List<OrderItemResponse> itemResponses = order.getOrderItems().stream()
+                .map(this::toOrderItemResponse)
+                .collect(Collectors.toList());
+
+        return OrderResponse.builder()
+                .id(order.getId())
+                .address(order.getAddress())
+                .phoneNumber(order.getPhoneNumber())
+                .comment(order.getComment())
+                .totalPrice(order.getTotalPrice())
+                .isWholesale(order.isWholesale())
+                .createdAt(order.getCreatedAt())
+                .userId(order.getUser().getId())
+                .username(order.getUser().getName())
+                .paymentMethod(order.getPaymentMethod())
+                .orderNumber(order.getOrderNumber())
+                .orderItems(itemResponses)
+                .status(toOrderStatusResponse(order.getStatus()))
+                .build();
+    }
+
+    public OrderWholesaleResponse toOrderWholesaleResponse(Order order) {
+        return OrderWholesaleResponse.builder()
+                .id(order.getId())
+                .address(order.getAddress())
+                .phoneNumber(order.getPhoneNumber())
+                .comment(order.getComment())
+                .isWholesale(order.isWholesale())
+                .createdAt(order.getCreatedAt())
+                .userId(order.getUser().getId())
+                .username(order.getUser().getName())
+                .paymentMethod(order.getPaymentMethod())
+                .orderNumber(order.getOrderNumber())
+                .status(toOrderStatusResponse(order.getStatus()))
+                .build();
+    }
+
 }

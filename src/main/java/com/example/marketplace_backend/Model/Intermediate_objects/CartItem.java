@@ -23,7 +23,6 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-
     private int quantity;
 
     @Column(precision = 15, scale = 2)

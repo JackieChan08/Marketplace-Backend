@@ -14,11 +14,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FavoriteItemResponse {
-    private UUID productId;
-    private String productName;
+    private UUID favoriteItemId;
     private int quantity;
+    private ProductResponse productResponse;
     private BigDecimal pricePerItem;
     private BigDecimal totalPrice;
-    private UUID favoriteItemId;
     private LocalDateTime addedAt;
 }
