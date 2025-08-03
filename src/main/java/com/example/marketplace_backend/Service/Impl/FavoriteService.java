@@ -7,6 +7,8 @@ import com.example.marketplace_backend.DTO.Responses.models.FavoriteItemResponse
 import com.example.marketplace_backend.DTO.Responses.models.FavoriteResponse;
 import com.example.marketplace_backend.Service.Impl.auth.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,6 +53,10 @@ public class FavoriteService {
             newFavorite.setFavoriteItems(new ArrayList<>());
             return favoriteRepository.save(newFavorite);
         });
+    }
+
+    public Page<FavoriteItem> findAllItems(Pageable pageable) {
+        return favoriteItemRepository.findAll(pageable);
     }
 
     private User extractUser() {
@@ -108,29 +114,5 @@ public class FavoriteService {
         return favoriteRepository.findFavoriteByUserId(extractUser().getId())
                 .map(favorite -> ResponseEntity.ok(favorite.getFavoriteItems()))
                 .orElse(ResponseEntity.notFound().build());
-    }
-
-    public FavoriteResponse convertToFavoriteResponse(Favorite favorite) {
-        List<FavoriteItemResponse> items = favorite.getFavoriteItems().stream().map(item -> {
-            BigDecimal totalPrice = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
-            return FavoriteItemResponse.builder()
-                    .productId(item.getProduct().getId())
-                    .productName(productService.getById(item.getProduct().getId()).getName())
-                    .quantity(item.getQuantity())
-                    .pricePerItem(item.getPrice())
-                    .totalPrice(totalPrice)
-                    .favoriteItemId(item.getId())
-                    .addedAt(item.getAddedAt())
-                    .build();
-        }).toList();
-
-        BigDecimal total = items.stream()
-                .map(FavoriteItemResponse::getTotalPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        return FavoriteResponse.builder()
-                .items(items)
-                .totalPrice(total)
-                .build();
     }
 }

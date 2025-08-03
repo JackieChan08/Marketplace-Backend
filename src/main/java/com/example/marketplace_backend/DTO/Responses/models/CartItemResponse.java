@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -17,9 +18,9 @@ import java.util.UUID;
 public class CartItemResponse {
     private UUID cartItemId;
     private UUID userId;
-    private UUID productId;
-    private String productName;
+    private ProductResponse productResponse;
     private int quantity;
     private BigDecimal pricePerItem;
     private BigDecimal totalPrice;
+    private LocalDateTime addedAt;
 }

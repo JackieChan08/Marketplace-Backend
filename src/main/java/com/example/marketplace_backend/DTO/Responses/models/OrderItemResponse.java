@@ -14,8 +14,7 @@ import java.util.UUID;
 @Builder
 public class OrderItemResponse {
     private UUID id;
-    private UUID productId;
-    private String productName;
+    private ProductResponse productResponse;
     private int quantity;
     private BigDecimal price;
 }
