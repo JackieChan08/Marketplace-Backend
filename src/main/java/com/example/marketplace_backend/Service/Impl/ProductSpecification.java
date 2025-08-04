@@ -1,6 +1,9 @@
 package com.example.marketplace_backend.Service.Impl;
 
+import com.example.marketplace_backend.Model.Intermediate_objects.ProductStatuses;
 import com.example.marketplace_backend.Model.Product;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
@@ -37,4 +40,18 @@ public class ProductSpecification {
             return null;
         };
     }
+
+    public static Specification<Product> hasStatusIds(List<UUID> statusIds) {
+        return (root, query, cb) -> {
+            if (statusIds == null || statusIds.isEmpty()) {
+                return cb.conjunction();
+            }
+
+            Join<Object, Object> productStatusesJoin = root.join("productStatuses", JoinType.INNER);
+            return productStatusesJoin.get("status").get("id").in(statusIds);
+        };
+    }
+
+
+
 }

@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.DTO.Requests.models;
 
+import com.example.marketplace_backend.Model.Intermediate_objects.ProductStatuses;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -10,6 +11,7 @@ import java.util.UUID;
 public class ProductFilterRequest {
     private List<UUID> subcategoryIds;
     private List<UUID> brandIds;
+    private List<UUID> statusIds;
     private BigDecimal minPrice;
     private BigDecimal maxPrice;
     private String sortBy; // "price" или "name"
