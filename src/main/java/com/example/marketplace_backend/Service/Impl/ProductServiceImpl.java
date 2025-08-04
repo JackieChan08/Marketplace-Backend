@@ -463,7 +463,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                 ProductSpecification.isNotDeleted()
                         .and(ProductSpecification.hasSubcategoryIds(filterRequest.getSubcategoryIds()))
                         .and(ProductSpecification.hasBrandIds(filterRequest.getBrandIds()))
-                        .and(ProductSpecification.hasPriceBetween(filterRequest.getMinPrice(), filterRequest.getMaxPrice()));
+                        .and(ProductSpecification.hasPriceBetween(filterRequest.getMinPrice(), filterRequest.getMaxPrice()))
+                        .and(ProductSpecification.hasStatusIds(filterRequest.getStatusIds()));
+
 
         // Сортировка
         String sortBy = filterRequest.getSortBy() != null ? filterRequest.getSortBy() : "name";

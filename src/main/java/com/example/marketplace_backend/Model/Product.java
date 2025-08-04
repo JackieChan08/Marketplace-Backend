@@ -67,7 +67,7 @@ public class Product {
     private boolean availability;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("product-statuses")
+    @JsonManagedReference("status-products")
     private Set<ProductStatuses> productStatuses;
 
     @Column(name = "title")
