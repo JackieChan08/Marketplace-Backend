@@ -69,6 +69,6 @@ public class Order {
     private PaymentMethod paymentMethod;
 
     @Column(name = "order_number", unique = true, nullable = false)
-    private Long orderNumber;
+    private String orderNumber;
 }
 

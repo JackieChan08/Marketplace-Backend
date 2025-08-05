@@ -112,4 +112,8 @@ public class AdminOrderController {
         return ResponseEntity.ok(responsePage);
     }
 
+    @GetMapping("/find/by-number")
+    public ResponseEntity<OrderResponse> findOrderByNumber(@RequestParam String orderNumber) {
+        return ResponseEntity.ok(orderService.findByOrderNumber(orderNumber));
+    }
 }

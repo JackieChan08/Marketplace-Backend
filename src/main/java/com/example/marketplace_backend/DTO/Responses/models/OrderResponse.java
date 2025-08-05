@@ -21,10 +21,11 @@ public class OrderResponse {
     private String phoneNumber;
     private String comment;
     private BigDecimal totalPrice;
+    private int totalQuantity;
     private boolean isWholesale;
     private LocalDateTime createdAt;
     private PaymentMethod paymentMethod;
-    private Long orderNumber;
+    private String orderNumber;
 
     private UUID userId;
     private String username;

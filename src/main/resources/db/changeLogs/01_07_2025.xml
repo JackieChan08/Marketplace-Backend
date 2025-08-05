@@ -442,7 +442,7 @@
             <column name="user_id" type="uuid">
                 <constraints nullable="false"/>
             </column>
-            <column name="order_number" type="BIGINT">
+            <column name="order_number" type="varchar(20)">
                 <constraints nullable="false" unique="true"/>
             </column>
         </createTable>
@@ -531,6 +531,23 @@
 
     <changeSet id="Admin" author="JekiChan08">
         <loadData tableName="users" file="data/users.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+
+    <changeSet id="create-order-number-sequence" author="aiteginbaratov">
+        <createTable tableName="order_number_sequence">
+            <column name="date_part" type="varchar(6)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="sequence_number" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add-unique-index-order-number" author="your_name">
+        <createIndex indexName="idx_unique_order_number" tableName="orders" unique="true">
+            <column name="order_number"/>
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>
