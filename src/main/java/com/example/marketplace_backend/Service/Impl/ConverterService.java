@@ -270,13 +270,15 @@ public class ConverterService {
                 .phoneNumber(order.getPhoneNumber())
                 .comment(order.getComment())
                 .totalPrice(order.getTotalPrice())
+                .totalQuantity(order.getOrderItems().size())
                 .isWholesale(order.isWholesale())
                 .createdAt(order.getCreatedAt())
                 .paymentMethod(order.getPaymentMethod())
                 .userId(order.getUser().getId())
                 .username(order.getUser().getName())
                 .orderItems(convertOrderItems(order.getOrderItems()))
-                .status(convertStatus(order.getStatus())) // Изменено на единственный статус
+                .status(convertStatus(order.getStatus()))
+                .orderNumber(order.getOrderNumber())
                 .build();
     }
 

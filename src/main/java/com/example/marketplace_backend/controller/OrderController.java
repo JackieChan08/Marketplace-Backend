@@ -95,7 +95,7 @@ public class OrderController {
         UUID userId = userService.findByEmail(email).getId();
         Page<Order> orders = orderService.findOrdersByUserId(pageable, userId);
 
-        return ResponseEntity.ok(orders.map(order -> converterService.convertToOrderResponse(order)));
+        return ResponseEntity.ok(orders.map(converterService::convertToOrderResponse));
     }
 
     @GetMapping("/payment-methods")
@@ -107,5 +107,4 @@ public class OrderController {
                 }))
                 .toList();
     }
-
 }

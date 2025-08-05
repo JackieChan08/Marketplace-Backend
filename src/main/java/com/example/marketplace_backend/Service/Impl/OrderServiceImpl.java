@@ -197,4 +197,13 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
     public Page<Order> findOrdersByStatus(Pageable pageable, UUID statusId) {
         return orderRepository.findOrdersByStatusId(pageable, statusId);
     }
+
+    public OrderResponse findByOrderNumber(String orderNumber) {
+        String normalized = orderNumber.toUpperCase();
+
+        Order order = orderRepository.findByOrderNumber(normalized)
+                .orElseThrow(() -> new RuntimeException("Order not found with number: " + orderNumber));
+
+        return converterService.toOrderResponse(order);
+    }
 }
