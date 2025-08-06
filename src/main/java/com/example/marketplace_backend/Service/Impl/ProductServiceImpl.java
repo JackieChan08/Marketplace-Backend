@@ -144,7 +144,6 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         return productRepository.findAllByStatusId(statusId, pageable);
     }
 
-
     public void deActiveProductsBySubcategory(Subcategory subcategory){
         List<Product> products = productRepository.findActiveBySubcategory(subcategory);
         for(Product product : products){
@@ -261,7 +260,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
             }
         } else {
             // Устанавливаем статус по умолчанию, если не указан
-            Statuses defaultStatus = statusRepository.findByName("Без статуса")
+            Statuses defaultStatus = statusRepository.findByNameByProductFlag("Без статуса")
                     .orElseThrow(() -> new RuntimeException("Default status not found"));
 
             ProductStatuses productStatus = ProductStatuses.builder()
