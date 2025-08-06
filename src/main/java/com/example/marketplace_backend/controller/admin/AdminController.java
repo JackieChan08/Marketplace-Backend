@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
     private final UserServiceImpl userService;
 
-
-
     //User
     @GetMapping("/users/search")
     public ResponseEntity<Page<UserResponse>> searchUsers(
