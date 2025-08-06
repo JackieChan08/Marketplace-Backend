@@ -16,6 +16,12 @@ public interface StatusRepository extends JpaRepository<Statuses, UUID> {
     @Query("SELECT s FROM Statuses s WHERE s.name = :name")
     Optional<Statuses> findByName(@Param("name") String name);
 
+    @Query("SELECT s FROM Statuses s WHERE s.name = :name AND s.orderFlag = true")
+    Optional<Statuses> findByNameByOrderFlag(@Param("name") String name);
+
+    @Query("SELECT s FROM Statuses s WHERE s.name = :name AND s.productFlag = true")
+    Optional<Statuses> findByNameByProductFlag(@Param("name") String name);
+
     @Query("SELECT s FROM Statuses s WHERE s.orderFlag = true")
     List<Statuses> findAllByOrderFlag();
 

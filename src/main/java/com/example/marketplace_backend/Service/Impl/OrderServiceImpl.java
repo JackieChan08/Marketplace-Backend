@@ -74,7 +74,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
                     .orElseThrow(() -> new RuntimeException("Status not found with ID: " + request.getStatusId()));
             order.setStatus(status);
         } else {
-            Statuses defaultStatus = statusRepository.findByName("Без статуса")
+            Statuses defaultStatus = statusRepository.findByNameByOrderFlag("Без статуса")
                     .orElseThrow(() -> new RuntimeException("Default status not found"));
             order.setStatus(defaultStatus);
         }
