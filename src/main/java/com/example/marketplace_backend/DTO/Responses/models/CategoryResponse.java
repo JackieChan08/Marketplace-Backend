@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.DTO.Responses.models;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,4 +24,7 @@ public class CategoryResponse {
     private boolean priority;
     private CategoryImageResponse categoryImage;
     private CategoryIconResponse categoryIcon;
+
+    @JsonProperty("subcategories")
+    private List<SubcategoryResponseSimple> subcategoryResponsesSimple;
 }

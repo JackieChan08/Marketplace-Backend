@@ -202,6 +202,14 @@ public class ConverterService {
             response.setCategoryIcon(categoryIconResponse);
         }
 
+        if (category.getSubcategories() != null && !category.getSubcategories().isEmpty()) {
+            List<SubcategoryResponseSimple> subcategoryResponsesSimple = category.getSubcategories().stream()
+                    .filter(subcategory -> subcategory.getDeletedAt() == null)
+                    .map(this::convertToSubcategoryResponseSimple)
+                    .toList();
+            response.setSubcategoryResponsesSimple(subcategoryResponsesSimple);
+        }
+
         return response;
     }
 

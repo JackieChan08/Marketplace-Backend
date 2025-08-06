@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.controller;
 
+import com.example.marketplace_backend.DTO.Requests.Jwt.RefreshTokenRequest;
 import com.example.marketplace_backend.Model.RefreshToken;
 import com.example.marketplace_backend.Model.User;
 import com.example.marketplace_backend.Repositories.RefreshTokenRepository;
@@ -165,4 +166,46 @@ public class AuthController {
         );
         response.addHeader("Set-Cookie", cookie);
     }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshAccessToken(
+            @RequestBody RefreshTokenRequest request,
+            @CookieValue(value = "refreshToken", required = false) String refreshTokenCookie,
+            HttpServletResponse response
+    ) {
+        try {
+            if (refreshTokenCookie == null || request.getAccessToken() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing tokens");
+            }
+
+            // Проверяем refresh токен в базе
+            RefreshToken savedToken = refreshTokenRepository.findByToken(refreshTokenCookie)
+                    .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
+
+            // Проверяем срок действия refresh токена
+            if (savedToken.getExpiryDate().isBefore(Instant.now())) {
+                refreshTokenRepository.delete(savedToken);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token expired");
+            }
+
+            // Проверяем accessToken: валиден, но истёк (если у тебя есть такая логика)
+            String userEmail = jwtService.extractUsername(request.getAccessToken());
+
+            User user = userRepository.findByEmail(userEmail)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            // Генерация нового access токена
+            String newAccessToken = jwtService.generateAccessToken(user);
+
+            // Устанавливаем новый accessToken в cookie
+            setCookie(response, "accessToken", newAccessToken, 3600);
+
+            return ResponseEntity.ok(Map.of(
+                    "accessToken", newAccessToken
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token refresh failed: " + e.getMessage());
+        }
+    }
+
 }
