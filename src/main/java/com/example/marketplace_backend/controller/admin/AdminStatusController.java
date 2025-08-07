@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/admin/statuses")
+@RequestMapping("/api/admin/statuses")
 public class AdminStatusController {
     private final StatusServiceImpl statusService;
 
