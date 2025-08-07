@@ -129,7 +129,9 @@ public class AuthController {
 
             return ResponseEntity.ok(Map.of(
                     "email", user.getEmail(),
-                    "name", user.getName()
+                    "name", user.getName(),
+                    "accessToken", accessToken,
+                    "refreshToken", refreshToken
             ));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("OAuth2 Login failed: " + e.getMessage());
