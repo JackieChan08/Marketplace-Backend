@@ -1,17 +1,15 @@
 package com.example.marketplace_backend.controller;
 
 
-
 import com.example.marketplace_backend.Model.RefreshToken;
 import com.example.marketplace_backend.Model.User;
 import com.example.marketplace_backend.Repositories.RefreshTokenRepository;
 import com.example.marketplace_backend.Repositories.UserRepository;
 import com.example.marketplace_backend.Service.Impl.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,10 +31,8 @@ public class TokenController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshAccessToken(@RequestBody Map<String, String> request) {
-        String refreshToken = request.get("refreshToken");
-
-        if (!jwtService.isTokenValid(refreshToken)) {
+    public ResponseEntity<?> refreshAccessToken(@CookieValue(name = "refreshToken", required = false) String refreshToken) {
+        if (refreshToken == null || !jwtService.isTokenValid(refreshToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
         }
 
@@ -54,4 +50,3 @@ public class TokenController {
         return ResponseEntity.ok(Map.of("accessToken", newAccess));
     }
 }
-
