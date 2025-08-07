@@ -153,13 +153,21 @@ public class AuthController {
         return ResponseEntity.ok("Logged out successfully");
     }
 
+//    private void setCookie(HttpServletResponse response, String name, String value, int maxAgeSeconds) {
+//        String cookie = String.format(
+//                "%s=%s; HttpOnly; Path=/; Max-Age=%d",
+//                name, value, maxAgeSeconds
+//        );
+//        response.addHeader("Set-Cookie", cookie);
+//    }
     private void setCookie(HttpServletResponse response, String name, String value, int maxAgeSeconds) {
         String cookie = String.format(
-                "%s=%s; HttpOnly; Path=/; Max-Age=%d",
+                "%s=%s; Path=/; Max-Age=%d; HttpOnly; Secure; SameSite=Lax",
                 name, value, maxAgeSeconds
         );
         response.addHeader("Set-Cookie", cookie);
     }
+
 
     private void clearCookie(HttpServletResponse response, String name) {
         String cookie = String.format(
