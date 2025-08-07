@@ -2,6 +2,7 @@ package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.DTO.Responses.models.OrderResponse;
 import com.example.marketplace_backend.DTO.Responses.models.OrderWholesaleResponse;
+import com.example.marketplace_backend.DTO.Responses.models.UserResponse;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.CartItem;
 import com.example.marketplace_backend.Model.Intermediate_objects.OrderItem;
@@ -49,6 +50,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         Cart cart = cartRepository.findCartByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
+        // Находим пользователя
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         if (cart.getCartItems().isEmpty()) {
             throw new RuntimeException("Cart is empty");
         }
@@ -56,6 +61,23 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         List<UUID> selectedItemIds = request.getCartItemIds();
         if (selectedItemIds == null || selectedItemIds.isEmpty()) {
             throw new RuntimeException("No cart items selected");
+        }
+
+        // Заполняем недостающие данные у пользователя
+        boolean userUpdated = false;
+        if ((user.getPhoneNumber() == null || user.getPhoneNumber().isEmpty()) && request.getPhoneNumber() != null) {
+            user.setPhoneNumber(request.getPhoneNumber());
+            userUpdated = true;
+        }
+
+        if ((user.getAddress() == null || user.getAddress().isEmpty()) && request.getAddress() != null) {
+            user.setAddress(request.getAddress());
+            userUpdated = true;
+        }
+
+        // Сохраняем пользователя, если его данные были обновлены
+        if (userUpdated) {
+            userRepository.save(user);
         }
 
         Order order = new Order();
@@ -113,9 +135,30 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
     }
 
     public OrderWholesaleResponse createOrderWholesale(UUID userId, OrderRequest request) {
+        // Находим пользователя
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Заполняем недостающие данные у пользователя
+        boolean userUpdated = false;
+        if ((user.getPhoneNumber() == null || user.getPhoneNumber().isEmpty()) && request.getPhoneNumber() != null) {
+            user.setPhoneNumber(request.getPhoneNumber());
+            userUpdated = true;
+        }
+
+        if ((user.getAddress() == null || user.getAddress().isEmpty()) && request.getAddress() != null) {
+            user.setAddress(request.getAddress());
+            userUpdated = true;
+        }
+
+        // Сохраняем пользователя, если его данные были обновлены
+        if (userUpdated) {
+            userRepository.save(user);
+        }
+
+        // Создаём заказ
         Order order = new Order();
-        order.setUser(userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found")));
+        order.setUser(user);
         order.setAddress(request.getAddress());
         order.setPhoneNumber(request.getPhoneNumber());
         order.setComment(request.getComment());
@@ -134,9 +177,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
             order.setStatus(defaultStatus);
         }
 
+        // Сохраняем заказ
         Order savedOrder = orderRepository.save(order);
+
         return converterService.toOrderWholesaleResponse(savedOrder);
     }
+
 
     // Методы без пагинации
     public List<Order> getAllOrders() {
@@ -205,5 +251,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
                 .orElseThrow(() -> new RuntimeException("Order not found with number: " + orderNumber));
 
         return converterService.toOrderResponse(order);
+    }
+
+    public List<UserResponse> getAllUsers() {
+        List<User> users = userRepository.findUsersSortedByLastOrderDateDesc();
+        return users.stream()
+                .map(converterService::convertToUserResponse)
+                .toList();
     }
 }

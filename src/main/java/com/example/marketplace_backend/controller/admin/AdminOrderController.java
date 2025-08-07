@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.controller.admin;
 
 import com.example.marketplace_backend.DTO.Responses.models.OrderResponse;
+import com.example.marketplace_backend.DTO.Responses.models.UserResponse;
 import com.example.marketplace_backend.Model.Order;
 import com.example.marketplace_backend.Service.Impl.ConverterService;
 import com.example.marketplace_backend.Service.Impl.OrderServiceImpl;
@@ -115,5 +116,10 @@ public class AdminOrderController {
     @GetMapping("/find/by-number")
     public ResponseEntity<OrderResponse> findOrderByNumber(@RequestParam String orderNumber) {
         return ResponseEntity.ok(orderService.findByOrderNumber(orderNumber));
+    }
+
+    @GetMapping("get/all-users")
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        return ResponseEntity.ok(orderService.getAllUsers());
     }
 }
