@@ -29,4 +29,12 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     """)
     Page<User> searchUsers(@Param("query") String query, Pageable pageable);
 
+    @Query(value = """
+    SELECT u.*
+    FROM users u
+    JOIN orders o ON o.user_id = u.id
+    GROUP BY u.id
+    ORDER BY MAX(o.created_at) DESC
+    """, nativeQuery = true)
+    List<User> findUsersSortedByLastOrderDateDesc();
 }
