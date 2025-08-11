@@ -20,10 +20,13 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("*2") // 👈 Указать точный origin!
+                .allowedOriginPatterns(
+                        "https://baistore.net",
+                        "https://baistore.net:8084",
+                        "http://localhost:3000"
+                )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowCredentials(true) // 👈 Обязательно, если куки
+                .allowCredentials(true)
                 .allowedHeaders("*");
     }
 }
-
