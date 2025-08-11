@@ -507,4 +507,20 @@ public class ConverterService {
                 .build();
     }
 
+    public ProductParameterResponse convertToProductParameterResponse(ProductParameters parameter) {
+        return ProductParameterResponse.builder()
+                .name(parameter.getName())
+                .subParameters(
+                        parameter.getProductSubParameters().stream()
+                                .map(sub -> ProductSubParameterResponse.builder()
+                                        .name(sub.getName())
+                                        .value(sub.getValue())
+                                        .build()
+                                )
+                                .toList()
+                )
+                .build();
+    }
+
+
 }

@@ -153,29 +153,40 @@ public class AuthController {
         return ResponseEntity.ok("Logged out successfully");
     }
 
-//    private void setCookie(HttpServletResponse response, String name, String value, int maxAgeSeconds) {
+    private void setCookie(HttpServletResponse response, String name, String value, int maxAgeSeconds) {
+        // ====== PROD версия ======
 //        String cookie = String.format(
-//                "%s=%s; HttpOnly; Path=/; Max-Age=%d",
+//                "%s=%s; Path=/; Max-Age=%d; HttpOnly; Secure; SameSite=None; Domain=baistore.net",
 //                name, value, maxAgeSeconds
 //        );
 //        response.addHeader("Set-Cookie", cookie);
-//    }
-    private void setCookie(HttpServletResponse response, String name, String value, int maxAgeSeconds) {
+
+        // ====== DEV версия ======
         String cookie = String.format(
-                "%s=%s; Path=/; Max-Age=%d; HttpOnly; Secure; SameSite=Lax",
+                "%s=%s; Path=/; Max-Age=%d; HttpOnly",
                 name, value, maxAgeSeconds
         );
         response.addHeader("Set-Cookie", cookie);
+
     }
 
-
     private void clearCookie(HttpServletResponse response, String name) {
+        // ====== PROD версия ======
+//        String cookie = String.format(
+//                "%s=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=None; Domain=baistore.net",
+//                name
+//        );
+//        response.addHeader("Set-Cookie", cookie);
+
+        // ====== DEV версия ======
+
         String cookie = String.format(
-                "%s=; HttpOnly; Path=/; Max-Age=0",
+                "%s=; Path=/; Max-Age=0; HttpOnly",
                 name
         );
         response.addHeader("Set-Cookie", cookie);
     }
+
 
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshAccessToken(

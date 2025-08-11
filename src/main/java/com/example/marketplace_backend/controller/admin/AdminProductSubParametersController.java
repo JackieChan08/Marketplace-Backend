@@ -40,14 +40,5 @@ public class AdminProductSubParametersController {
         }
     }
 
-    @GetMapping("/template")
-    public ResponseEntity<Set<String>> getProductSubParametersTemplate() {
-        List<ProductSubParameters> subParameters = productSubParametersService.findAll();
-        Set<String> template = subParameters.stream()
-                .map(ProductSubParameters::getName)
-                .collect(Collectors.toSet());
-        return ResponseEntity.ok(template);
-    }
-
 
 }
