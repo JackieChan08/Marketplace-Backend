@@ -154,36 +154,36 @@ public class AuthController {
     }
 
     private void setCookie(HttpServletResponse response, String name, String value, int maxAgeSeconds) {
-        // ====== PROD версия ======
-//        String cookie = String.format(
-//                "%s=%s; Path=/; Max-Age=%d; HttpOnly; Secure; SameSite=None; Domain=baistore.net",
-//                name, value, maxAgeSeconds
-//        );
-//        response.addHeader("Set-Cookie", cookie);
-
-        // ====== DEV версия ======
+//         ====== PROD версия ======
         String cookie = String.format(
-                "%s=%s; Path=/; Max-Age=%d; HttpOnly",
+                "%s=%s; Path=/; Max-Age=%d; HttpOnly; Secure; SameSite=None; Domain=baistore.net",
                 name, value, maxAgeSeconds
         );
+        response.addHeader("Set-Cookie", cookie);
+
+        // ====== DEV версия ======
+//        String cookie = String.format(
+//                "%s=%s; Path=/; Max-Age=%d; HttpOnly",
+//                name, value, maxAgeSeconds
+//        );
         response.addHeader("Set-Cookie", cookie);
 
     }
 
     private void clearCookie(HttpServletResponse response, String name) {
         // ====== PROD версия ======
-//        String cookie = String.format(
-//                "%s=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=None; Domain=baistore.net",
-//                name
-//        );
-//        response.addHeader("Set-Cookie", cookie);
-
-        // ====== DEV версия ======
-
         String cookie = String.format(
-                "%s=; Path=/; Max-Age=0; HttpOnly",
+                "%s=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=None; Domain=baistore.net",
                 name
         );
+        response.addHeader("Set-Cookie", cookie);
+
+//        // ====== DEV версия ======
+//
+//        String cookie = String.format(
+//                "%s=; Path=/; Max-Age=0; HttpOnly",
+//                name
+//        );
         response.addHeader("Set-Cookie", cookie);
     }
 

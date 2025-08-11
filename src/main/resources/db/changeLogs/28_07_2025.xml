@@ -60,36 +60,36 @@
     </changeSet>
 
     <!-- Миграция данных из старой таблицы product_images (если нужно) -->
-    <changeSet id="migrate-product-images-data" author="JekiChan08">
-        <comment>
-            Этот changeSet нужен только если у вас уже есть данные в product_images
-            и вы хотите их сохранить. Если данных нет, можно пропустить.
-        </comment>
+<!--    <changeSet id="migrate-product-images-data" author="JekiChan08">-->
+<!--        <comment>-->
+<!--            Этот changeSet нужен только если у вас уже есть данные в product_images-->
+<!--            и вы хотите их сохранить. Если данных нет, можно пропустить.-->
+<!--        </comment>-->
 
-        <!-- Создаем временный цвет "default" для существующих изображений -->
-        <sql>
-            INSERT INTO product_colors (id, name, hex, product_id)
-            SELECT
-                gen_random_uuid(),
-                'Default',
-                '#000000',
-                pi.product_id
-            FROM product_images pi
-            GROUP BY pi.product_id
-                ON CONFLICT DO NOTHING;
-        </sql>
+<!--        &lt;!&ndash; Создаем временный цвет "default" для существующих изображений &ndash;&gt;-->
+<!--        <sql>-->
+<!--            INSERT INTO product_colors (id, name, hex, product_id)-->
+<!--            SELECT-->
+<!--                gen_random_uuid(),-->
+<!--                'Default',-->
+<!--                '#000000',-->
+<!--                pi.product_id-->
+<!--            FROM product_images pi-->
+<!--            GROUP BY pi.product_id-->
+<!--                ON CONFLICT DO NOTHING;-->
+<!--        </sql>-->
 
-        <!-- Переносим изображения в новую таблицу -->
-        <sql>
-            INSERT INTO product_color_images (id, color_id, image_id)
-            SELECT
-                gen_random_uuid(),
-                pc.id,
-                pi.image_id
-            FROM product_images pi
-                     JOIN product_colors pc ON pc.product_id = pi.product_id AND pc.name = 'Default';
-        </sql>
-    </changeSet>
+<!--        &lt;!&ndash; Переносим изображения в новую таблицу &ndash;&gt;-->
+<!--        <sql>-->
+<!--            INSERT INTO product_color_images (id, color_id, image_id)-->
+<!--            SELECT-->
+<!--                gen_random_uuid(),-->
+<!--                pc.id,-->
+<!--                pi.image_id-->
+<!--            FROM product_images pi-->
+<!--                     JOIN product_colors pc ON pc.product_id = pi.product_id AND pc.name = 'Default';-->
+<!--        </sql>-->
+<!--    </changeSet>-->
 
     <!-- Удаление старой таблицы product_images (ОСТОРОЖНО!) -->
     <changeSet id="drop-old-product-images-table" author="JekiChan08">
