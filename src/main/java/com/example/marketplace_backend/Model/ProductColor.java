@@ -38,4 +38,8 @@ public class ProductColor {
     @OneToMany(mappedBy = "color", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<ProductColorImage> images = new ArrayList<>();;
+
+    @OneToMany(mappedBy = "color", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<ProductMemory> memories = new ArrayList<>();
 }

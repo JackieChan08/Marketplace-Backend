@@ -4,6 +4,7 @@ import com.example.marketplace_backend.DTO.Requests.models.*;
 import com.example.marketplace_backend.DTO.Responses.models.ProductResponse;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductColorImage;
+import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductStatuses;
 import com.example.marketplace_backend.Repositories.*;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -29,17 +30,16 @@ import java.util.UUID;
 public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     private final ProductRepository productRepository;
     private final FileUploadService fileUploadService;
-    private final ProductColorImageRepository productImageRepository;
     private final BrandRepository brandRepository;
     private final SubcategoryRepository subcategoryRepository;
     private final StatusRepository statusRepository;
     private final ProductStatusRepository productStatusRepository;
     private final ConverterService converter;
+    private final ProductImageRepository productImageRepository;
     private final ProductParametersRepository productParametersRepository;
-
-    // Добавить недостающие репозитории
     private final ProductColorRepository productColorRepository;
     private final ProductColorImageRepository productColorImageRepository;
+    private final ProductMemoryRepository productMemoryRepository;
 
     @Value("${app.base-url}")
     private String baseUrl;
@@ -48,18 +48,18 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     public ProductServiceImpl(ProductRepository productRepository,
                               SubcategoryRepository subcategoryRepository,
                               FileUploadService fileUploadService,
-                              ProductColorImageRepository productImageRepository,
+                              ProductColorImageRepository productColorImageRepository,
                               BrandRepository brandRepository,
                               ProductStatusRepository productStatusRepository,
                               StatusRepository statusRepository,
                               ConverterService converter,
                               ProductParametersRepository productParametersRepository,
                               ProductColorRepository productColorRepository,
-                              ProductColorImageRepository productColorImageRepository) {
+                              ProductMemoryRepository productMemoryRepository,
+                              ProductImageRepository productImageRepository) {
         super(productRepository);
         this.productRepository = productRepository;
         this.fileUploadService = fileUploadService;
-        this.productImageRepository = productImageRepository;
         this.brandRepository = brandRepository;
         this.subcategoryRepository = subcategoryRepository;
         this.statusRepository = statusRepository;
@@ -68,6 +68,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         this.productParametersRepository = productParametersRepository;
         this.productColorRepository = productColorRepository;
         this.productColorImageRepository = productColorImageRepository;
+        this.productImageRepository = productImageRepository;
+        this.productMemoryRepository = productMemoryRepository;
     }
 
     public Page<Product> findAllActiveByBrand(UUID brandId, Pageable pageable) {
@@ -223,8 +225,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
 
         Product savedProduct = productRepository.save(product);
 
-        // Обрабатываем изображения
-        if (dto.getColors() != null) {
+        // 1. Если есть цвета — логика как сейчас
+        if (dto.getColors() != null && !dto.getColors().isEmpty()) {
             for (ColorRequest colorDto : dto.getColors()) {
                 ProductColor color = new ProductColor();
                 color.setName(colorDto.getName());
@@ -232,19 +234,39 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                 color.setProduct(savedProduct);
                 ProductColor savedColor = productColorRepository.save(color);
 
+                // Сохраняем изображения
                 if (colorDto.getImages() != null) {
                     for (MultipartFile imageFile : colorDto.getImages()) {
                         FileEntity fileEntity = fileUploadService.saveImage(imageFile);
-
                         ProductColorImage colorImage = new ProductColorImage();
                         colorImage.setColor(savedColor);
                         colorImage.setImage(fileEntity);
                         productColorImageRepository.save(colorImage);
                     }
                 }
+
+                // Сохраняем память для цвета
+                if (colorDto.getMemories() != null) {
+                    for (String mem : colorDto.getMemories()) {
+                        ProductMemory memoryEntity = new ProductMemory();
+                        memoryEntity.setColor(savedColor);
+                        memoryEntity.setMemory(mem);
+                        productMemoryRepository.save(memoryEntity);
+                    }
+                }
             }
         }
+        // 2. Если цветов нет, но есть общие фото
+        else if (dto.getImages() != null && !dto.getImages().isEmpty()) {
+            for (MultipartFile imageFile : dto.getImages()) {
+                FileEntity fileEntity = fileUploadService.saveImage(imageFile);
 
+                ProductImage productImage = new ProductImage();
+                productImage.setProduct(savedProduct);
+                productImage.setImage(fileEntity);
+                productImageRepository.save(productImage);
+            }
+        }
 
         // Обрабатываем статусы
         if (dto.getStatusId() != null && !dto.getStatusId().isEmpty()) {
@@ -300,7 +322,6 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                 productParametersRepository.save(parameter);
             }
         }
-
         return savedProduct;
     }
 
@@ -309,6 +330,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
+        // Обновляем базовые поля
         if (dto.getName() != null) product.setName(dto.getName());
         if (dto.getPrice() != null) product.setPrice(dto.getPrice());
         if (dto.getTitle() != null) product.setTitle(dto.getTitle());
@@ -324,7 +346,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                     .orElseThrow(() -> new RuntimeException("Brand not found")));
         }
 
-        // Обновляем статусы продукта, если указаны новые
+        // Обновляем статусы
         if (dto.getStatusId() != null && !dto.getStatusId().isEmpty()) {
             productStatusRepository.deleteByProductId(product.getId());
 
@@ -343,9 +365,11 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         product.setUpdatedAt(LocalDateTime.now());
         Product updatedProduct = productRepository.save(product);
 
+        // Обновляем цвета
         if (dto.getColors() != null && !dto.getColors().isEmpty()) {
-            // Удаляем старые цвета и их изображения
+            // Удаляем старые цвета, картинки и память
             productColorImageRepository.deleteByProductId(product.getId());
+            productMemoryRepository.deleteByColor_Product_Id(product.getId());
             productColorRepository.deleteByProductId(product.getId());
 
             // Создаем новые цвета
@@ -356,39 +380,43 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                 color.setProduct(updatedProduct);
                 ProductColor savedColor = productColorRepository.save(color);
 
-                // Добавляем изображения для цвета
-                if (colorDto.getImages() != null && !colorDto.getImages().isEmpty()) {
+                // Добавляем изображения
+                if (colorDto.getImages() != null) {
                     for (MultipartFile imageFile : colorDto.getImages()) {
                         FileEntity fileEntity = fileUploadService.saveImage(imageFile);
-
                         ProductColorImage colorImage = new ProductColorImage();
                         colorImage.setColor(savedColor);
                         colorImage.setImage(fileEntity);
                         productColorImageRepository.save(colorImage);
                     }
                 }
+
+                // Добавляем память для цвета
+                if (colorDto.getMemories() != null) {
+                    for (String mem : colorDto.getMemories()) {
+                        ProductMemory memoryEntity = new ProductMemory();
+                        memoryEntity.setColor(savedColor);
+                        memoryEntity.setMemory(mem);
+                        productMemoryRepository.save(memoryEntity);
+                    }
+                }
+            }
+        }
+        // Если нет цветов, но есть общие картинки
+        else if (dto.getImages() != null && !dto.getImages().isEmpty()) {
+            productImageRepository.deleteByProductId(product.getId());
+            for (MultipartFile imageFile : dto.getImages()) {
+                FileEntity fileEntity = fileUploadService.saveImage(imageFile);
+                ProductImage productImage = new ProductImage();
+                productImage.setProduct(updatedProduct);
+                productImage.setImage(fileEntity);
+                productImageRepository.save(productImage);
             }
         }
 
-        // УДАЛИТЬ ИЛИ ЗАКОММЕНТИРОВАТЬ: Старая логика обработки изображений
-    /*
-    if (dto.getImages() != null && !dto.getImages().isEmpty()) {
-        productImageRepository.deleteByProductId(product.getId());
-        for (MultipartFile image : dto.getImages()) {
-            FileEntity fileEntity = fileUploadService.saveImage(image);
-            ProductColorImage productColorImage = ProductColorImage.builder()
-                    .product(updatedProduct)  // ЭТО БЫЛО НЕПРАВИЛЬНО!
-                    .image(fileEntity)
-                    .build();
-            productImageRepository.save(productColorImage);
-        }
-    }
-    */
-
-        // Обрабатываем параметры продукта
+        // Обновляем параметры
         ObjectMapper mapper = new ObjectMapper();
         List<ProductParameterRequest> parameters = new ArrayList<>();
-
         if (dto.getParametersJson() != null && !dto.getParametersJson().isEmpty()) {
             parameters = mapper.readValue(
                     dto.getParametersJson(),
@@ -397,21 +425,22 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         }
 
         if (parameters != null && !parameters.isEmpty()) {
-            // Удалить старые параметры перед добавлением новых
             productParametersRepository.deleteByProductId(product.getId());
 
             for (ProductParameterRequest paramReq : parameters) {
                 ProductParameters parameter = new ProductParameters();
                 parameter.setName(paramReq.getName());
-                parameter.setProduct(updatedProduct); // Используем updatedProduct
+                parameter.setProduct(updatedProduct);
 
                 List<ProductSubParameters> subParams = new ArrayList<>();
-                for (ProductSubParameterRequest sub : paramReq.getSubParameters()) {
-                    ProductSubParameters s = new ProductSubParameters();
-                    s.setName(sub.getName());
-                    s.setValue(sub.getValue());
-                    s.setProductParameter(parameter);
-                    subParams.add(s);
+                if (paramReq.getSubParameters() != null) {
+                    for (ProductSubParameterRequest sub : paramReq.getSubParameters()) {
+                        ProductSubParameters s = new ProductSubParameters();
+                        s.setName(sub.getName());
+                        s.setValue(sub.getValue());
+                        s.setProductParameter(parameter);
+                        subParams.add(s);
+                    }
                 }
 
                 parameter.setProductSubParameters(subParams);
@@ -419,12 +448,11 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
             }
         }
 
-        // Используем метод с JOIN FETCH для получения всех связанных данных
-        Product finalProduct = productRepository.findByIdWithImagesAndStatuses(updatedProduct.getId())
+        // Возвращаем обновленный продукт с join fetch всех связанных сущностей
+        return productRepository.findByIdWithImagesAndStatuses(updatedProduct.getId())
                 .orElseThrow(() -> new RuntimeException("Product not found after update"));
-
-        return finalProduct;
     }
+
 
     @Override
     public void delete(UUID id) {

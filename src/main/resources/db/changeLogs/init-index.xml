@@ -1,0 +1,45 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="update-products-name-index" author="JekiChan08">
+        <sql splitStatements="true" stripComments="true">
+            CREATE EXTENSION IF NOT EXISTS pg_trgm;
+            CREATE INDEX IF NOT EXISTS idx_products_name_trgm ON products USING gin (name gin_trgm_ops);
+        </sql>
+    </changeSet>
+
+    <changeSet id="add-user-indexes" author="JekiChan08">
+        <sql splitStatements="true" stripComments="true">
+            CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+            CREATE INDEX IF NOT EXISTS idx_users_name_trgm ON users USING gin (name gin_trgm_ops);
+            CREATE INDEX IF NOT EXISTS idx_users_email_trgm ON users USING gin (email gin_trgm_ops);
+            CREATE INDEX IF NOT EXISTS idx_users_phone_trgm ON users USING gin (phone_number gin_trgm_ops);
+        </sql>
+    </changeSet>
+
+    <changeSet id="add-product-colors-indexes" author="JekiChan08">
+        <createIndex tableName="product_colors" indexName="idx_product_colors_product_id">
+            <column name="product_id"/>
+        </createIndex>
+
+        <createIndex tableName="product_color_images" indexName="idx_product_color_images_color_id">
+            <column name="color_id"/>
+        </createIndex>
+
+        <createIndex tableName="product_color_images" indexName="idx_product_color_images_image_id">
+            <column name="image_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="add-unique-index-order-number" author="your_name">
+        <createIndex indexName="idx_unique_order_number" tableName="orders" unique="true">
+            <column name="order_number"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
