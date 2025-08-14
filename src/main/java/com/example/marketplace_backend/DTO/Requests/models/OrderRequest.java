@@ -20,5 +20,4 @@ public class OrderRequest {
 
     private UUID statusId;
     private List<UUID> cartItemIds;
-
 }

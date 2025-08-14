@@ -58,7 +58,7 @@ public class ConverterService {
                         colorResponse.setName(productColor.getName());
                         colorResponse.setHex(productColor.getHex());
 
-                        // Обработка изображений для каждого цвета
+                        // Картинки цвета
                         if (productColor.getImages() != null && !productColor.getImages().isEmpty()) {
                             List<FileResponse> colorImages = productColor.getImages().stream()
                                     .map(productColorImage -> {
@@ -73,29 +73,60 @@ public class ConverterService {
                                     .toList();
                             colorResponse.setImages(colorImages);
                         }
+
+                        // Память для цвета
+                        if (productColor.getMemories() != null && !productColor.getMemories().isEmpty()) {
+                            List<String> memories = productColor.getMemories().stream()
+                                    .map(ProductMemory::getMemory)
+                                    .toList();
+                            colorResponse.setMemories(memories);
+                        }
+
                         return colorResponse;
                     })
                     .toList();
             response.setColors(colors);
         }
 
-        // Собираем все изображения из всех цветов в один список
-        if (product.getColors() != null && !product.getColors().isEmpty()) {
-            List<FileResponse> allImages = product.getColors().stream()
-                    .filter(color -> color.getImages() != null)
-                    .flatMap(color -> color.getImages().stream())
-                    .map(productColorImage -> {
-                        FileEntity image = productColorImage.getImage();
-                        FileResponse fileResponse = new FileResponse();
-                        fileResponse.setUniqueName(image.getUniqueName());
-                        fileResponse.setOriginalName(image.getOriginalName());
-                        fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
-                        fileResponse.setFileType(image.getFileType());
-                        return fileResponse;
-                    })
-                    .toList();
-            response.setImages(allImages);
+        // Собираем color images
+        List<FileResponse> colorImages = product.getColors() != null
+                ? product.getColors().stream()
+                .filter(color -> color.getImages() != null && !color.getImages().isEmpty())
+                .flatMap(color -> color.getImages().stream())
+                .map(productColorImage -> {
+                    FileEntity image = productColorImage.getImage();
+                    return FileResponse.builder()
+                            .uniqueName(image.getUniqueName())
+                            .originalName(image.getOriginalName())
+                            .url(baseUrl + "/uploads/" + image.getUniqueName())
+                            .fileType(image.getFileType())
+                            .build();
+                })
+                .toList()
+                : List.of();
+
+        // Собираем product images
+        List<FileResponse> productImages = product.getImages() != null
+                ? product.getImages().stream()
+                .map(productImage -> {
+                    FileEntity image = productImage.getImage();
+                    return FileResponse.builder()
+                            .uniqueName(image.getUniqueName())
+                            .originalName(image.getOriginalName())
+                            .url(baseUrl + "/uploads/" + image.getUniqueName())
+                            .fileType(image.getFileType())
+                            .build();
+                })
+                .toList()
+                : List.of();
+
+        // Логика выбора
+        if (!colorImages.isEmpty()) {
+            response.setImages(colorImages); // приоритет цветных фото
+        } else {
+            response.setImages(productImages); // fallback — общие фото
         }
+
 
         // Обработка статусов
         if (product.getProductStatuses() != null && !product.getProductStatuses().isEmpty()) {
@@ -103,6 +134,7 @@ public class ConverterService {
                     .map(productStatus -> {
                         Statuses status = productStatus.getStatus();
                         return new StatusResponse(
+                                status.getId(),
                                 status.getName(),
                                 status.getPrimaryColor(),
                                 status.getBackgroundColor()

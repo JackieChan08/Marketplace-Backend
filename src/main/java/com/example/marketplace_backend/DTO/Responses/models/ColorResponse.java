@@ -14,5 +14,7 @@ import java.util.List;
 public class ColorResponse {
     private String name;
     private String hex;
+
+    private List<String> memories;
     private List<FileResponse> images;
 }

@@ -284,7 +284,64 @@
     </changeSet>
 
     <!-- Product images table -->
-    <changeSet id="15" author="JekiChan08">
+    <changeSet id="create-product-colors-table" author="JekiChan08">
+        <createTable tableName="product_colors">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hex" type="varchar(7)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="product_colors"
+                                 baseColumnNames="product_id"
+                                 referencedTableName="products"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_product_colors_product"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+
+
+    <!-- Переименование и изменение таблицы product_images -->
+    <changeSet id="rename-and-modify-product-images-table" author="JekiChan08">
+        <!-- Создаем новую таблицу product_color_images -->
+        <createTable tableName="product_color_images">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="color_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="product_color_images"
+                                 baseColumnNames="color_id"
+                                 referencedTableName="product_colors"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_product_color_images_color"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="product_color_images"
+                                 baseColumnNames="image_id"
+                                 referencedTableName="files"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_product_color_images_files"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="create-product-images-table" author="JekiChan08">
+        <!-- Создаем новую таблицу product_images -->
         <createTable tableName="product_images">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
@@ -296,16 +353,22 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <!-- Связь с products -->
         <addForeignKeyConstraint baseTableName="product_images"
                                  baseColumnNames="product_id"
                                  referencedTableName="products"
                                  referencedColumnNames="id"
-                                 constraintName="fk_product_images_product"/>
+                                 constraintName="fk_product_images_product"
+                                 onDelete="CASCADE"/>
+
+        <!-- Связь с files (FileEntity) -->
         <addForeignKeyConstraint baseTableName="product_images"
                                  baseColumnNames="image_id"
                                  referencedTableName="files"
                                  referencedColumnNames="id"
-                                 constraintName="fk_product_images_files"/>
+                                 constraintName="fk_product_images_files"
+                                 onDelete="CASCADE"/>
     </changeSet>
 
     <!-- Carts table -->
@@ -512,25 +575,139 @@
                                  constraintName="fk_refresh_tokens_user"/>
     </changeSet>
 
-    <changeSet id="update-products-name-index" author="JekiChan08">
-        <sql splitStatements="true" stripComments="true">
-            CREATE EXTENSION IF NOT EXISTS pg_trgm;
-            CREATE INDEX IF NOT EXISTS idx_products_name_trgm ON products USING gin (name gin_trgm_ops);
-        </sql>
+    <changeSet id="create-product-memories" author="JekiChan08">
+        <createTable tableName="product_memories">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="color_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="memory" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="product_memories"
+                                 baseColumnNames="color_id"
+                                 referencedTableName="product_colors"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_product_memories_color"
+                                 onDelete="CASCADE"/>
     </changeSet>
 
-    <changeSet id="add-user-indexes" author="JekiChan08">
-    <sql splitStatements="true" stripComments="true">
-        CREATE EXTENSION IF NOT EXISTS pg_trgm;
+    <changeSet id="create-vip-products-table" author="aiteginbaratov">
 
-        CREATE INDEX IF NOT EXISTS idx_users_name_trgm ON users USING gin (name gin_trgm_ops);
-        CREATE INDEX IF NOT EXISTS idx_users_email_trgm ON users USING gin (email gin_trgm_ops);
-        CREATE INDEX IF NOT EXISTS idx_users_phone_trgm ON users USING gin (phone_number gin_trgm_ops);
-    </sql>
+        <createTable tableName="vip_products">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="image_id" type="UUID">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <!-- Внешний ключ добавляется отдельно -->
+        <addForeignKeyConstraint
+                baseTableName="vip_products"
+                baseColumnNames="image_id"
+                constraintName="fk_vip_products_image"
+                referencedTableName="files"
+                referencedColumnNames="id"
+                deferrable="false"
+                initiallyDeferred="false"
+                onDelete="SET NULL"/>
     </changeSet>
 
-    <changeSet id="Admin" author="JekiChan08">
-        <loadData tableName="users" file="data/users.csv" relativeToChangelogFile="true" separator=";"/>
+    <!-- Statuses table -->
+    <changeSet id="statuses" author="aiteginbaratov">
+        <createTable tableName="statuses">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="primary_color" type="VARCHAR(255)"/>
+            <column name="background_color" type="VARCHAR(255)"/>
+            <column name="order_flag" type="BOOLEAN" defaultValue="false"/>
+            <column name="product_flag" type="BOOLEAN" defaultValue="false"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Добавляем колонку status_id в таблицу orders для OneToOne связи -->
+    <changeSet id="add-status-id-to-orders" author="developer">
+        <addColumn tableName="orders">
+            <column name="status_id" type="UUID"/>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseTableName="orders"
+                baseColumnNames="status_id"
+                constraintName="fk_orders_status"
+                referencedTableName="statuses"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+    </changeSet>
+
+    <!--Добавление поля icon для Category-->
+    <changeSet id="add-icon-columns-to-category" author="aiteginbaratov">
+        <createTable tableName="category_icons">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="category_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="icon_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="category_icons"
+                                 baseColumnNames="category_id"
+                                 referencedTableName="categories"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_category_icon_category"/>
+        <addForeignKeyConstraint baseTableName="category_icons"
+                                 baseColumnNames="icon_id"
+                                 referencedTableName="files"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_category_icon_files"/>
+    </changeSet>
+
+    <changeSet id="create-product-statuses-table" author="developer">
+        <createTable tableName="product_statuses">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="product_statuses"
+                baseColumnNames="product_id"
+                constraintName="fk_product_statuses_product"
+                referencedTableName="products"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="product_statuses"
+                baseColumnNames="status_id"
+                constraintName="fk_product_statuses_status"
+                referencedTableName="statuses"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
     </changeSet>
 
     <changeSet id="create-order-number-sequence" author="aiteginbaratov">
@@ -542,12 +719,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-    </changeSet>
-
-    <changeSet id="add-unique-index-order-number" author="your_name">
-        <createIndex indexName="idx_unique_order_number" tableName="orders" unique="true">
-            <column name="order_number"/>
-        </createIndex>
     </changeSet>
 
 </databaseChangeLog>

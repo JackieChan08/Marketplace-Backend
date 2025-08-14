@@ -15,5 +15,7 @@ import java.util.List;
 public class ColorRequest {
     private String name;
     private String hex;
+
+    private List<String> memories;
     private List<MultipartFile> images;
 }

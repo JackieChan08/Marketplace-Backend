@@ -40,4 +40,16 @@
     <changeSet id="psp" author="JekiChan08">
         <loadData tableName="product_sub_parameters" file="data/product_sub_parameters.csv" relativeToChangelogFile="true" separator=";"/>
     </changeSet>
+    <changeSet id="pc" author="aiteginbaratov">
+        <loadData tableName="product_colors" file="data/product_colors.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+    <changeSet id="pci" author="aiteginbaratov">
+        <loadData tableName="product_color_images" file="data/product_color_image.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+    <changeSet id="Admin" author="JekiChan08">
+        <loadData tableName="users" file="data/users.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
+    <changeSet id="vps" author="aiteginbaratov">
+        <loadData tableName="vip_products" file="data/vip_products.csv" relativeToChangelogFile="true" separator=";"/>
+    </changeSet>
 </databaseChangeLog>
