@@ -1,11 +1,15 @@
 package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.DTO.Requests.models.*;
-import com.example.marketplace_backend.DTO.Responses.models.ProductResponse;
+import com.example.marketplace_backend.DTO.Responses.models.*;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductColorImage;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductStatuses;
+import com.example.marketplace_backend.Model.Phone.PhoneConnection;
+import com.example.marketplace_backend.Model.Phone.PhoneConnectionAndProductColor;
+import com.example.marketplace_backend.Model.Phone.ProductMemory;
+import com.example.marketplace_backend.Model.Phone.ProductMemoryAndProductColor;
 import com.example.marketplace_backend.Repositories.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,6 +44,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     private final ProductColorRepository productColorRepository;
     private final ProductColorImageRepository productColorImageRepository;
     private final ProductMemoryRepository productMemoryRepository;
+    private final PhoneConnectionRepository phoneConnectionRepository;
+    private final ProductMemoryAndProductColorRepository productMemoryAndProductColorRepository;
+    private final PhoneConnectionAndProductColorRepository phoneConnectionAndProductColorRepository;
 
     @Value("${app.base-url}")
     private String baseUrl;
@@ -56,7 +63,10 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                               ProductParametersRepository productParametersRepository,
                               ProductColorRepository productColorRepository,
                               ProductMemoryRepository productMemoryRepository,
-                              ProductImageRepository productImageRepository) {
+                              PhoneConnectionRepository phoneConnectionRepository,
+                              ProductImageRepository productImageRepository,
+                              ProductMemoryAndProductColorRepository productMemoryAndProductColorRepository,
+                              PhoneConnectionAndProductColorRepository phoneConnectionAndProductColorRepository) {
         super(productRepository);
         this.productRepository = productRepository;
         this.fileUploadService = fileUploadService;
@@ -70,6 +80,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         this.productColorImageRepository = productColorImageRepository;
         this.productImageRepository = productImageRepository;
         this.productMemoryRepository = productMemoryRepository;
+        this.productMemoryAndProductColorRepository = productMemoryAndProductColorRepository;
+        this.phoneConnectionAndProductColorRepository = phoneConnectionAndProductColorRepository;
+        this.phoneConnectionRepository = phoneConnectionRepository;
     }
 
     public Page<Product> findAllActiveByBrand(UUID brandId, Pageable pageable) {
@@ -211,6 +224,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         productRepository.deleteAll(productsToDelete);
     }
 
+    @Transactional
     public Product createProduct(ProductRequest dto) throws Exception {
         Product product = new Product();
         product.setName(dto.getName());
@@ -234,7 +248,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                 color.setProduct(savedProduct);
                 ProductColor savedColor = productColorRepository.save(color);
 
-                // Сохраняем изображения
+                // Сохраняем изображения для цвета
                 if (colorDto.getImages() != null) {
                     for (MultipartFile imageFile : colorDto.getImages()) {
                         FileEntity fileEntity = fileUploadService.saveImage(imageFile);
@@ -245,13 +259,31 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                     }
                 }
 
-                // Сохраняем память для цвета
-                if (colorDto.getMemories() != null) {
-                    for (String mem : colorDto.getMemories()) {
-                        ProductMemory memoryEntity = new ProductMemory();
-                        memoryEntity.setColor(savedColor);
-                        memoryEntity.setMemory(mem);
-                        productMemoryRepository.save(memoryEntity);
+                // Обрабатываем память для каждого цвета
+                if (colorDto.getMemoryIds() != null && !colorDto.getMemoryIds().isEmpty()) {
+                    for (UUID memoryId : colorDto.getMemoryIds()) {
+                        ProductMemory memory = productMemoryRepository.findById(memoryId)
+                                .orElseThrow(() -> new RuntimeException("Memory not found with ID: " + memoryId));
+
+                        ProductMemoryAndProductColor memoryColor = ProductMemoryAndProductColor.builder()
+                                .productColor(savedColor)
+                                .productMemory(memory)
+                                .build();
+                        productMemoryAndProductColorRepository.save(memoryColor);
+                    }
+                }
+
+                // Обрабатываем типы подключения для каждого цвета
+                if (colorDto.getConnectionIds() != null && !colorDto.getConnectionIds().isEmpty()) {
+                    for (UUID connectionId : colorDto.getConnectionIds()) {
+                        PhoneConnection connection = phoneConnectionRepository.findById(connectionId)
+                                .orElseThrow(() -> new RuntimeException("Connection not found with ID: " + connectionId));
+
+                        PhoneConnectionAndProductColor connectionColor = PhoneConnectionAndProductColor.builder()
+                                .productColor(savedColor)
+                                .phoneConnection(connection)
+                                .build();
+                        phoneConnectionAndProductColorRepository.save(connectionColor);
                     }
                 }
             }
@@ -292,6 +324,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
             productStatusRepository.save(productStatus);
         }
 
+        // Обрабатываем параметры продукта
         ObjectMapper mapper = new ObjectMapper();
         List<ProductParameterRequest> parameters = new ArrayList<>();
 
@@ -302,12 +335,11 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
             );
         }
 
-
-        if (parameters != null) {
+        if (parameters != null && !parameters.isEmpty()) {
             for (ProductParameterRequest paramReq : parameters) {
                 ProductParameters parameter = new ProductParameters();
                 parameter.setName(paramReq.getName());
-                parameter.setProduct(product);
+                parameter.setProduct(savedProduct); // исправлено: было product, должно быть savedProduct
 
                 List<ProductSubParameters> subParams = new ArrayList<>();
                 for (ProductSubParameterRequest sub : paramReq.getSubParameters()) {
@@ -322,6 +354,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                 productParametersRepository.save(parameter);
             }
         }
+
         return savedProduct;
     }
 
@@ -369,7 +402,6 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         if (dto.getColors() != null && !dto.getColors().isEmpty()) {
             // Удаляем старые цвета, картинки и память
             productColorImageRepository.deleteByProductId(product.getId());
-            productMemoryRepository.deleteByColor_Product_Id(product.getId());
             productColorRepository.deleteByProductId(product.getId());
 
             // Создаем новые цвета
@@ -388,16 +420,6 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                         colorImage.setColor(savedColor);
                         colorImage.setImage(fileEntity);
                         productColorImageRepository.save(colorImage);
-                    }
-                }
-
-                // Добавляем память для цвета
-                if (colorDto.getMemories() != null) {
-                    for (String mem : colorDto.getMemories()) {
-                        ProductMemory memoryEntity = new ProductMemory();
-                        memoryEntity.setColor(savedColor);
-                        memoryEntity.setMemory(mem);
-                        productMemoryRepository.save(memoryEntity);
                     }
                 }
             }
@@ -505,5 +527,4 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
 
         return productPage.map(converter::convertToProductResponse);
     }
-
 }

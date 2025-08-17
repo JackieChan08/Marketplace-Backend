@@ -12,13 +12,10 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ColorResponse {
+public class ColorResponseForPhone {
     private UUID id;
     private String name;
     private String hex;
-
-    private List<MemoryResponse> memories;
-    private List<ConnectionResponse> simTypes;
-    private List<FileResponse> images;
+    private List<String> memories;
+    private List<String> connections;
 }
-
