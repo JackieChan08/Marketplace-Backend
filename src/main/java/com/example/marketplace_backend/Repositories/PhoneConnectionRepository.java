@@ -1,12 +1,11 @@
 package com.example.marketplace_backend.Repositories;
 
-import com.example.marketplace_backend.Model.Phone.ProductMemory;
+import com.example.marketplace_backend.Model.Phone.PhoneConnection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface ProductMemoryRepository extends JpaRepository<ProductMemory, UUID> {
+public interface PhoneConnectionRepository extends JpaRepository<PhoneConnection, UUID> {
 }

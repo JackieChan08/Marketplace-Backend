@@ -1,5 +1,6 @@
-package com.example.marketplace_backend.Model;
+package com.example.marketplace_backend.Model.Phone;
 
+import com.example.marketplace_backend.Model.ProductColor;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,10 +17,6 @@ public class ProductMemory {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "color_id", nullable = false)
-    private ProductColor color;
-
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String memory;
 }

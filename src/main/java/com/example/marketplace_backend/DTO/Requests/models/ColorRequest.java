@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -18,4 +19,6 @@ public class ColorRequest {
 
     private List<String> memories;
     private List<MultipartFile> images;
+    private List<UUID> memoryIds;
+    private List<UUID> connectionIds;
 }

@@ -6,19 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ColorResponse {
-    private UUID id;
-    private String name;
-    private String hex;
-
-    private List<MemoryResponse> memories;
-    private List<ConnectionResponse> simTypes;
-    private List<FileResponse> images;
+public class FilteredColorResponseForPhone {
+    private List<ColorResponse> colors;
 }
-

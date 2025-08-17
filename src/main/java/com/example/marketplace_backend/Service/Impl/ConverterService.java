@@ -3,11 +3,19 @@ package com.example.marketplace_backend.Service.Impl;
 import com.example.marketplace_backend.DTO.Responses.models.*;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.*;
+import com.example.marketplace_backend.Model.Phone.PhoneConnection;
+import com.example.marketplace_backend.Model.Phone.PhoneConnectionAndProductColor;
+import com.example.marketplace_backend.Model.Phone.ProductMemory;
+import com.example.marketplace_backend.Model.Phone.ProductMemoryAndProductColor;
+import com.example.marketplace_backend.Repositories.PhoneConnectionAndProductColorRepository;
+import com.example.marketplace_backend.Repositories.ProductColorRepository;
+import com.example.marketplace_backend.Repositories.ProductMemoryAndProductColorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +23,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ConverterService {
     private final ProductParametersServiceImpl productParametersService;
+    private final ProductMemoryAndProductColorRepository productMemoryAndProductColorRepository;
+    private final PhoneConnectionAndProductColorRepository phoneConnectionAndProductColorRepository;
+    private final ProductColorRepository productColorRepository;
 
     @Value("${app.base-url}")
     private String baseUrl;
@@ -51,39 +62,10 @@ public class ConverterService {
             response.setBrandName(product.getBrand().getName());
         }
 
+        // Обработка цветов с памятью и типами подключения
         if (product.getColors() != null && !product.getColors().isEmpty()) {
             List<ColorResponse> colors = product.getColors().stream()
-                    .map(productColor -> {
-                        ColorResponse colorResponse = new ColorResponse();
-                        colorResponse.setName(productColor.getName());
-                        colorResponse.setHex(productColor.getHex());
-
-                        // Картинки цвета
-                        if (productColor.getImages() != null && !productColor.getImages().isEmpty()) {
-                            List<FileResponse> colorImages = productColor.getImages().stream()
-                                    .map(productColorImage -> {
-                                        FileEntity image = productColorImage.getImage();
-                                        FileResponse fileResponse = new FileResponse();
-                                        fileResponse.setUniqueName(image.getUniqueName());
-                                        fileResponse.setOriginalName(image.getOriginalName());
-                                        fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
-                                        fileResponse.setFileType(image.getFileType());
-                                        return fileResponse;
-                                    })
-                                    .toList();
-                            colorResponse.setImages(colorImages);
-                        }
-
-                        // Память для цвета
-                        if (productColor.getMemories() != null && !productColor.getMemories().isEmpty()) {
-                            List<String> memories = productColor.getMemories().stream()
-                                    .map(ProductMemory::getMemory)
-                                    .toList();
-                            colorResponse.setMemories(memories);
-                        }
-
-                        return colorResponse;
-                    })
+                    .map(this::convertToColorResponse)
                     .toList();
             response.setColors(colors);
         }
@@ -127,7 +109,6 @@ public class ConverterService {
             response.setImages(productImages); // fallback — общие фото
         }
 
-
         // Обработка статусов
         if (product.getProductStatuses() != null && !product.getProductStatuses().isEmpty()) {
             List<StatusResponse> statuses = product.getProductStatuses().stream()
@@ -168,6 +149,65 @@ public class ConverterService {
                 .toList();
 
         response.setParameters(parameterResponses);
+
+        return response;
+    }
+
+    public ColorResponse convertToColorResponse(ProductColor productColor) {
+        ColorResponse response = new ColorResponse();
+        response.setId(productColor.getId());
+        response.setName(productColor.getName());
+        response.setHex(productColor.getHex());
+
+        // Обработка памяти для цвета
+        List<MemoryResponse> memories = new ArrayList<>();
+        if (productColor.getId() != null) {
+            List<ProductMemoryAndProductColor> memoryConnections =
+                    productMemoryAndProductColorRepository.findByProductColorId(productColor.getId());
+
+            memories = memoryConnections.stream()
+                    .map(connection -> new MemoryResponse(
+                            connection.getProductMemory().getId(),
+                            connection.getProductMemory().getMemory()
+                    ))
+                    .distinct() // можно убрать если equals/hashCode не переопределены
+                    .toList();
+        }
+        response.setMemories(memories);
+
+// Обработка типов подключения для цвета
+        List<ConnectionResponse> simTypes = new ArrayList<>();
+        if (productColor.getId() != null) {
+            List<PhoneConnectionAndProductColor> connectionConnections =
+                    phoneConnectionAndProductColorRepository.findByProductColorId(productColor.getId());
+
+            simTypes = connectionConnections.stream()
+                    .map(connection -> new ConnectionResponse(
+                            connection.getPhoneConnection().getId(),
+                            connection.getPhoneConnection().getSimType()
+                    ))
+                    .distinct() // тоже самое, осторожнее
+                    .toList();
+        }
+        response.setSimTypes(simTypes);
+
+
+        // Обработка изображений цвета
+        List<FileResponse> images = new ArrayList<>();
+        if (productColor.getImages() != null && !productColor.getImages().isEmpty()) {
+            images = productColor.getImages().stream()
+                    .map(colorImage -> {
+                        FileEntity image = colorImage.getImage();
+                        FileResponse fileResponse = new FileResponse();
+                        fileResponse.setOriginalName(image.getOriginalName());
+                        fileResponse.setUniqueName(image.getUniqueName());
+                        fileResponse.setFileType(image.getFileType());
+                        fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
+                        return fileResponse;
+                    })
+                    .toList();
+        }
+        response.setImages(images);
 
         return response;
     }
@@ -333,7 +373,7 @@ public class ConverterService {
                 .paymentMethod(order.getPaymentMethod())
                 .userId(order.getUser().getId())
                 .username(order.getUser().getName())
-                .status(convertStatus(order.getStatus())) // Изменено на единственный статус
+                .status(convertStatus(order.getStatus()))
                 .build();
     }
 
@@ -412,7 +452,7 @@ public class ConverterService {
         List<FavoriteItemResponse> items = favorite.getFavoriteItems().stream().map(item -> {
             BigDecimal totalPrice = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
             return FavoriteItemResponse.builder()
-                    .productResponse(convertToProductResponse(item.getProduct())) // добавлено
+                    .productResponse(convertToProductResponse(item.getProduct()))
                     .quantity(item.getQuantity())
                     .pricePerItem(item.getPrice())
                     .totalPrice(totalPrice)
@@ -541,10 +581,12 @@ public class ConverterService {
 
     public ProductParameterResponse convertToProductParameterResponse(ProductParameters parameter) {
         return ProductParameterResponse.builder()
+                .id(parameter.getId())
                 .name(parameter.getName())
                 .subParameters(
                         parameter.getProductSubParameters().stream()
                                 .map(sub -> ProductSubParameterResponse.builder()
+                                        .id(sub.getId())
                                         .name(sub.getName())
                                         .value(sub.getValue())
                                         .build()
@@ -554,5 +596,17 @@ public class ConverterService {
                 .build();
     }
 
+    public PhoneConnectionResponse convertToPhoneConnectionResponse(PhoneConnection phoneConnection) {
+        return PhoneConnectionResponse.builder()
+                .id(phoneConnection.getId())
+                .simType(phoneConnection.getSimType())
+                .build();
+    }
 
+    public ProductMemoryResponse convertToProductMemoryResponse(ProductMemory productMemory) {
+        return ProductMemoryResponse.builder()
+                .id(productMemory.getId())
+                .memory(productMemory.getMemory())
+                .build();
+    }
 }
