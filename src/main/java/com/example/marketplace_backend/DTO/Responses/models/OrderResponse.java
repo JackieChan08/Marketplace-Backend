@@ -1,6 +1,6 @@
 package com.example.marketplace_backend.DTO.Responses.models;
 
-import com.example.marketplace_backend.Model.Enums.PaymentMethod;
+import com.example.marketplace_backend.enums.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -3,7 +3,7 @@ package com.example.marketplace_backend.controller;
 import com.example.marketplace_backend.DTO.Requests.models.OrderRequest;
 import com.example.marketplace_backend.DTO.Responses.models.OrderResponse;
 import com.example.marketplace_backend.DTO.Responses.models.OrderWholesaleResponse;
-import com.example.marketplace_backend.Model.Enums.PaymentMethod;
+import com.example.marketplace_backend.enums.PaymentMethod;
 import com.example.marketplace_backend.Model.Order;
 import com.example.marketplace_backend.Model.User;
 import com.example.marketplace_backend.Service.Impl.CartService;
@@ -20,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;

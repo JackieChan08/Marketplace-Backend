@@ -734,6 +734,9 @@
             <column name="memory_id" type="uuid">
                 <constraints nullable="false"/>
             </column>
+            <column name="price" type="bigint">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <!-- Добавление внешних ключей -->

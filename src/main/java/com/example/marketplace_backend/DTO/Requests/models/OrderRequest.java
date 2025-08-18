@@ -1,9 +1,7 @@
 package com.example.marketplace_backend.DTO.Requests.models;
 
 
-import com.example.marketplace_backend.Model.Enums.PaymentMethod;
-import com.example.marketplace_backend.Model.Statuses;
-import jakarta.persistence.Column;
+import com.example.marketplace_backend.enums.PaymentMethod;
 import lombok.Data;
 
 import java.util.List;

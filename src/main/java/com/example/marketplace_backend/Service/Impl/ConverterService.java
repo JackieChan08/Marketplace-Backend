@@ -168,7 +168,8 @@ public class ConverterService {
             memories = memoryConnections.stream()
                     .map(connection -> new MemoryResponse(
                             connection.getProductMemory().getId(),
-                            connection.getProductMemory().getMemory()
+                            connection.getProductMemory().getMemory(),
+                            connection.getPrice()
                     ))
                     .distinct() // можно убрать если equals/hashCode не переопределены
                     .toList();

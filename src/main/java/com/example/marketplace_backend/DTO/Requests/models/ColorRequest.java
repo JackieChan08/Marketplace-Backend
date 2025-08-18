@@ -17,8 +17,7 @@ public class ColorRequest {
     private String name;
     private String hex;
 
-    private List<String> memories;
     private List<MultipartFile> images;
-    private List<UUID> memoryIds;
     private List<UUID> connectionIds;
+    private List<MemoryWithPriceRequest> memories;
 }

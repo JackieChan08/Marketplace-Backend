@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.Model.Enums;
+package com.example.marketplace_backend.enums;
 
 public enum PaymentMethod {
     CASH, // Наличными

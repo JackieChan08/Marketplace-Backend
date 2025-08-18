@@ -260,18 +260,21 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                 }
 
                 // Обрабатываем память для каждого цвета
-                if (colorDto.getMemoryIds() != null && !colorDto.getMemoryIds().isEmpty()) {
-                    for (UUID memoryId : colorDto.getMemoryIds()) {
-                        ProductMemory memory = productMemoryRepository.findById(memoryId)
-                                .orElseThrow(() -> new RuntimeException("Memory not found with ID: " + memoryId));
+                if (colorDto.getMemories() != null && !colorDto.getMemories().isEmpty()) {
+                    for (MemoryWithPriceRequest memoryReq : colorDto.getMemories()) {
+                        ProductMemory memory = productMemoryRepository.findById(memoryReq.getMemoryId())
+                                .orElseThrow(() -> new RuntimeException("Memory not found with ID: " + memoryReq.getMemoryId()));
 
                         ProductMemoryAndProductColor memoryColor = ProductMemoryAndProductColor.builder()
                                 .productColor(savedColor)
                                 .productMemory(memory)
+                                .price(memoryReq.getPrice())
                                 .build();
+
                         productMemoryAndProductColorRepository.save(memoryColor);
                     }
                 }
+
 
                 // Обрабатываем типы подключения для каждого цвета
                 if (colorDto.getConnectionIds() != null && !colorDto.getConnectionIds().isEmpty()) {
