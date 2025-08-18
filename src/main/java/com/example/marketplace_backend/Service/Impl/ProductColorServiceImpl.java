@@ -58,7 +58,8 @@ public class ProductColorServiceImpl {
                         .memories(c.getMemoryLinks().stream()
                                 .map(link -> new MemoryResponse(
                                         link.getProductMemory().getId(),
-                                        link.getProductMemory().getMemory()
+                                        link.getProductMemory().getMemory(),
+                                        link.getPrice()
                                 ))
                                 .toList())
                         .simTypes(c.getConnectionLinks().stream()

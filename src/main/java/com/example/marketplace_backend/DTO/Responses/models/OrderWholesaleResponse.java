@@ -1,14 +1,12 @@
 package com.example.marketplace_backend.DTO.Responses.models;
 
-import com.example.marketplace_backend.Model.Enums.PaymentMethod;
+import com.example.marketplace_backend.enums.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Data

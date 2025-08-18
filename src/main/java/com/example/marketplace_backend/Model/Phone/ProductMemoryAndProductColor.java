@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -27,4 +28,8 @@ public class ProductMemoryAndProductColor {
     @ManyToOne
     @JoinColumn(name = "memory_id", nullable = false)
     private ProductMemory productMemory;
+
+    @Column(nullable = false)
+    private BigDecimal price;
+
 }

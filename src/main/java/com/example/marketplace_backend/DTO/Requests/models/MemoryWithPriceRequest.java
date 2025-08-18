@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.DTO.Responses.models;
+package com.example.marketplace_backend.DTO.Requests.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,8 +12,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemoryResponse {
-    private UUID id;
-    private String memory;
+public class MemoryWithPriceRequest {
+    private UUID memoryId;
     private BigDecimal price;
 }
