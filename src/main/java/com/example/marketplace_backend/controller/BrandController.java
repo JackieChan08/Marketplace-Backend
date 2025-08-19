@@ -39,7 +39,8 @@ public class BrandController {
             @Parameter(description = "ID бренда", required = true, example = "123")
             @PathVariable UUID id
     ) {
-        Brand brand = brandService.getById(id);
+        Brand brand = brandService.findById(id)
+                .orElseThrow(() -> new RuntimeException("Brand not found"));;
         if (brand == null || brand.getDeletedAt() != null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -62,9 +63,7 @@ public class BrandController {
     @GetMapping("all")
     public ResponseEntity<?> getAll() {
         try {
-            List<BrandResponse> responses = brandService.getAll().stream()
-                    .map(converter::convertToBrandResponse)
-                    .toList();
+            List<BrandResponse> responses = brandService.getAllBrands();
             return ResponseEntity.ok(responses);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

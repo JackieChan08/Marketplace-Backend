@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.DTO.Requests.models.BrandRequest;
+import com.example.marketplace_backend.DTO.Responses.models.BrandResponse;
 import com.example.marketplace_backend.Model.Brand;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.Intermediate_objects.BrandImage;
@@ -23,17 +24,18 @@ import java.util.*;
 
 @Slf4j
 @Service
-public class BrandServiceImpl extends BaseServiceImpl<Brand, UUID>{
+public class BrandServiceImpl{
     private final BrandRepository brandRepository;
     private final BrandImageRepository brandImageRepository;
     private final FileUploadService fileUploadService;
+    private final ConverterService converterService;
 
     @Autowired
-    public BrandServiceImpl(BrandRepository brandRepository, BrandImageRepository brandImageRepository, FileUploadService fileUploadService) {
-        super(brandRepository);
+    public BrandServiceImpl(BrandRepository brandRepository, BrandImageRepository brandImageRepository, FileUploadService fileUploadService, ConverterService converterService) {
         this.brandRepository = brandRepository;
         this.brandImageRepository = brandImageRepository;
         this.fileUploadService = fileUploadService;
+        this.converterService = converterService;
     }
 
     @Transactional(readOnly = true)
@@ -68,7 +70,6 @@ public class BrandServiceImpl extends BaseServiceImpl<Brand, UUID>{
         return brandRepository.findById(brandId);
     }
 
-    @Override
     public Brand save(Brand brand) {
         if (brand.getId() == null) {
             brand.setCreatedAt(LocalDateTime.now());
@@ -100,7 +101,6 @@ public class BrandServiceImpl extends BaseServiceImpl<Brand, UUID>{
         brandRepository.deleteAll(brandsToDelete);
     }
 
-    @Override
     public void delete(UUID id) {
         try {
             brandRepository.deleteById(id);
@@ -163,8 +163,10 @@ public class BrandServiceImpl extends BaseServiceImpl<Brand, UUID>{
     }
 
 
+    @Transactional
     public Brand editBrand(UUID id, BrandRequest request) throws IOException {
-        Brand brand = getById(id);
+        Brand brand = findById(id)
+                .orElseThrow(() -> new RuntimeException("Brand not found"));
 
         if (request.getName() != null && !request.getName().isEmpty()) {
             brand.setName(request.getName());
@@ -196,7 +198,8 @@ public class BrandServiceImpl extends BaseServiceImpl<Brand, UUID>{
 
     @Transactional
     public void deleteBrandImage(UUID brandId) {
-        Brand brand = getById(brandId);
+        Brand brand = findById(brandId)
+                .orElseThrow(() -> new RuntimeException("Brand not found"));;
 
         if (brand.getBrandImages() != null && !brand.getBrandImages().isEmpty()) {
             // Удаляем изображение из файловой системы
@@ -206,6 +209,12 @@ public class BrandServiceImpl extends BaseServiceImpl<Brand, UUID>{
             brand.setBrandImages(new ArrayList<>());
             save(brand);
         }
+    }
+
+    public List<BrandResponse> getAllBrands() {
+        return brandRepository.findAllActive().stream()
+                .map(converterService::convertToBrandResponse)
+                .toList();
     }
 
 

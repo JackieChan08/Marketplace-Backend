@@ -35,6 +35,9 @@ public class Product {
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal price;
 
+    @Column(name = "price_description")
+    private String priceDescription;
+
     @Column(name = "discounted_price", precision = 15, scale = 2)
     private BigDecimal discountedPrice;
 

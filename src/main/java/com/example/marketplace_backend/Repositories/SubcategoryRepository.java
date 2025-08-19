@@ -47,5 +47,4 @@ public interface SubcategoryRepository extends JpaRepository<Subcategory, UUID> 
     Page<Subcategory> findByCategoryAndDeletedAtIsNull(Category category, Pageable pageable);
 
     Page<Subcategory> findByNameContainingIgnoreCaseAndDeletedAtIsNull(String name, Pageable pageable);
-
 }

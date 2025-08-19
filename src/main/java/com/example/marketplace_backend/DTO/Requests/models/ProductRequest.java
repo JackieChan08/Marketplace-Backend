@@ -19,6 +19,7 @@ import java.util.UUID;
 public class ProductRequest {
     private String name;
     private BigDecimal price;
+    private String priceDescription;
     private UUID subCategoryId;
     private UUID brandId;
     private boolean availability;

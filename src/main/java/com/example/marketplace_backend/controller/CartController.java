@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/cart")
@@ -65,6 +66,27 @@ public class CartController {
        Page<CartItemResponse> responses = cartItems.map(converterService::convertToCartItemResponse);
        return ResponseEntity.ok(responses);
     }
+
+    @GetMapping("/product-ids")
+    public ResponseEntity<List<UUID>> getProductIds() {
+        Cart cart = cartService.getCart();
+
+        List<UUID> productIds = cart.getCartItems().stream()
+                .map(item -> item.getProduct().getId())
+                .toList();
+
+        return ResponseEntity.ok(productIds);
+    }
+
+    @PostMapping("/update-quantity")
+    public ResponseEntity<CartResponse> updateItemQuantity(
+            @RequestParam UUID productId,
+            @RequestParam int quantity
+    ) {
+        Cart updatedCart = cartService.updateItemQuantity(productId, quantity);
+        return ResponseEntity.ok(converterService.convertToCartResponse(updatedCart));
+    }
+
 
 //    @GetMapping("/items")
 //    public ResponseEntity<Page<FavoriteItemResponse>> getPaginatedFavoriteItems(

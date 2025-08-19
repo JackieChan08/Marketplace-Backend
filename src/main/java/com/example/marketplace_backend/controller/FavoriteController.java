@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/favorite")
@@ -66,4 +67,16 @@ public class FavoriteController {
         Page<FavoriteItemResponse> responses = favoriteItems.map(converterService::convertToFavoriteItemResponse);
         return ResponseEntity.ok(responses);
     }
+
+    @GetMapping("/product-ids")
+    public ResponseEntity<List<UUID>> getProductIds() {
+        Favorite favorite = favoriteService.getFavorite();
+
+        List<UUID> productIds = favorite.getFavoriteItems().stream()
+                .map(item -> item.getProduct().getId())
+                .toList();
+
+        return ResponseEntity.ok(productIds);
+    }
 }
+
