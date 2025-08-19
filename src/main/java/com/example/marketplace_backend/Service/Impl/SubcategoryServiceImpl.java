@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
+public class SubcategoryServiceImpl {
     private final SubcategoryRepository subcategoryRepository;
     private final SubcategoryImageRepository subcategoryImageRepository;
     private final FileUploadService fileUploadService;
@@ -34,7 +34,6 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
                                   FileUploadService fileUploadService,
                                   CategoryServiceImpl categoryService,
                                   ConverterService converterService) {
-        super(subcategoryRepository);
         this.subcategoryRepository = subcategoryRepository;
         this.subcategoryImageRepository = subcategoryImageRepository;
         this.fileUploadService = fileUploadService;
@@ -82,7 +81,6 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
         return subcategoryRepository.findById(subcategoryId);
     }
 
-    @Override
     public Subcategory save(Subcategory subcategory) {
         if (subcategory.getId() == null) {
             subcategory.setCreatedAt(LocalDateTime.now());
@@ -115,7 +113,6 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
         subcategoryRepository.deleteAll(subcategoriesToDelete);
     }
 
-    @Override
     public void delete(UUID id) {
         try {
             List<SubcategoryImage> subcategoryImages = subcategoryImageRepository.findBySubcategoryId(id);
@@ -184,19 +181,22 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
 
 
     public ResponseEntity<Subcategory> updateSubcategory(UUID id, SubcategoryRequest request) throws IOException {
-        Subcategory subcategory = getById(id);
+        Subcategory subcategory = subcategoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Subcategory not found"));
 
         if (request.getName() != null && !request.getName().isEmpty()) {
             subcategory.setName(request.getName());
         }
 
         if (request.getCategoryId() != null) {
-            Optional<Category> categoryOpt = categoryService.findById(request.getCategoryId());
-            categoryOpt.ifPresent(subcategory::setCategory);
+            Category category = categoryService.findById(request.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found"));
+            subcategory.setCategory(category);
         }
 
         subcategory.setUpdatedAt(LocalDateTime.now());
         save(subcategory);
+
         return ResponseEntity.ok(subcategory);
     }
 
@@ -234,6 +234,12 @@ public class SubcategoryServiceImpl extends BaseServiceImpl<Subcategory, UUID> {
 
     public List<Subcategory> findAllDeActiveList(){
         return subcategoryRepository.findAllDeActiveList();
+    }
+
+    public List<SubcategoryResponse> getAllSubcategories() {
+        return subcategoryRepository.findAllActive().stream()
+                .map(converterService::convertToSubcategoryResponse)
+                .toList();
     }
 
 }

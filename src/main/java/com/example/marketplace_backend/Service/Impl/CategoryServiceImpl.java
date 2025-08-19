@@ -27,7 +27,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
+public class CategoryServiceImpl {
     private final CategoryRepository categoryRepository;
     private final CategoryImageRepository categoryImageRepository;
     private final FileUploadService  fileUploadService;
@@ -41,7 +41,6 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
                                FileUploadService fileUploadService,
                                ConverterService converterService,
                                CategoryIconRepository categoryIconRepository) {
-        super(categoryRepository);
         this.categoryRepository = categoryRepository;
         this.categoryImageRepository = categoryImageRepository;
         this.fileUploadService = fileUploadService;
@@ -89,7 +88,6 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
         return categoryRepository.findByName(name) != null;
     }
 
-    @Override
     public Category save(Category category) {
         if (category.getId() == null) {
             category.setCreatedAt(LocalDateTime.now());
@@ -122,7 +120,6 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
         categoryRepository.deleteAll(categoriesToDelete);
     }
 
-    @Override
     public void delete(UUID id) {
         try {
             categoryRepository.deleteById(id);
@@ -189,7 +186,8 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
 
     @Transactional
     public Category updateCategory(UUID id, CategoryRequest request) throws IOException {
-        Category category = getById(id);
+        Category category = findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
 
         if (request.getName() != null && !request.getName().isEmpty()) {
             category.setName(request.getName());
@@ -373,10 +371,17 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, UUID> {
 
     @Transactional(readOnly = true)
     public CategoryWithSubcategoryResponse getCategoryWithSubcategoriesById(UUID id) {
-        Category category = getById(id);
+        Category category = findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found: " + id));
         if (category == null || category.getDeletedAt() != null) {
             throw new EntityNotFoundException("Category not found or deleted: " + id);
         }
         return converterService.convertToCategoryWithSubcategoryResponse(category);
+    }
+
+    public List<CategoryResponse> getAllCategories() {
+        return categoryRepository.findAllActive().stream()
+                .map(converterService::convertToCategoryResponse)
+                .toList();
     }
 }

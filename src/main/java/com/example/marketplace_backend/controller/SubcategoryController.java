@@ -81,9 +81,7 @@ public class SubcategoryController {
     @GetMapping("/all")
     public ResponseEntity<?> getAll() {
         try {
-            List<SubcategoryResponse> subcategoryResponses = subcategoryService.getAll().stream()
-                    .map(converter::convertToSubcategoryResponse)
-                    .toList();
+            List<SubcategoryResponse> subcategoryResponses = subcategoryService.getAllSubcategories();
             return ResponseEntity.ok(subcategoryResponses);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -22,6 +22,7 @@ public class ProductResponse {
     private UUID id;
     private String name;
     private BigDecimal price;
+    private String priceDescription;
     private BigDecimal discountedPrice;
     private boolean availability;
     private String title;

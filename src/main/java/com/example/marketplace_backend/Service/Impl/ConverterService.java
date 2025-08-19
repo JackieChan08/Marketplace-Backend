@@ -35,6 +35,7 @@ public class ConverterService {
         response.setId(product.getId());
         response.setName(product.getName());
         response.setPrice(product.getPrice());
+        response.setPriceDescription(product.getPriceDescription());
         response.setAvailability(product.isAvailability());
         response.setTitle(product.getTitle());
         response.setDescription(product.getDescription());

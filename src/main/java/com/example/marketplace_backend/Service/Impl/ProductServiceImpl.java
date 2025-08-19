@@ -229,6 +229,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         Product product = new Product();
         product.setName(dto.getName());
         product.setPrice(dto.getPrice());
+        product.setPriceDescription(dto.getPriceDescription());
         product.setSubcategory(subcategoryRepository.findById(dto.getSubCategoryId())
                 .orElseThrow(() -> new RuntimeException("Subcategory not found")));
         product.setBrand(brandRepository.findById(dto.getBrandId())
@@ -369,6 +370,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         // Обновляем базовые поля
         if (dto.getName() != null) product.setName(dto.getName());
         if (dto.getPrice() != null) product.setPrice(dto.getPrice());
+        if (dto.getPriceDescription() != null) product.setPriceDescription(dto.getPriceDescription());
         if (dto.getTitle() != null) product.setTitle(dto.getTitle());
         if (dto.getDescription() != null) product.setDescription(dto.getDescription());
         product.setAvailability(dto.isAvailability());

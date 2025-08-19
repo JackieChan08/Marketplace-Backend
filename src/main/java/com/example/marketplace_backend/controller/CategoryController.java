@@ -44,7 +44,8 @@ public class CategoryController {
             @Parameter(description = "ID категории", required = true, example = "123")
             @PathVariable UUID id
     ) {
-        Category category = categoryService.getById(id);
+        Category category = categoryService.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
         if (category == null || category.getDeletedAt() != null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -62,19 +63,6 @@ public class CategoryController {
 
         Page<CategoryResponse> responses = categoryService.findAllActive(pageable).map(converter::convertToCategoryResponse);
         return ResponseEntity.ok(responses);
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<?> getAll() {
-        try {
-            List<CategoryResponse> responses = categoryService.getAll().stream()
-                    .map(converter::convertToCategoryResponse)
-                    .toList();
-            return ResponseEntity.ok(responses);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Ошибка при получении категории" + e.getMessage());
-        }
     }
 
     @GetMapping("/with-subcategories/all")
@@ -100,6 +88,17 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAll() {
+        try {
+            List<CategoryResponse> responses = categoryService.getAllCategories();
+            return ResponseEntity.ok(responses);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка при получении категории" + e.getMessage());
         }
     }
 }

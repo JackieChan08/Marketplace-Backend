@@ -124,5 +124,25 @@ public class CartService {
     public Page<CartItem> findAllItems (Pageable pageable) {
         return cartItemRepository.findAll(pageable);
     }
+
+    public Cart updateItemQuantity(UUID productId, int quantity) {
+        Cart cart = getCart(); // твой метод, который достаёт корзину текущего пользователя
+
+        CartItem cartItem = cart.getCartItems().stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Product not found in cart"));
+
+        if (quantity <= 0) {
+            // если количество <= 0, удаляем товар из корзины
+            cart.getCartItems().remove(cartItem);
+            cartItemRepository.delete(cartItem);
+        } else {
+            cartItem.setQuantity(quantity);
+            cartItemRepository.save(cartItem);
+        }
+
+        return cartRepository.save(cart);
+    }
 }
 
