@@ -10,9 +10,9 @@ services:
     volumes:
       - ./templates:/app/src/main/resources/templates
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/marketplace
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/buystore
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: ac
+      SPRING_DATASOURCE_PASSWORD: postgres
     depends_on:
       - db
 
@@ -20,8 +20,8 @@ services:
     image: postgres:15
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=ac
-      - POSTGRES_DB=marketplace
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=buystore
     ports:
       - "5432:5432"
     volumes:
