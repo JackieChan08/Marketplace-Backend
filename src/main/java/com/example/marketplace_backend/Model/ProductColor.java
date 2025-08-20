@@ -1,10 +1,8 @@
 package com.example.marketplace_backend.Model;
 
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductColorImage;
-import com.example.marketplace_backend.Model.Phone.PhoneConnection;
-import com.example.marketplace_backend.Model.Phone.PhoneConnectionAndProductColor;
-import com.example.marketplace_backend.Model.Phone.ProductMemory;
-import com.example.marketplace_backend.Model.Phone.ProductMemoryAndProductColor;
+import com.example.marketplace_backend.Model.ProductSpec.PhoneSpec;
+import com.example.marketplace_backend.Model.ProductSpec.LaptopSpec;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -41,11 +39,11 @@ public class ProductColor {
 
     @OneToMany(mappedBy = "color", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<ProductColorImage> images = new ArrayList<>();;
+    private List<ProductColorImage> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "productColor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductMemoryAndProductColor> memoryLinks = new ArrayList<>();
+    private List<PhoneSpec> phoneSpecs = new ArrayList<>();
 
     @OneToMany(mappedBy = "productColor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PhoneConnectionAndProductColor> connectionLinks = new ArrayList<>();
+    private List<LaptopSpec> laptopSpecs = new ArrayList<>();
 }

@@ -1,6 +1,8 @@
-package com.example.marketplace_backend.Model.Phone;
+package com.example.marketplace_backend.Model.ProductSpec;
 
 import com.example.marketplace_backend.Model.ProductColor;
+import com.example.marketplace_backend.enums.PaymentMethod;
+import com.example.marketplace_backend.enums.SimType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,12 +13,12 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "product_memory_and_product_color")
+@Table(name = "phone_spec")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductMemoryAndProductColor {
+public class PhoneSpec {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -25,11 +27,14 @@ public class ProductMemoryAndProductColor {
     @JoinColumn(name = "color_id", nullable = false)
     private ProductColor productColor;
 
-    @ManyToOne
-    @JoinColumn(name = "memory_id", nullable = false)
-    private ProductMemory productMemory;
+    @Column(nullable = false)
+    private String memory;
 
     @Column(nullable = false)
     private BigDecimal price;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "sim_type", nullable = false)
+    private SimType simType;
 
 }

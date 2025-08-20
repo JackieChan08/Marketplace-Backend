@@ -42,6 +42,7 @@
             </column>
             <column name="phone_number" type="varchar(255)"/>
             <column name="address" type="varchar(255)"/>
+            <column name="city" type="varchar(60)"/>
             <column name="role" type="varchar(50)"/>
             <column name="provider" type="varchar(255)"/>
             <column name="password" type="varchar(255)"/>
@@ -662,7 +663,7 @@
                                  constraintName="fk_category_icon_files"/>
     </changeSet>
 
-    <changeSet id="create-product-statuses-table" author="developer">
+    <changeSet id="create-product-statuses-table" author="aiteginbaratov">
         <createTable tableName="product_statuses">
             <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
@@ -703,94 +704,56 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="create-product-memories" author="aiteginbaratov">
-        <createTable tableName="product_memories">
-            <column name="id" type="uuid">
+    <changeSet id="create-phone-spec-table" author="aiteginbaratov">
+        <createTable tableName="phone_spec">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="memory" type="varchar(50)">
-                <constraints nullable="false" unique="true"/>
+            <column name="color_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="memory" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(19,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sim_type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="phone_spec"
+                baseColumnNames="color_id"
+                constraintName="fk_phone_spec_color"
+                referencedTableName="product_colors"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
     </changeSet>
 
-    <changeSet id="create-phone-connections" author="aiteginbaratov">
-        <createTable tableName="phone_connections">
-            <column name="id" type="uuid">
+    <changeSet id="create-laptop-spec-table" author="aiteginbaratov">
+        <createTable tableName="laptop_spec">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="sim_type" type="varchar(20)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-        </createTable>
-    </changeSet>
-
-    <!-- Создание промежуточной таблицы для связи памяти и цвета продукта -->
-    <changeSet id="create-product-memory-and-product-color-table" author="aiteginbaratov">
-        <createTable tableName="product_memory_and_product_color">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="color_id" type="uuid">
+            <column name="color_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="memory_id" type="uuid">
+            <column name="ssd_memory" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
-            <column name="price" type="bigint">
+            <column name="price" type="DECIMAL(19,2)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
 
-        <!-- Добавление внешних ключей -->
-        <addForeignKeyConstraint baseTableName="product_memory_and_product_color"
-                                 baseColumnNames="color_id"
-                                 referencedTableName="product_colors"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_product_memory_color_color"/>
-
-        <addForeignKeyConstraint baseTableName="product_memory_and_product_color"
-                                 baseColumnNames="memory_id"
-                                 referencedTableName="product_memories"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_product_memory_color_memory"/>
-
-        <!-- Добавление уникального ограничения на комбинацию color_id и memory_id -->
-        <addUniqueConstraint tableName="product_memory_and_product_color"
-                             columnNames="color_id, memory_id"
-                             constraintName="uk_product_memory_color"/>
-    </changeSet>
-
-    <!-- Создание промежуточной таблицы для связи типа подключения и цвета продукта -->
-    <changeSet id="create-phone-connection-and-product-color-table" author="aiteginbaratov">
-        <createTable tableName="phone_connection_and_product_color">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="color_id" type="uuid">
-                <constraints nullable="false"/>
-            </column>
-            <column name="connection_id" type="uuid">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <!-- Добавление внешних ключей -->
-        <addForeignKeyConstraint baseTableName="phone_connection_and_product_color"
-                                 baseColumnNames="color_id"
-                                 referencedTableName="product_colors"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_phone_connection_color_color"/>
-
-        <addForeignKeyConstraint baseTableName="phone_connection_and_product_color"
-                                 baseColumnNames="connection_id"
-                                 referencedTableName="phone_connections"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_phone_connection_color_connection"/>
-
-        <!-- Добавление уникального ограничения на комбинацию color_id и connection_id -->
-        <addUniqueConstraint tableName="phone_connection_and_product_color"
-                             columnNames="color_id, connection_id"
-                             constraintName="uk_phone_connection_color"/>
+        <addForeignKeyConstraint
+                baseTableName="laptop_spec"
+                baseColumnNames="color_id"
+                constraintName="fk_laptop_spec_color"
+                referencedTableName="product_colors"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
     </changeSet>
 </databaseChangeLog>

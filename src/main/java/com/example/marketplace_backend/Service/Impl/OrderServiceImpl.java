@@ -70,6 +70,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
             userUpdated = true;
         }
 
+        if ((user.getCity() == null || user.getCity().isEmpty()) && request.getCity() != null) {
+            user.setCity(request.getCity());
+            userUpdated = true;
+        }
+
         if ((user.getAddress() == null || user.getAddress().isEmpty()) && request.getAddress() != null) {
             user.setAddress(request.getAddress());
             userUpdated = true;
@@ -84,6 +89,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         order.setUser(userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found")));
         order.setAddress(request.getAddress());
+        order.setCity(request.getCity());
         order.setPhoneNumber(request.getPhoneNumber());
         order.setComment(request.getComment());
         order.setWholesale(false);
@@ -160,6 +166,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         Order order = new Order();
         order.setUser(user);
         order.setAddress(request.getAddress());
+        order.setCity(request.getCity());
         order.setPhoneNumber(request.getPhoneNumber());
         order.setComment(request.getComment());
         order.setWholesale(true);

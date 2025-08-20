@@ -11,6 +11,7 @@ import java.util.UUID;
 public class OrderRequest {
     private UUID orderId;
     private String address;
+    private String city;
     private String phoneNumber;
     private Boolean isWholesale;
     private String comment;

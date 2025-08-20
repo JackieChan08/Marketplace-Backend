@@ -3,13 +3,7 @@ package com.example.marketplace_backend.Service.Impl;
 import com.example.marketplace_backend.DTO.Responses.models.*;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.*;
-import com.example.marketplace_backend.Model.Phone.PhoneConnection;
-import com.example.marketplace_backend.Model.Phone.PhoneConnectionAndProductColor;
-import com.example.marketplace_backend.Model.Phone.ProductMemory;
-import com.example.marketplace_backend.Model.Phone.ProductMemoryAndProductColor;
-import com.example.marketplace_backend.Repositories.PhoneConnectionAndProductColorRepository;
 import com.example.marketplace_backend.Repositories.ProductColorRepository;
-import com.example.marketplace_backend.Repositories.ProductMemoryAndProductColorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,8 +17,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ConverterService {
     private final ProductParametersServiceImpl productParametersService;
-    private final ProductMemoryAndProductColorRepository productMemoryAndProductColorRepository;
-    private final PhoneConnectionAndProductColorRepository phoneConnectionAndProductColorRepository;
     private final ProductColorRepository productColorRepository;
 
     @Value("${app.base-url}")
@@ -160,39 +152,30 @@ public class ConverterService {
         response.setName(productColor.getName());
         response.setHex(productColor.getHex());
 
-        // Обработка памяти для цвета
-        List<MemoryResponse> memories = new ArrayList<>();
-        if (productColor.getId() != null) {
-            List<ProductMemoryAndProductColor> memoryConnections =
-                    productMemoryAndProductColorRepository.findByProductColorId(productColor.getId());
-
-            memories = memoryConnections.stream()
-                    .map(connection -> new MemoryResponse(
-                            connection.getProductMemory().getId(),
-                            connection.getProductMemory().getMemory(),
-                            connection.getPrice()
-                    ))
-                    .distinct() // можно убрать если equals/hashCode не переопределены
+        // Обработка спецификаций телефонов
+        if (productColor.getPhoneSpecs() != null && !productColor.getPhoneSpecs().isEmpty()) {
+            List<PhoneSpecResponse> phoneSpecs = productColor.getPhoneSpecs().stream()
+                    .map(phoneSpec -> PhoneSpecResponse.builder()
+                            .id(phoneSpec.getId())
+                            .memory(phoneSpec.getMemory())
+                            .price(phoneSpec.getPrice())
+                            .simType(phoneSpec.getSimType())
+                            .build())
                     .toList();
+            response.setPhoneSpecs(phoneSpecs);
         }
-        response.setMemories(memories);
 
-// Обработка типов подключения для цвета
-        List<ConnectionResponse> simTypes = new ArrayList<>();
-        if (productColor.getId() != null) {
-            List<PhoneConnectionAndProductColor> connectionConnections =
-                    phoneConnectionAndProductColorRepository.findByProductColorId(productColor.getId());
-
-            simTypes = connectionConnections.stream()
-                    .map(connection -> new ConnectionResponse(
-                            connection.getPhoneConnection().getId(),
-                            connection.getPhoneConnection().getSimType()
-                    ))
-                    .distinct() // тоже самое, осторожнее
+        // Обработка спецификаций ноутбуков
+        if (productColor.getLaptopSpecs() != null && !productColor.getLaptopSpecs().isEmpty()) {
+            List<LaptopSpecResponse> laptopSpecs = productColor.getLaptopSpecs().stream()
+                    .map(laptopSpec -> LaptopSpecResponse.builder()
+                            .id(laptopSpec.getId())
+                            .ssdMemory(laptopSpec.getSsdMemory())
+                            .price(laptopSpec.getPrice())
+                            .build())
                     .toList();
+            response.setLaptopSpecs(laptopSpecs);
         }
-        response.setSimTypes(simTypes);
-
 
         // Обработка изображений цвета
         List<FileResponse> images = new ArrayList<>();
@@ -598,17 +581,12 @@ public class ConverterService {
                 .build();
     }
 
-    public PhoneConnectionResponse convertToPhoneConnectionResponse(PhoneConnection phoneConnection) {
-        return PhoneConnectionResponse.builder()
-                .id(phoneConnection.getId())
-                .simType(phoneConnection.getSimType())
-                .build();
-    }
-
-    public ProductMemoryResponse convertToProductMemoryResponse(ProductMemory productMemory) {
-        return ProductMemoryResponse.builder()
-                .id(productMemory.getId())
-                .memory(productMemory.getMemory())
+    public StatusResponse convertToStatusResponse(Statuses status) {
+        return StatusResponse.builder()
+                .id(status.getId())
+                .name(status.getName())
+                .backgroundColor(status.getBackgroundColor())
+                .primaryColor(status.getPrimaryColor())
                 .build();
     }
 }

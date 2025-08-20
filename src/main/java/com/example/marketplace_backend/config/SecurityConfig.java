@@ -71,6 +71,7 @@ public class SecurityConfig {
                                 "/api/brands/**",
                                 "/api/vip-products/**",
                                 "/api/orders/**",
+                                "/api/statuses/**",
                                 "/auth/oauth2/token",
                                 "/uploads/**",
                                 "/auth/logout",

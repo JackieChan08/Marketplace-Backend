@@ -16,9 +16,9 @@ public class ColorResponse {
     private UUID id;
     private String name;
     private String hex;
-
-    private List<MemoryResponse> memories;
-    private List<ConnectionResponse> simTypes;
     private List<FileResponse> images;
+
+    private List<PhoneSpecResponse> phoneSpecs;
+    private List<LaptopSpecResponse> laptopSpecs;
 }
 

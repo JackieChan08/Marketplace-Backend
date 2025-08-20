@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.DTO.Requests.models.StatusRequest;
+import com.example.marketplace_backend.DTO.Responses.models.StatusResponse;
 import com.example.marketplace_backend.Model.Statuses;
 import com.example.marketplace_backend.Repositories.StatusRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class StatusServiceImpl {
     private final StatusRepository statusRepository;
+    private final ConverterService converterService;
 
     public List<Statuses> getAllStatuses() {
         return statusRepository.findAll();
@@ -47,8 +49,10 @@ public class StatusServiceImpl {
         return statusRepository.findAllByOrderFlag();
     }
 
-    public List<Statuses> getAllStatusesByProduct() {
-        return statusRepository.findAllByProductFlag();
+    public List<StatusResponse> getAllStatusesByProduct() {
+        return statusRepository.findAllByProductFlag().stream()
+                .map(converterService::convertToStatusResponse)
+                .toList();
     }
 
     public Statuses getStatusById(UUID id) {

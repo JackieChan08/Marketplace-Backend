@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.controller;
 
+import com.example.marketplace_backend.DTO.Responses.models.StatusResponse;
 import com.example.marketplace_backend.Model.Statuses;
 import com.example.marketplace_backend.Service.Impl.StatusServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class StatusController {
     private final StatusServiceImpl statusService;
 
     @GetMapping("/by-product")
-    public ResponseEntity<List<Statuses>> getAllStatusesByProduct() {
+    public ResponseEntity<List<StatusResponse>> getAllStatusesByProduct() {
         return ResponseEntity.ok(statusService.getAllStatusesByProduct());
     }
 }

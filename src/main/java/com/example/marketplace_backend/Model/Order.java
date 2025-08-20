@@ -28,6 +28,8 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    private String city;
+
     @Column(name = "address", nullable = false)
     private String address;
 
