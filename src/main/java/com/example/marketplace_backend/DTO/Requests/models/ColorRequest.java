@@ -18,6 +18,6 @@ public class ColorRequest {
     private String hex;
 
     private List<MultipartFile> images;
-    private List<UUID> connectionIds;
-    private List<MemoryWithPriceRequest> memories;
+    private List<PhoneSpecRequest> phoneSpecs;
+    private List<LaptopSpecRequest> laptopSpecs;
 }

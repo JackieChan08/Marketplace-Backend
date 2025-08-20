@@ -39,6 +39,8 @@ public class User {
 
     private String address;
 
+    private String city;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

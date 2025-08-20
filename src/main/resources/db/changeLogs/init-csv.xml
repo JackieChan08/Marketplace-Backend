@@ -52,10 +52,4 @@
     <changeSet id="vps" author="aiteginbaratov">
         <loadData tableName="vip_products" file="data/vip_products.csv" relativeToChangelogFile="true" separator=";"/>
     </changeSet>
-    <changeSet id="phone_connection" author="aiteginbaratov">
-        <loadData tableName="phone_connections" file="data/phone_connections.csv" relativeToChangelogFile="true" separator=";"/>
-    </changeSet>
-    <changeSet id="pm" author="aiteginbaratov">
-        <loadData tableName="product_memories" file="data/product_memories.csv" relativeToChangelogFile="true" separator=";"/>
-    </changeSet>
 </databaseChangeLog>
