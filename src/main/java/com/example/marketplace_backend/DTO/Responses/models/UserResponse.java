@@ -13,6 +13,7 @@ public class UserResponse {
     private String email;
     private String name;
     private String phoneNumber;
+    private String city;
     private String address;
     private Role role;
     private LocalDateTime createdAt;

@@ -59,7 +59,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
     Page<Product> findActiveBySubcategory(@Param("subcategoryId") UUID subcategoryId, Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.subcategory.category.id = :categoryId and p.deletedAt IS NULL")
-    Page<Product> findActiveByCategory(@Param("subcategoryId") UUID categoryId, Pageable pageable);
+    Page<Product> findActiveByCategory(@Param("categoryId") UUID categoryId, Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.brand = :brand and p.deletedAt IS NOT NULL")
     List<Product> findDeActiveByBrand(@Param("brand") Brand brand);
