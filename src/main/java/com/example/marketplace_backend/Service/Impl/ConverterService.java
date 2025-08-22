@@ -276,6 +276,7 @@ public class ConverterService {
         response.setEmail(user.getEmail());
         response.setName(user.getName());
         response.setPhoneNumber(user.getPhoneNumber());
+        response.setCity(user.getCity());
         response.setAddress(user.getAddress());
         response.setRole(user.getRole());
         response.setCreatedAt(user.getCreatedAt());
