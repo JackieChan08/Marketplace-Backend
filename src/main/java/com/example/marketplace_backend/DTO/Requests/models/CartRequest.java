@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Data
 public class CartRequest {
-    private UUID productId;
+    private UUID productVariantId;
     private int quantity;
 }
 

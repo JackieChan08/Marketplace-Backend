@@ -3,6 +3,8 @@ package com.example.marketplace_backend.Service.Impl;
 import com.example.marketplace_backend.DTO.Responses.models.*;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.*;
+import com.example.marketplace_backend.Model.ProductSpec.LaptopSpec;
+import com.example.marketplace_backend.Model.ProductSpec.PhoneSpec;
 import com.example.marketplace_backend.Repositories.ProductColorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,178 +25,153 @@ public class ConverterService {
     private String baseUrl;
 
     public ProductResponse convertToProductResponse(Product product) {
-        ProductResponse response = new ProductResponse();
-        response.setId(product.getId());
-        response.setName(product.getName());
-        response.setPrice(product.getPrice());
-        response.setPriceDescription(product.getPriceDescription());
-        response.setAvailability(product.isAvailability());
-        response.setTitle(product.getTitle());
-        response.setDescription(product.getDescription());
-        response.setCreatedAt(product.getCreatedAt());
-        response.setUpdatedAt(product.getUpdatedAt());
-        response.setDeletedAt(product.getDeletedAt());
+        if (product == null) return null;
 
-        // Обработка подкатегории
+        ProductResponse response = ProductResponse.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .price(product.getPrice())
+                .priceDescription(product.getPriceDescription())
+                .discountedPrice(product.getDiscountedPrice())
+                .availability(product.isAvailability())
+                .title(product.getTitle())
+                .description(product.getDescription())
+                .createdAt(product.getCreatedAt())
+                .updatedAt(product.getUpdatedAt())
+                .deletedAt(product.getDeletedAt())
+                .build();
+
+        // Subcategory / Category
         if (product.getSubcategory() != null) {
             response.setSubcategoryId(product.getSubcategory().getId());
             response.setSubcategoryName(product.getSubcategory().getName());
-
             if (product.getSubcategory().getCategory() != null) {
                 response.setCategoryId(product.getSubcategory().getCategory().getId());
                 response.setCategoryName(product.getSubcategory().getCategory().getName());
             }
         }
 
-        if (product.getDiscountedPrice() != null) {
-            response.setDiscountedPrice(product.getDiscountedPrice());
-        }
-
+        // Brand
         if (product.getBrand() != null) {
             response.setBrandId(product.getBrand().getId());
             response.setBrandName(product.getBrand().getName());
         }
 
-        // Обработка цветов с памятью и типами подключения
-        if (product.getColors() != null && !product.getColors().isEmpty()) {
-            List<ColorResponse> colors = product.getColors().stream()
-                    .map(this::convertToColorResponse)
-                    .toList();
-            response.setColors(colors);
+        // Variants
+        List<VariantResponse> variantResponses = new ArrayList<>();
+        if (product.getVariants() != null) {
+            for (ProductVariant variant : product.getVariants()) {
+                VariantResponse vr = VariantResponse.builder()
+                        .id(variant.getId())
+                        .color(variant.getColor() != null ? convertToColorResponse(variant.getColor()) : null)
+                        .phoneSpec(variant.getPhoneSpec() != null ? convertToPhoneSpecResponse(variant.getPhoneSpec()) : null)
+                        .laptopSpec(variant.getLaptopSpec() != null ? convertToLaptopSpecResponse(variant.getLaptopSpec()) : null)
+                        .build();
+
+                variantResponses.add(vr);
+            }
         }
+        response.setVariants(variantResponses);
 
-        // Собираем color images
-        List<FileResponse> colorImages = product.getColors() != null
-                ? product.getColors().stream()
-                .filter(color -> color.getImages() != null && !color.getImages().isEmpty())
-                .flatMap(color -> color.getImages().stream())
-                .map(productColorImage -> {
-                    FileEntity image = productColorImage.getImage();
-                    return FileResponse.builder()
-                            .uniqueName(image.getUniqueName())
-                            .originalName(image.getOriginalName())
-                            .url(baseUrl + "/uploads/" + image.getUniqueName())
-                            .fileType(image.getFileType())
-                            .build();
-                })
-                .toList()
-                : List.of();
+        // Images: приоритет — изображения из вариантов (цветов), иначе общие product images
+        List<FileResponse> variantImages = variantResponses.stream()
+                .filter(v -> v.getColor() != null && v.getColor().getImages() != null)
+                .flatMap(v -> v.getColor().getImages().stream())
+                .collect(Collectors.toList());
 
-        // Собираем product images
-        List<FileResponse> productImages = product.getImages() != null
+        List<FileResponse> productImages = (product.getImages() != null)
                 ? product.getImages().stream()
-                .map(productImage -> {
-                    FileEntity image = productImage.getImage();
-                    return FileResponse.builder()
-                            .uniqueName(image.getUniqueName())
-                            .originalName(image.getOriginalName())
-                            .url(baseUrl + "/uploads/" + image.getUniqueName())
-                            .fileType(image.getFileType())
-                            .build();
-                })
-                .toList()
+                .map(img -> toFileResponse(img.getImage()))
+                .collect(Collectors.toList())
                 : List.of();
 
-        // Логика выбора
-        if (!colorImages.isEmpty()) {
-            response.setImages(colorImages); // приоритет цветных фото
-        } else {
-            response.setImages(productImages); // fallback — общие фото
-        }
+        response.setImages(!variantImages.isEmpty() ? variantImages : productImages);
 
-        // Обработка статусов
-        if (product.getProductStatuses() != null && !product.getProductStatuses().isEmpty()) {
+        // Statuses
+        if (product.getProductStatuses() != null) {
             List<StatusResponse> statuses = product.getProductStatuses().stream()
-                    .map(productStatus -> {
-                        Statuses status = productStatus.getStatus();
-                        return new StatusResponse(
-                                status.getId(),
-                                status.getName(),
-                                status.getPrimaryColor(),
-                                status.getBackgroundColor()
-                        );
-                    })
-                    .toList();
+                    .map(ps -> {
+                        Statuses st = ps.getStatus();
+                        return StatusResponse.builder()
+                                .id(st.getId())
+                                .name(st.getName())
+                                .primaryColor(st.getPrimaryColor())
+                                .backgroundColor(st.getBackgroundColor())
+                                .build();
+                    }).collect(Collectors.toList());
             response.setStatuses(statuses);
+        } else {
+            response.setStatuses(List.of());
         }
 
-        // Добавление параметров
-        List<ProductParameterResponse> parameterResponses = productParametersService
+        // Parameters (через сервис параметров)
+        List<ProductParameterResponse> params = productParametersService
                 .getParametersWithSubParams(product.getId())
                 .stream()
-                .map(param -> {
-                    ProductParameterResponse paramResponse = new ProductParameterResponse();
-                    paramResponse.setId(param.getId());
-                    paramResponse.setName(param.getName());
-
-                    List<ProductSubParameterResponse> subParamResponses = param.getProductSubParameters().stream()
-                            .map(sub -> {
-                                ProductSubParameterResponse subResponse = new ProductSubParameterResponse();
-                                subResponse.setId(sub.getId());
-                                subResponse.setName(sub.getName());
-                                subResponse.setValue(sub.getValue());
-                                return subResponse;
-                            }).toList();
-
-                    paramResponse.setSubParameters(subParamResponses);
-                    return paramResponse;
-                })
-                .toList();
-
-        response.setParameters(parameterResponses);
+                .map(param -> ProductParameterResponse.builder()
+                        .id(param.getId())
+                        .name(param.getName())
+                        .subParameters(param.getProductSubParameters().stream()
+                                .map(sp -> ProductSubParameterResponse.builder()
+                                        .id(sp.getId())
+                                        .name(sp.getName())
+                                        .value(sp.getValue())
+                                        .build())
+                                .collect(Collectors.toList()))
+                        .build())
+                .collect(Collectors.toList());
+        response.setParameters(params);
 
         return response;
     }
 
-    public ColorResponse convertToColorResponse(ProductColor productColor) {
-        ColorResponse response = new ColorResponse();
-        response.setId(productColor.getId());
-        response.setName(productColor.getName());
-        response.setHex(productColor.getHex());
+    /* ---------- вспомогательные методы ---------- */
 
-        // Обработка спецификаций телефонов
-        if (productColor.getPhoneSpecs() != null && !productColor.getPhoneSpecs().isEmpty()) {
-            List<PhoneSpecResponse> phoneSpecs = productColor.getPhoneSpecs().stream()
-                    .map(phoneSpec -> PhoneSpecResponse.builder()
-                            .id(phoneSpec.getId())
-                            .memory(phoneSpec.getMemory())
-                            .price(phoneSpec.getPrice())
-                            .simType(phoneSpec.getSimType())
-                            .build())
-                    .toList();
-            response.setPhoneSpecs(phoneSpecs);
-        }
+    private ColorResponse convertToColorResponse(ProductColor color) {
+        if (color == null) return null;
 
-        // Обработка спецификаций ноутбуков
-        if (productColor.getLaptopSpecs() != null && !productColor.getLaptopSpecs().isEmpty()) {
-            List<LaptopSpecResponse> laptopSpecs = productColor.getLaptopSpecs().stream()
-                    .map(laptopSpec -> LaptopSpecResponse.builder()
-                            .id(laptopSpec.getId())
-                            .ssdMemory(laptopSpec.getSsdMemory())
-                            .price(laptopSpec.getPrice())
-                            .build())
-                    .toList();
-            response.setLaptopSpecs(laptopSpecs);
-        }
+        List<FileResponse> images = (color.getImages() != null)
+                ? color.getImages().stream()
+                // предполагается, что img.getImage() возвращает FileEntity
+                .map(img -> toFileResponse(img.getImage()))
+                .collect(Collectors.toList())
+                : List.of();
 
-        // Обработка изображений цвета
-        List<FileResponse> images = new ArrayList<>();
-        if (productColor.getImages() != null && !productColor.getImages().isEmpty()) {
-            images = productColor.getImages().stream()
-                    .map(colorImage -> {
-                        FileEntity image = colorImage.getImage();
-                        FileResponse fileResponse = new FileResponse();
-                        fileResponse.setOriginalName(image.getOriginalName());
-                        fileResponse.setUniqueName(image.getUniqueName());
-                        fileResponse.setFileType(image.getFileType());
-                        fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
-                        return fileResponse;
-                    })
-                    .toList();
-        }
-        response.setImages(images);
+        return ColorResponse.builder()
+                .id(color.getId())
+                .name(color.getName())
+                .hex(color.getHex())
+                .images(images)
+                .build();
+    }
 
-        return response;
+    private PhoneSpecResponse convertToPhoneSpecResponse(PhoneSpec spec) {
+        if (spec == null) return null;
+        return PhoneSpecResponse.builder()
+                .id(spec.getId())
+                .memory(spec.getMemory())
+                .price(spec.getPrice())
+                .simType(spec.getSimType())
+                .build();
+    }
+
+    private LaptopSpecResponse convertToLaptopSpecResponse(LaptopSpec spec) {
+        if (spec == null) return null;
+        return LaptopSpecResponse.builder()
+                .id(spec.getId())
+                .ssdMemory(spec.getSsdMemory())
+                .price(spec.getPrice())
+                .build();
+    }
+
+    private FileResponse toFileResponse(FileEntity image) {
+        if (image == null) return null;
+        return FileResponse.builder()
+                .uniqueName(image.getUniqueName())
+                .originalName(image.getOriginalName())
+                .url(baseUrl + "/uploads/" + image.getUniqueName())
+                .fileType(image.getFileType())
+                .build();
     }
 
     public SubcategoryResponse convertToSubcategoryResponse(Subcategory subcategory) {
@@ -219,7 +196,7 @@ public class ConverterService {
         response.setDeletedAt(category.getDeletedAt());
         response.setPriority(category.isPriority());
 
-        // Обработка изображения категории
+        // Process category image
         if (category.getCategoryImages() != null && !category.getCategoryImages().isEmpty()) {
             CategoryImage firstImage = category.getCategoryImages().iterator().next();
             CategoryImageResponse categoryImageResponse = new CategoryImageResponse();
@@ -239,7 +216,7 @@ public class ConverterService {
             response.setCategoryImage(categoryImageResponse);
         }
 
-        // Обработка иконки категории
+        // Process category icon
         if (category.getCategoryIcons() != null && !category.getCategoryIcons().isEmpty()) {
             CategoryIcon firstIcon = category.getCategoryIcons().iterator().next();
             CategoryIconResponse categoryIconResponse = new CategoryIconResponse();
@@ -263,7 +240,7 @@ public class ConverterService {
             List<SubcategoryResponseSimple> subcategoryResponsesSimple = category.getSubcategories().stream()
                     .filter(subcategory -> subcategory.getDeletedAt() == null)
                     .map(this::convertToSubcategoryResponseSimple)
-                    .toList();
+                    .collect(Collectors.toList());
             response.setSubcategoryResponsesSimple(subcategoryResponsesSimple);
         }
 
@@ -292,7 +269,7 @@ public class ConverterService {
                         fileResponse.setFileType(image.getFileType());
                         return fileResponse;
                     })
-                    .toList();
+                    .collect(Collectors.toList());
             response.setImages(images);
         }
 
@@ -328,11 +305,11 @@ public class ConverterService {
         return response;
     }
 
-    // Обновленный метод для работы с единственным статусом
     public OrderResponse convertToOrderResponse(Order order) {
         return OrderResponse.builder()
                 .id(order.getId())
                 .address(order.getAddress())
+                .city(order.getCity())
                 .phoneNumber(order.getPhoneNumber())
                 .comment(order.getComment())
                 .totalPrice(order.getTotalPrice())
@@ -369,14 +346,13 @@ public class ConverterService {
         return items.stream().map(item -> {
             OrderItemResponse response = new OrderItemResponse();
             response.setId(item.getId());
-            response.setProductResponse(convertToProductResponse(item.getProduct()));
+            response.setProductVariantResponse(convertToProductVariantResponse(item.getProductVariant()));
             response.setQuantity(item.getQuantity());
             response.setPrice(item.getPrice());
             return response;
         }).collect(Collectors.toList());
     }
 
-    // Обновленный метод для работы с единственным статусом
     private OrderStatusResponse convertStatus(Statuses status) {
         if (status == null) return null;
 
@@ -420,7 +396,7 @@ public class ConverterService {
             List<SubcategoryResponseSimple> subcategoryResponsesSimple = category.getSubcategories().stream()
                     .filter(subcategory -> subcategory.getDeletedAt() == null)
                     .map(this::convertToSubcategoryResponseSimple)
-                    .toList();
+                    .collect(Collectors.toList());
             response.setSubcategoryResponsesSimple(subcategoryResponsesSimple);
         }
 
@@ -438,14 +414,14 @@ public class ConverterService {
         List<FavoriteItemResponse> items = favorite.getFavoriteItems().stream().map(item -> {
             BigDecimal totalPrice = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
             return FavoriteItemResponse.builder()
-                    .productResponse(convertToProductResponse(item.getProduct()))
+                    .productVariant(convertToProductVariantResponse(item.getProductVariant()))
                     .quantity(item.getQuantity())
                     .pricePerItem(item.getPrice())
                     .totalPrice(totalPrice)
                     .favoriteItemId(item.getId())
                     .addedAt(item.getAddedAt())
                     .build();
-        }).toList();
+        }).collect(Collectors.toList());
 
         BigDecimal total = items.stream()
                 .map(FavoriteItemResponse::getTotalPrice)
@@ -466,22 +442,14 @@ public class ConverterService {
                 .pricePerItem(item.getPrice())
                 .totalPrice(totalPrice)
                 .addedAt(item.getAddedAt())
-                .productResponse(convertToProductResponse(item.getProduct()))
+                .productVariant(convertToProductVariantResponse(item.getProductVariant()))
                 .build();
     }
 
     public CartResponse convertToCartResponse(Cart cart) {
-        List<CartItemResponse> items = cart.getCartItems().stream().map(item -> {
-            BigDecimal totalPrice = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
-            return CartItemResponse.builder()
-                    .cartItemId(item.getId())
-                    .quantity(item.getQuantity())
-                    .pricePerItem(item.getPrice())
-                    .totalPrice(totalPrice)
-                    .addedAt(item.getCreatedAt())
-                    .productResponse(convertToProductResponse(item.getProduct()))
-                    .build();
-        }).toList();
+        List<CartItemResponse> items = cart.getCartItems().stream()
+                .map(this::convertToCartItemResponse) // используем общий метод
+                .collect(Collectors.toList());
 
         BigDecimal total = items.stream()
                 .map(CartItemResponse::getTotalPrice)
@@ -492,7 +460,6 @@ public class ConverterService {
                 .totalPrice(total)
                 .build();
     }
-
     public CartItemResponse convertToCartItemResponse(CartItem item) {
         BigDecimal totalPrice = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
 
@@ -502,14 +469,14 @@ public class ConverterService {
                 .pricePerItem(item.getPrice())
                 .totalPrice(totalPrice)
                 .addedAt(item.getCreatedAt())
-                .productResponse(convertToProductResponse(item.getProduct()))
+                .productVariant(convertToProductVariantResponse(item.getProductVariant()))
                 .build();
     }
 
     public OrderItemResponse toOrderItemResponse(OrderItem item) {
         return OrderItemResponse.builder()
                 .id(item.getId())
-                .productResponse(convertToProductResponse(item.getProduct()))
+                .productVariantResponse(convertToProductVariantResponse(item.getProductVariant()))
                 .quantity(item.getQuantity())
                 .price(item.getPrice())
                 .build();
@@ -577,7 +544,7 @@ public class ConverterService {
                                         .value(sub.getValue())
                                         .build()
                                 )
-                                .toList()
+                                .collect(Collectors.toList())
                 )
                 .build();
     }
@@ -588,6 +555,20 @@ public class ConverterService {
                 .name(status.getName())
                 .backgroundColor(status.getBackgroundColor())
                 .primaryColor(status.getPrimaryColor())
+                .build();
+    }
+
+    public ProductVariantResponse convertToProductVariantResponse(ProductVariant variant) {
+        if (variant == null) {
+            return null;
+        }
+
+        return ProductVariantResponse.builder()
+                .id(variant.getId())
+                .productId(variant.getProduct().getId())
+                .color(convertToColorResponse(variant.getColor()))
+                .phoneSpec(convertToPhoneSpecResponse(variant.getPhoneSpec()))
+                .laptopSpec(convertToLaptopSpecResponse(variant.getLaptopSpec()))
                 .build();
     }
 }

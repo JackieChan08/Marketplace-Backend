@@ -19,11 +19,6 @@ public interface ProductColorImageRepository extends JpaRepository<ProductColorI
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM ProductColorImage pci WHERE pci.color.product.id = :productId")
-    void deleteByProductId(@Param("productId") UUID productId);
-
-    @Modifying
-    @Transactional
     @Query("DELETE FROM ProductColorImage pci WHERE pci.color.id = :colorId")
     void deleteByColorId(@Param("colorId") UUID colorId);
 }

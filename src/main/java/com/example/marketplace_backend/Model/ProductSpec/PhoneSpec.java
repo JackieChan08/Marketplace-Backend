@@ -23,10 +23,6 @@ public class PhoneSpec {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "color_id", nullable = false)
-    private ProductColor productColor;
-
     @Column(nullable = false)
     private String memory;
 
@@ -36,5 +32,4 @@ public class PhoneSpec {
     @Enumerated(EnumType.STRING)
     @Column(name = "sim_type", nullable = false)
     private SimType simType;
-
 }

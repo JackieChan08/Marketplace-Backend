@@ -22,11 +22,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="add-product-colors-indexes" author="JekiChan08">
-        <createIndex tableName="product_colors" indexName="idx_product_colors_product_id">
-            <column name="product_id"/>
-        </createIndex>
-
+    <changeSet id="add-product-color-images-indexes" author="JekiChan08">
         <createIndex tableName="product_color_images" indexName="idx_product_color_images_color_id">
             <column name="color_id"/>
         </createIndex>
@@ -36,10 +32,34 @@
         </createIndex>
     </changeSet>
 
+    <changeSet id="add-product-variants-indexes" author="aiteginbaratov">
+        <createIndex tableName="product_variants" indexName="idx_product_variants_product_id">
+            <column name="product_id"/>
+        </createIndex>
+
+        <createIndex tableName="product_variants" indexName="idx_product_variants_color_id">
+            <column name="color_id"/>
+        </createIndex>
+
+        <createIndex tableName="product_variants" indexName="idx_product_variants_phone_spec_id">
+            <column name="phone_spec_id"/>
+        </createIndex>
+
+        <createIndex tableName="product_variants" indexName="idx_product_variants_laptop_spec_id">
+            <column name="laptop_spec_id"/>
+        </createIndex>
+    </changeSet>
+
     <changeSet id="add-unique-index-order-number" author="your_name">
         <createIndex indexName="idx_unique_order_number" tableName="orders" unique="true">
             <column name="order_number"/>
         </createIndex>
+    </changeSet>
+
+    <changeSet id="add-product-colors-search-index" author="aiteginbaratov">
+        <sql splitStatements="true" stripComments="true">
+            CREATE INDEX IF NOT EXISTS idx_product_colors_name_trgm ON product_colors USING gin (name gin_trgm_ops);
+        </sql>
     </changeSet>
 
 </databaseChangeLog>

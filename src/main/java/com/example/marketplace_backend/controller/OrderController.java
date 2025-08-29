@@ -68,6 +68,14 @@ public class OrderController {
         return ResponseEntity.ok(orderService.createOrderFromCart(userId, request));
     }
 
+    @PostMapping(value = "/create-for-all", consumes = {"multipart/form-data"})
+    public ResponseEntity<OrderResponse> createFullCart(@ModelAttribute OrderRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        UUID userId = userService.findByEmail(email).getId();
+        return ResponseEntity.ok(orderService.createOrderFromCart(userId, request));
+    }
+
     @PostMapping(value = "/create/wholesale", consumes = {"multipart/form-data"})
     public ResponseEntity<OrderWholesaleResponse> createOrderWholesale(@ModelAttribute OrderRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

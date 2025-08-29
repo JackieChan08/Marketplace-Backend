@@ -32,18 +32,7 @@ public class ProductColor {
     @Column
     private String hex;
 
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "product_id")
-    private Product product;
-
     @OneToMany(mappedBy = "color", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<ProductColorImage> images = new ArrayList<>();
-
-    @OneToMany(mappedBy = "productColor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PhoneSpec> phoneSpecs = new ArrayList<>();
-
-    @OneToMany(mappedBy = "productColor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LaptopSpec> laptopSpecs = new ArrayList<>();
 }

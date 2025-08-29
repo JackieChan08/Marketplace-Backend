@@ -8,5 +8,4 @@ import java.util.UUID;
 
 @Repository
 public interface PhoneSpecRepository extends JpaRepository<PhoneSpec, UUID> {
-    void deleteByProductColorId(UUID id);
 }

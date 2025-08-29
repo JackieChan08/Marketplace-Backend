@@ -98,17 +98,6 @@ public class AdminProductController {
     public ResponseEntity<?> createProductWithImages(
             @ModelAttribute ProductRequest request
     ) throws Exception {
-
-        boolean noGeneralImages = request.getImages() == null || request.getImages().isEmpty();
-        boolean noColorImages = request.getColors() == null
-                || request.getColors().isEmpty()
-                || request.getColors().get(0).getImages() == null
-                || request.getColors().get(0).getImages().isEmpty();
-
-        if (noGeneralImages && noColorImages) {
-            return ResponseEntity.badRequest().body("Изображение обязательно для создания продукта");
-        }
-
         ProductResponse productResponse = converterService.convertToProductResponse(
                 productService.createProduct(request)
         );

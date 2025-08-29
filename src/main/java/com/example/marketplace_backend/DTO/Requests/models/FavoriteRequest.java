@@ -6,6 +6,6 @@ import java.util.UUID;
 
 @Data
 public class FavoriteRequest {
-    private UUID productId;
+    private UUID productVariantId;
     private int quantity;
 }
