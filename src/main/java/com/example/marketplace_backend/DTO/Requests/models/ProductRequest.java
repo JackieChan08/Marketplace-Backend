@@ -25,12 +25,9 @@ public class ProductRequest {
     private boolean availability;
     private String title;
     private String description;
+    private String parametersJson;
 
     private List<MultipartFile> images;
     private List<UUID> statusId;
-
-    private String parametersJson;
-
-    private List<ColorRequest> colors;
-
+    private List<VariantRequest> variants;
 }

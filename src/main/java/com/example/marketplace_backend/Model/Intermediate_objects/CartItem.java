@@ -2,6 +2,7 @@ package com.example.marketplace_backend.Model.Intermediate_objects;
 
 import com.example.marketplace_backend.Model.Cart;
 import com.example.marketplace_backend.Model.Product;
+import com.example.marketplace_backend.Model.ProductVariant;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,8 +36,8 @@ public class CartItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "product_variant_id")
+    private ProductVariant productVariant;
 
     @CreationTimestamp
     @Column(name = "added_at")

@@ -21,10 +21,6 @@ public class LaptopSpec {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne()
-    @JoinColumn(name = "color_id", nullable = false)
-    private ProductColor productColor;
-
     @Column(name = "ssd_memory", nullable = false)
     private String ssdMemory;
 

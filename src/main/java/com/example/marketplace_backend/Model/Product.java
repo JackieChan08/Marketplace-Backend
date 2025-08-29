@@ -46,10 +46,8 @@ public class Product {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    // Добавить связь с цветами
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("product-colors")
-    private List<ProductColor> colors = new ArrayList<>();
+    private List<ProductVariant> variants = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("product-images")

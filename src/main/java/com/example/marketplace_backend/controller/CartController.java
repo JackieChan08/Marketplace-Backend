@@ -33,14 +33,14 @@ public class CartController {
 
     @PostMapping(value = "/add", consumes = {"multipart/form-data"})
     public ResponseEntity<CartResponse> addItem(@ModelAttribute CartRequest request) {
-        Cart cart = cartService.addItemToCart(request.getProductId(), request.getQuantity());
+        Cart cart = cartService.addItemToCart(request.getProductVariantId(), request.getQuantity());
         return ResponseEntity.ok(converterService.convertToCartResponse(cart));
     }
 
     @DeleteMapping("/remove")
     public ResponseEntity<String> removeItem(@ModelAttribute CartRequest request) {
-        cartService.removeItemFromCart(request.getProductId());
-        return ResponseEntity.ok("Removed product with ID: " + request.getProductId());
+        cartService.removeItemFromCart(request.getProductVariantId());
+        return ResponseEntity.ok("Removed productVariant with ID: " + request.getProductVariantId());
     }
 
     @DeleteMapping("/clear")
@@ -72,7 +72,7 @@ public class CartController {
         Cart cart = cartService.getCart();
 
         List<UUID> productIds = cart.getCartItems().stream()
-                .map(item -> item.getProduct().getId())
+                .map(item -> item.getProductVariant().getId())
                 .toList();
 
         return ResponseEntity.ok(productIds);

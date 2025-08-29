@@ -12,5 +12,4 @@ import java.util.UUID;
 @Repository
 public interface FavoriteItemRepository extends JpaRepository<FavoriteItem, UUID> {
     List<FavoriteItem> findByFavoriteId(UUID favoriteId);
-    void deleteByFavoriteIdAndProductId(UUID favoriteId, UUID productId);
 }

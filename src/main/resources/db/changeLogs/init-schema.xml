@@ -287,32 +287,21 @@
                                  constraintName="fk_subcategory_images_files"/>
     </changeSet>
 
-    <!-- Product images table -->
-    <changeSet id="create-product-colors-table" author="JekiChan08">
+    <changeSet id="create-product-colors-table" author="aiteginbaratov">
         <createTable tableName="product_colors">
-            <column name="id" type="uuid">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(255)">
-                <constraints nullable="false"/>
+
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="true"/>
             </column>
-            <column name="hex" type="varchar(7)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="product_id" type="uuid">
-                <constraints nullable="false"/>
+
+            <column name="hex" type="VARCHAR(7)">
+                <constraints nullable="true"/>
             </column>
         </createTable>
-
-        <addForeignKeyConstraint baseTableName="product_colors"
-                                 baseColumnNames="product_id"
-                                 referencedTableName="products"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_product_colors_product"
-                                 onDelete="CASCADE"/>
     </changeSet>
-
-
 
     <!-- Переименование и изменение таблицы product_images -->
     <changeSet id="rename-and-modify-product-images-table" author="JekiChan08">
@@ -396,40 +385,6 @@
                                  constraintName="fk_carts_user"/>
     </changeSet>
 
-    <!-- Cart items table -->
-    <changeSet id="17" author="JekiChan08">
-        <createTable tableName="cart_items">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="quantity" type="int">
-                <constraints nullable="false"/>
-            </column>
-            <column name="price" type="decimal(15,2)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="added_at" type="timestamp">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cart_id" type="uuid">
-                <constraints nullable="false"/>
-            </column>
-            <column name="product_id" type="uuid">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-        <addForeignKeyConstraint baseTableName="cart_items"
-                                 baseColumnNames="cart_id"
-                                 referencedTableName="carts"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_cart_items_cart"/>
-        <addForeignKeyConstraint baseTableName="cart_items"
-                                 baseColumnNames="product_id"
-                                 referencedTableName="products"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_cart_items_product"/>
-    </changeSet>
-
     <!-- Favorites table -->
     <changeSet id="18" author="JekiChan08">
         <createTable tableName="favorites">
@@ -449,40 +404,6 @@
                                  referencedTableName="users"
                                  referencedColumnNames="id"
                                  constraintName="fk_favorites_user"/>
-    </changeSet>
-
-    <!-- Favorite item table -->
-    <changeSet id="19" author="JekiChan08">
-        <createTable tableName="favorite_item">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="quantity" type="int">
-                <constraints nullable="false"/>
-            </column>
-            <column name="price" type="decimal(15,2)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="added_at" type="timestamp">
-                <constraints nullable="false"/>
-            </column>
-            <column name="favorite_id" type="uuid">
-                <constraints nullable="false"/>
-            </column>
-            <column name="product_id" type="uuid">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-        <addForeignKeyConstraint baseTableName="favorite_item"
-                                 baseColumnNames="favorite_id"
-                                 referencedTableName="favorites"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_favorite_item_favorite"/>
-        <addForeignKeyConstraint baseTableName="favorite_item"
-                                 baseColumnNames="product_id"
-                                 referencedTableName="products"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_favorite_item_product"/>
     </changeSet>
 
     <!-- Orders table -->
@@ -522,37 +443,6 @@
                 sequenceName="order_number_seq"
                 startValue="1"
                 incrementBy="1"/>
-    </changeSet>
-
-    <!-- Order items table -->
-    <changeSet id="21" author="JekiChan08">
-        <createTable tableName="order_items">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="quantity" type="int">
-                <constraints nullable="false"/>
-            </column>
-            <column name="price" type="decimal(15,2)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="order_id" type="uuid">
-                <constraints nullable="false"/>
-            </column>
-            <column name="product_id" type="uuid">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-        <addForeignKeyConstraint baseTableName="order_items"
-                                 baseColumnNames="order_id"
-                                 referencedTableName="orders"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_order_items_order"/>
-        <addForeignKeyConstraint baseTableName="order_items"
-                                 baseColumnNames="product_id"
-                                 referencedTableName="products"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_order_items_product"/>
     </changeSet>
 
     <!-- Refresh tokens table -->
@@ -709,27 +599,19 @@
             <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="color_id" type="UUID">
+
+            <column name="memory" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="memory" type="VARCHAR(100)">
+
+            <column name="price" type="DECIMAL(15,2)">
                 <constraints nullable="false"/>
             </column>
-            <column name="price" type="DECIMAL(19,2)">
-                <constraints nullable="false"/>
-            </column>
+
             <column name="sim_type" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        <addForeignKeyConstraint
-                baseTableName="phone_spec"
-                baseColumnNames="color_id"
-                constraintName="fk_phone_spec_color"
-                referencedTableName="product_colors"
-                referencedColumnNames="id"
-                onDelete="CASCADE"/>
     </changeSet>
 
     <changeSet id="create-laptop-spec-table" author="aiteginbaratov">
@@ -737,23 +619,178 @@
             <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="color_id" type="UUID">
+
+            <column name="ssd_memory" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="ssd_memory" type="VARCHAR(100)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="price" type="DECIMAL(19,2)">
+
+            <column name="price" type="DECIMAL(15,2)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+
+    <changeSet id="create-product-variants-table" author="aiteginbaratov">
+        <createTable tableName="product_variants">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="product_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="color_id" type="UUID">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="phone_spec_id" type="UUID">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="laptop_spec_id" type="UUID">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <!-- Внешние ключи для product_variants -->
+        <addForeignKeyConstraint
+                baseTableName="product_variants"
+                baseColumnNames="product_id"
+                constraintName="fk_product_variants_product"
+                referencedTableName="products"
+                referencedColumnNames="id"
+                deferrable="false"
+                initiallyDeferred="false"
+                onDelete="CASCADE"/>
 
         <addForeignKeyConstraint
-                baseTableName="laptop_spec"
+                baseTableName="product_variants"
                 baseColumnNames="color_id"
-                constraintName="fk_laptop_spec_color"
+                constraintName="fk_product_variants_color"
                 referencedTableName="product_colors"
                 referencedColumnNames="id"
+                deferrable="false"
+                initiallyDeferred="false"
                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="product_variants"
+                baseColumnNames="phone_spec_id"
+                constraintName="fk_product_variants_phone_spec"
+                referencedTableName="phone_spec"
+                referencedColumnNames="id"
+                deferrable="false"
+                initiallyDeferred="false"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="product_variants"
+                baseColumnNames="laptop_spec_id"
+                constraintName="fk_product_variants_laptop_spec"
+                referencedTableName="laptop_spec"
+                referencedColumnNames="id"
+                deferrable="false"
+                initiallyDeferred="false"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <!-- Cart items table -->
+    <changeSet id="17" author="JekiChan08">
+        <createTable tableName="cart_items">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="decimal(15,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="added_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cart_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_variant_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="cart_items"
+                                 baseColumnNames="cart_id"
+                                 referencedTableName="carts"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_cart_items_cart"/>
+        <addForeignKeyConstraint baseTableName="cart_items"
+                                 baseColumnNames="product_variant_id"
+                                 referencedTableName="product_variants"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_cart_items_product_variants"/>
+    </changeSet>
+
+    <!-- Favorite item table -->
+    <changeSet id="19" author="JekiChan08">
+        <createTable tableName="favorite_item">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="decimal(15,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="added_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="favorite_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_variant_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="favorite_item"
+                                 baseColumnNames="favorite_id"
+                                 referencedTableName="favorites"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_favorite_item_favorite"/>
+        <addForeignKeyConstraint baseTableName="favorite_item"
+                                 baseColumnNames="product_variant_id"
+                                 referencedTableName="product_variants"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_favorite_item_product_variants"/>
+    </changeSet>
+
+    <!-- Order items table -->
+    <changeSet id="21" author="JekiChan08">
+        <createTable tableName="order_items">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="decimal(15,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_variant_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="order_items"
+                                 baseColumnNames="order_id"
+                                 referencedTableName="orders"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_order_items_order"/>
+        <addForeignKeyConstraint baseTableName="order_items"
+                                 baseColumnNames="product_variant_id"
+                                 referencedTableName="product_variants"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_order_items_product_variants"/>
     </changeSet>
 </databaseChangeLog>

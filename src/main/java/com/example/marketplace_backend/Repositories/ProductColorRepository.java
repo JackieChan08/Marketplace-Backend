@@ -12,9 +12,4 @@ import java.util.UUID;
 
 @Repository
 public interface ProductColorRepository extends JpaRepository<ProductColor, UUID> {
-    List<ProductColor> findByProductId(UUID productId);
-
-    @Modifying
-    @Query("DELETE FROM ProductColor pc WHERE pc.product.id = :productId")
-    void deleteByProductId(@Param("productId") UUID productId);
 }

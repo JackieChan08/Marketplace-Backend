@@ -18,6 +18,7 @@ import java.util.UUID;
 public class OrderResponse {
     private UUID id;
     private String address;
+    private String city;
     private String phoneNumber;
     private String comment;
     private BigDecimal totalPrice;

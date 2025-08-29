@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.DTO.Responses.models;
 
 
+import com.example.marketplace_backend.DTO.Requests.models.VariantRequest;
 import com.example.marketplace_backend.Model.Description;
 import com.example.marketplace_backend.Model.Statuses;
 import lombok.AllArgsConstructor;
@@ -43,5 +44,5 @@ public class ProductResponse {
     private List<FileResponse> images;
     private List<StatusResponse> statuses;
     private List<ProductParameterResponse> parameters;
-    private List<ColorResponse> colors;
+    private List<VariantResponse> variants;
 }

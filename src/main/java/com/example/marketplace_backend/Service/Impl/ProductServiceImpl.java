@@ -43,6 +43,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     private final ProductColorImageRepository productColorImageRepository;
     private final PhoneSpecRepository phoneSpecRepository;
     private final LaptopSpecRepository laptopSpecRepository;
+    private final ProductVariantRepository productVariantRepository;
 
     @Value("${app.base-url}")
     private String baseUrl;
@@ -60,7 +61,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                               ProductColorRepository productColorRepository,
                               ProductImageRepository productImageRepository,
                               PhoneSpecRepository phoneSpecRepository,
-                              LaptopSpecRepository laptopSpecRepository) {
+                              LaptopSpecRepository laptopSpecRepository,
+                              ProductVariantRepository productVariantRepository) {
         super(productRepository);
         this.productRepository = productRepository;
         this.fileUploadService = fileUploadService;
@@ -75,6 +77,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         this.productImageRepository = productImageRepository;
         this.phoneSpecRepository = phoneSpecRepository;
         this.laptopSpecRepository = laptopSpecRepository;
+        this.productVariantRepository = productVariantRepository;
     }
 
     public Page<Product> findAllActiveByBrand(UUID brandId, Pageable pageable) {
@@ -217,36 +220,36 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
     }
 
     @Transactional
-    public Product createProduct(ProductRequest dto) throws Exception {
-        // Создаем основной продукт
+    public Product createProduct(ProductRequest request) throws Exception {
+        // Create base product
         Product product = Product.builder()
-                .name(dto.getName())
-                .price(dto.getPrice())
-                .priceDescription(dto.getPriceDescription())
-                .title(dto.getTitle())
-                .description(dto.getDescription())
-                .availability(dto.isAvailability())
+                .name(request.getName())
+                .price(request.getPrice())
+                .priceDescription(request.getPriceDescription())
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .availability(request.isAvailability())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        // Устанавливаем подкатегорию
-        if (dto.getSubCategoryId() != null) {
-            product.setSubcategory(subcategoryRepository.findById(dto.getSubCategoryId())
+        // Set subcategory
+        if (request.getSubCategoryId() != null) {
+            product.setSubcategory(subcategoryRepository.findById(request.getSubCategoryId())
                     .orElseThrow(() -> new RuntimeException("Subcategory not found")));
         }
 
-        // Устанавливаем бренд
-        if (dto.getBrandId() != null) {
-            product.setBrand(brandRepository.findById(dto.getBrandId())
+        // Set brand
+        if (request.getBrandId() != null) {
+            product.setBrand(brandRepository.findById(request.getBrandId())
                     .orElseThrow(() -> new RuntimeException("Brand not found")));
         }
 
         Product savedProduct = productRepository.save(product);
 
-        // Обрабатываем статусы
-        if (dto.getStatusId() != null && !dto.getStatusId().isEmpty()) {
-            for (UUID statusId : dto.getStatusId()) {
+        // Process statuses
+        if (request.getStatusId() != null && !request.getStatusId().isEmpty()) {
+            for (UUID statusId : request.getStatusId()) {
                 Statuses status = statusRepository.findById(statusId)
                         .orElseThrow(() -> new RuntimeException("Status not found with ID: " + statusId));
 
@@ -258,67 +261,81 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
             }
         }
 
-        // Обрабатываем цвета и их спецификации
-        if (dto.getColors() != null && !dto.getColors().isEmpty()) {
-            for (ColorRequest colorDto : dto.getColors()) {
-                ProductColor color = new ProductColor();
-                color.setName(colorDto.getName());
-                color.setHex(colorDto.getHex());
-                color.setProduct(savedProduct);
-                ProductColor savedColor = productColorRepository.save(color);
+        // Process variants (colors, specifications)
+        if (request.getVariants() != null && !request.getVariants().isEmpty()) {
+            for (VariantRequest variantRequest : request.getVariants()) {
+                ProductVariant variant = new ProductVariant();
+                variant.setProduct(savedProduct);
 
-                // Добавляем изображения для цвета
-                if (colorDto.getImages() != null && !colorDto.getImages().isEmpty()) {
-                    for (MultipartFile imageFile : colorDto.getImages()) {
-                        FileEntity fileEntity = fileUploadService.saveImage(imageFile);
-                        ProductColorImage colorImage = new ProductColorImage();
-                        colorImage.setColor(savedColor);
-                        colorImage.setImage(fileEntity);
-                        productColorImageRepository.save(colorImage);
+                // Process color
+                if (variantRequest.getColor() != null) {
+                    ColorRequest colorReq = variantRequest.getColor();
+                    ProductColor color = ProductColor.builder()
+                            .name(colorReq.getName())
+                            .hex(colorReq.getHex())
+                            .build();
+                    ProductColor savedColor = productColorRepository.save(color);
+
+                    // Add color images
+                    if (colorReq.getImages() != null && !colorReq.getImages().isEmpty()) {
+                        for (MultipartFile imageFile : colorReq.getImages()) {
+                            FileEntity fileEntity = fileUploadService.saveImage(imageFile);
+                            ProductColorImage colorImage = ProductColorImage.builder()
+                                    .color(savedColor)
+                                    .image(fileEntity)
+                                    .build();
+                            productColorImageRepository.save(colorImage);
+                        }
                     }
+                    variant.setColor(savedColor);
                 }
 
-                if (colorDto.getPhoneSpecs() != null && !colorDto.getPhoneSpecs().isEmpty()) {
-                    for (PhoneSpecRequest phoneSpecDto : colorDto.getPhoneSpecs()) {
-                        PhoneSpec phoneSpec = PhoneSpec.builder()
-                                .productColor(savedColor)
-                                .memory(phoneSpecDto.getMemory())
-                                .price(phoneSpecDto.getPrice())
-                                .simType(phoneSpecDto.getSimType())
-                                .build();
-                        phoneSpecRepository.save(phoneSpec);
-                    }
+                // Process phone specifications
+                if (variantRequest.getPhoneSpec() != null) {
+                    PhoneSpecRequest specReq = variantRequest.getPhoneSpec();
+                    PhoneSpec spec = PhoneSpec.builder()
+                            .memory(specReq.getMemory())
+                            .price(specReq.getPrice())
+                            .simType(specReq.getSimType())
+                            .build();
+                    PhoneSpec savedSpec = phoneSpecRepository.save(spec);
+                    variant.setPhoneSpec(savedSpec);
                 }
 
-                if (colorDto.getLaptopSpecs() != null && !colorDto.getLaptopSpecs().isEmpty()) {
-                    for (LaptopSpecRequest laptopSpecDto : colorDto.getLaptopSpecs()) {
-                        LaptopSpec laptopSpec = LaptopSpec.builder()
-                                .productColor(savedColor)
-                                .ssdMemory(laptopSpecDto.getSsdMemory())
-                                .price(laptopSpecDto.getPrice())
-                                .build();
-                        laptopSpecRepository.save(laptopSpec);
-                    }
+                // Process laptop specifications
+                if (variantRequest.getLaptopSpec() != null) {
+                    LaptopSpecRequest specReq = variantRequest.getLaptopSpec();
+                    LaptopSpec spec = LaptopSpec.builder()
+                            .ssdMemory(specReq.getSsdMemory())
+                            .price(specReq.getPrice())
+                            .build();
+                    LaptopSpec savedSpec = laptopSpecRepository.save(spec);
+                    variant.setLaptopSpec(savedSpec);
                 }
+
+                productVariantRepository.save(variant);
             }
         }
-        // Если нет цветов, но есть общие картинки
-        else if (dto.getImages() != null && !dto.getImages().isEmpty()) {
-            for (MultipartFile imageFile : dto.getImages()) {
+
+        // Process general product images if no variants with colors
+        if ((request.getVariants() == null || request.getVariants().isEmpty()) &&
+                request.getImages() != null && !request.getImages().isEmpty()) {
+            for (MultipartFile imageFile : request.getImages()) {
                 FileEntity fileEntity = fileUploadService.saveImage(imageFile);
-                ProductImage productImage = new ProductImage();
-                productImage.setProduct(savedProduct);
-                productImage.setImage(fileEntity);
+                ProductImage productImage = ProductImage.builder()
+                        .product(savedProduct)
+                        .image(fileEntity)
+                        .build();
                 productImageRepository.save(productImage);
             }
         }
 
-        // Обрабатываем параметры
+        // Process parameters
         ObjectMapper mapper = new ObjectMapper();
         List<ProductParameterRequest> parameters = new ArrayList<>();
-        if (dto.getParametersJson() != null && !dto.getParametersJson().isEmpty()) {
+        if (request.getParametersJson() != null && !request.getParametersJson().isEmpty()) {
             parameters = mapper.readValue(
-                    dto.getParametersJson(),
+                    request.getParametersJson(),
                     new TypeReference<List<ProductParameterRequest>>() {}
             );
         }
@@ -345,7 +362,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
             }
         }
 
-        // Возвращаем созданный продукт
+        // Return created product
         return productRepository.findByIdWithImagesAndStatuses(savedProduct.getId())
                 .orElseThrow(() -> new RuntimeException("Product not found after creation"));
     }
@@ -355,7 +372,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        // Обновляем базовые поля
+        // Update basic fields
         if (dto.getName() != null) product.setName(dto.getName());
         if (dto.getPrice() != null) product.setPrice(dto.getPrice());
         if (dto.getPriceDescription() != null) product.setPriceDescription(dto.getPriceDescription());
@@ -372,7 +389,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                     .orElseThrow(() -> new RuntimeException("Brand not found")));
         }
 
-        // Обновляем статусы
+        // Update statuses
         if (dto.getStatusId() != null && !dto.getStatusId().isEmpty()) {
             productStatusRepository.deleteByProductId(product.getId());
 
@@ -391,84 +408,92 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         product.setUpdatedAt(LocalDateTime.now());
         Product updatedProduct = productRepository.save(product);
 
-        // Обновляем цвета и их спецификации
-        if (dto.getColors() != null && !dto.getColors().isEmpty()) {
-            // Удаляем старые цвета и все связанные с ними данные
-            List<ProductColor> existingColors = productColorRepository.findByProductId(product.getId());
-            for (ProductColor existingColor : existingColors) {
-                // Удаляем спецификации телефонов
-                phoneSpecRepository.deleteByProductColorId(existingColor.getId());
-                // Удаляем спецификации ноутбуков
-                laptopSpecRepository.deleteByProductColorId(existingColor.getId());
-                // Удаляем изображения цветов
-                productColorImageRepository.deleteByColorId(existingColor.getId());
-            }
-            // Удаляем сами цвета
-            productColorRepository.deleteByProductId(product.getId());
-
-            // Создаем новые цвета
-            for (ColorRequest colorDto : dto.getColors()) {
-                ProductColor color = new ProductColor();
-                color.setName(colorDto.getName());
-                color.setHex(colorDto.getHex());
-                color.setProduct(updatedProduct);
-                ProductColor savedColor = productColorRepository.save(color);
-
-                // Добавляем изображения для цвета
-                if (colorDto.getImages() != null && !colorDto.getImages().isEmpty()) {
-                    for (MultipartFile imageFile : colorDto.getImages()) {
-                        FileEntity fileEntity = fileUploadService.saveImage(imageFile);
-                        ProductColorImage colorImage = new ProductColorImage();
-                        colorImage.setColor(savedColor);
-                        colorImage.setImage(fileEntity);
-                        productColorImageRepository.save(colorImage);
-                    }
+        // Update variants
+        if (dto.getVariants() != null) {
+            // Delete existing variants and related data
+            List<ProductVariant> existingVariants = productVariantRepository.findByProductId(product.getId());
+            for (ProductVariant variant : existingVariants) {
+                if (variant.getColor() != null) {
+                    // Delete color images
+                    productColorImageRepository.deleteByColorId(variant.getColor().getId());
+                    // Delete color
+                    productColorRepository.deleteById(variant.getColor().getId());
                 }
-
-                // Обрабатываем спецификации в зависимости от категории продукта
-                String categoryName = product.getSubcategory().getCategory().getName().toLowerCase();
-
-                if ("phone".equals(categoryName) || "smartphone".equals(categoryName)) {
-                    // Создаем спецификации для телефонов
-                    if (colorDto.getPhoneSpecs() != null && !colorDto.getPhoneSpecs().isEmpty()) {
-                        for (PhoneSpecRequest phoneSpecDto : colorDto.getPhoneSpecs()) {
-                            PhoneSpec phoneSpec = PhoneSpec.builder()
-                                    .productColor(savedColor)
-                                    .memory(phoneSpecDto.getMemory())
-                                    .price(phoneSpecDto.getPrice())
-                                    .simType(phoneSpecDto.getSimType())
-                                    .build();
-                            phoneSpecRepository.save(phoneSpec);
-                        }
-                    }
-                } else if ("laptop".equals(categoryName) || "notebook".equals(categoryName)) {
-                    // Создаем спецификации для ноутбуков
-                    if (colorDto.getLaptopSpecs() != null && !colorDto.getLaptopSpecs().isEmpty()) {
-                        for (LaptopSpecRequest laptopSpecDto : colorDto.getLaptopSpecs()) {
-                            LaptopSpec laptopSpec = LaptopSpec.builder()
-                                    .productColor(savedColor)
-                                    .ssdMemory(laptopSpecDto.getSsdMemory())
-                                    .price(laptopSpecDto.getPrice())
-                                    .build();
-                            laptopSpecRepository.save(laptopSpec);
-                        }
-                    }
+                if (variant.getPhoneSpec() != null) {
+                    phoneSpecRepository.deleteById(variant.getPhoneSpec().getId());
+                }
+                if (variant.getLaptopSpec() != null) {
+                    laptopSpecRepository.deleteById(variant.getLaptopSpec().getId());
                 }
             }
-        }
-        // Если нет цветов, но есть общие картинки
-        else if (dto.getImages() != null && !dto.getImages().isEmpty()) {
+            productVariantRepository.deleteByProductId(product.getId());
+
+            // Create new variants
+            for (VariantRequest variantRequest : dto.getVariants()) {
+                ProductVariant variant = new ProductVariant();
+                variant.setProduct(updatedProduct);
+
+                // Process color
+                if (variantRequest.getColor() != null) {
+                    ColorRequest colorReq = variantRequest.getColor();
+                    ProductColor color = ProductColor.builder()
+                            .name(colorReq.getName())
+                            .hex(colorReq.getHex())
+                            .build();
+                    ProductColor savedColor = productColorRepository.save(color);
+
+                    // Add color images
+                    if (colorReq.getImages() != null && !colorReq.getImages().isEmpty()) {
+                        for (MultipartFile imageFile : colorReq.getImages()) {
+                            FileEntity fileEntity = fileUploadService.saveImage(imageFile);
+                            ProductColorImage colorImage = ProductColorImage.builder()
+                                    .color(savedColor)
+                                    .image(fileEntity)
+                                    .build();
+                            productColorImageRepository.save(colorImage);
+                        }
+                    }
+                    variant.setColor(savedColor);
+                }
+
+                // Process specifications
+                if (variantRequest.getPhoneSpec() != null) {
+                    PhoneSpecRequest specReq = variantRequest.getPhoneSpec();
+                    PhoneSpec spec = PhoneSpec.builder()
+                            .memory(specReq.getMemory())
+                            .price(specReq.getPrice())
+                            .simType(specReq.getSimType())
+                            .build();
+                    PhoneSpec savedSpec = phoneSpecRepository.save(spec);
+                    variant.setPhoneSpec(savedSpec);
+                }
+
+                if (variantRequest.getLaptopSpec() != null) {
+                    LaptopSpecRequest specReq = variantRequest.getLaptopSpec();
+                    LaptopSpec spec = LaptopSpec.builder()
+                            .ssdMemory(specReq.getSsdMemory())
+                            .price(specReq.getPrice())
+                            .build();
+                    LaptopSpec savedSpec = laptopSpecRepository.save(spec);
+                    variant.setLaptopSpec(savedSpec);
+                }
+
+                productVariantRepository.save(variant);
+            }
+        } else if (dto.getImages() != null && !dto.getImages().isEmpty()) {
+            // If no variants but has general images
             productImageRepository.deleteByProductId(product.getId());
             for (MultipartFile imageFile : dto.getImages()) {
                 FileEntity fileEntity = fileUploadService.saveImage(imageFile);
-                ProductImage productImage = new ProductImage();
-                productImage.setProduct(updatedProduct);
-                productImage.setImage(fileEntity);
+                ProductImage productImage = ProductImage.builder()
+                        .product(updatedProduct)
+                        .image(fileEntity)
+                        .build();
                 productImageRepository.save(productImage);
             }
         }
 
-        // Обновляем параметры (остается без изменений)
+        // Update parameters
         ObjectMapper mapper = new ObjectMapper();
         List<ProductParameterRequest> parameters = new ArrayList<>();
         if (dto.getParametersJson() != null && !dto.getParametersJson().isEmpty()) {
@@ -502,42 +527,18 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
             }
         }
 
-        // Возвращаем обновленный продукт
         return productRepository.findByIdWithImagesAndStatuses(updatedProduct.getId())
                 .orElseThrow(() -> new RuntimeException("Product not found after update"));
     }
-
 
     @Override
     public void delete(UUID id) {
         try {
             productRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Ошибка при удалении продукта с ID: " + id, e);
+            throw new RuntimeException("Error deleting product with ID: " + id, e);
         }
     }
-
-//    public boolean deleteProductImage(UUID productId, UUID imageId) {
-//        Optional<Product> productOpt = productRepository.findById(productId);
-//
-//        if (productOpt.isEmpty()) {
-//            return false;
-//        }
-//
-//        Product product = productOpt.get();
-//
-//        boolean removed = false;
-//        if(product.getProductColorImages() != null) {
-//            removed = product.getProductColorImages().removeIf(img ->
-//                    img.getImage() != null && img.getProduct().getId().equals(productId));
-//        }
-//
-//        if (removed) {
-//            productRepository.save(product);
-//        }
-//
-//        return removed;
-//    }
 
     public Page<ProductResponse> filterProducts(ProductFilterRequest filterRequest) {
         Specification<Product> spec =
@@ -547,8 +548,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                         .and(ProductSpecification.hasPriceBetween(filterRequest.getMinPrice(), filterRequest.getMaxPrice()))
                         .and(ProductSpecification.hasStatusIds(filterRequest.getStatusIds()));
 
-
-        // Сортировка
+        // Sorting
         String sortBy = filterRequest.getSortBy() != null ? filterRequest.getSortBy() : "name";
         String direction = filterRequest.getSortDirection() != null ? filterRequest.getSortDirection() : "asc";
         Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
@@ -559,4 +559,5 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
 
         return productPage.map(converter::convertToProductResponse);
     }
+
 }

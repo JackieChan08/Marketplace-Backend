@@ -119,10 +119,13 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         }
 
         for (CartItem cartItem : selectedItems) {
+            if (cartItem.getProductVariant() == null) {
+                throw new RuntimeException("CartItem " + cartItem.getId() + " has no associated ProductVariant");
+            }
+
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
-            orderItem.setProduct(productRepository.findById(cartItem.getProduct().getId())
-                    .orElseThrow(() -> new RuntimeException("Product not found")));
+            orderItem.setProductVariant(cartItem.getProductVariant());
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setPrice(cartItem.getPrice());
 
@@ -139,6 +142,88 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, UUID> {
         Order savedOrder = orderRepository.save(order);
         return converterService.toOrderResponse(savedOrder);
     }
+
+    public OrderResponse createOrderFromFullCart(UUID userId, OrderRequest request) {
+        Cart cart = cartRepository.findCartByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+
+        // Находим пользователя
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (cart.getCartItems().isEmpty()) {
+            throw new RuntimeException("Cart is empty");
+        }
+
+        // Заполняем недостающие данные у пользователя
+        boolean userUpdated = false;
+        if ((user.getPhoneNumber() == null || user.getPhoneNumber().isEmpty()) && request.getPhoneNumber() != null) {
+            user.setPhoneNumber(request.getPhoneNumber());
+            userUpdated = true;
+        }
+        if ((user.getCity() == null || user.getCity().isEmpty()) && request.getCity() != null) {
+            user.setCity(request.getCity());
+            userUpdated = true;
+        }
+        if ((user.getAddress() == null || user.getAddress().isEmpty()) && request.getAddress() != null) {
+            user.setAddress(request.getAddress());
+            userUpdated = true;
+        }
+        if (userUpdated) {
+            userRepository.save(user);
+        }
+
+        // Создаём заказ
+        Order order = new Order();
+        order.setUser(user);
+        order.setAddress(request.getAddress());
+        order.setCity(request.getCity());
+        order.setPhoneNumber(request.getPhoneNumber());
+        order.setComment(request.getComment());
+        order.setWholesale(false);
+        order.setPaymentMethod(request.getPaymentMethod());
+        order.setOrderNumber(orderNumberGeneratorService.generateOrderNumber());
+
+        // Устанавливаем статус
+        if (request.getStatusId() != null) {
+            Statuses status = statusRepository.findById(request.getStatusId())
+                    .orElseThrow(() -> new RuntimeException("Status not found with ID: " + request.getStatusId()));
+            order.setStatus(status);
+        } else {
+            Statuses defaultStatus = statusRepository.findByNameByOrderFlag("Без статуса")
+                    .orElseThrow(() -> new RuntimeException("Default status not found"));
+            order.setStatus(defaultStatus);
+        }
+
+        List<OrderItem> orderItems = new ArrayList<>();
+        BigDecimal total = BigDecimal.ZERO;
+
+        // Берём все товары корзины
+        for (CartItem cartItem : cart.getCartItems()) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setProductVariant(cartItem.getProductVariant());
+            orderItem.setQuantity(cartItem.getQuantity());
+            orderItem.setPrice(cartItem.getPrice());
+
+            BigDecimal itemTotal = cartItem.getPrice()
+                    .multiply(BigDecimal.valueOf(cartItem.getQuantity()));
+            total = total.add(itemTotal);
+
+            orderItems.add(orderItem);
+        }
+
+        order.setOrderItems(orderItems);
+        order.setTotalPrice(total);
+
+        Order savedOrder = orderRepository.save(order);
+
+        cart.getCartItems().clear();
+        cartRepository.save(cart);
+
+        return converterService.toOrderResponse(savedOrder);
+    }
+
 
     public OrderWholesaleResponse createOrderWholesale(UUID userId, OrderRequest request) {
         // Находим пользователя

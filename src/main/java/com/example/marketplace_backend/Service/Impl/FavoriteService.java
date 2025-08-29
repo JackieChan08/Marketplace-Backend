@@ -30,6 +30,7 @@ public class FavoriteService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final UserServiceImpl userService;
+    private final ProductVariantRepository productVariantRepository;
 
     @Autowired
     public FavoriteService(FavoriteRepository favoriteRepository,
@@ -37,13 +38,15 @@ public class FavoriteService {
                            ProductServiceImpl productService,
                            UserRepository userRepository,
                            ProductRepository productRepository,
-                           UserServiceImpl userService) {
+                           UserServiceImpl userService,
+                           ProductVariantRepository productVariantRepository) {
         this.favoriteRepository = favoriteRepository;
         this.favoriteItemRepository = favoriteItemRepository;
         this.productService = productService;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.userService = userService;
+        this.productVariantRepository = productVariantRepository;
     }
 
     public Favorite getFavorite() {
@@ -66,16 +69,13 @@ public class FavoriteService {
     }
 
     @Transactional
-    public Favorite addItemToFavorite(UUID productId, int quantity) {
+    public Favorite addItemToFavorite(UUID productVariantId, int quantity) {
         Favorite favorite = getFavorite();
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+        ProductVariant productVariant = productVariantRepository.findById(productVariantId).orElseThrow(() -> new RuntimeException("ProductVariant not found"));
 
         Optional<FavoriteItem> existingItem = favorite.getFavoriteItems().stream()
-                .filter(item -> item.getProduct().equals(product))
+                .filter(item -> item.getProductVariant().equals(productVariant))
                 .findFirst();
-
-        BigDecimal productPrice = getProductPrice(productId);
 
         if (existingItem.isPresent()) {
             FavoriteItem item = existingItem.get();
@@ -83,9 +83,10 @@ public class FavoriteService {
         } else {
             FavoriteItem newItem = new FavoriteItem();
             newItem.setFavorite(favorite);
-            newItem.setProduct(product);
+            newItem.setProductVariant(productVariant);
             newItem.setQuantity(quantity);
-            newItem.setPrice(productPrice);
+            BigDecimal price = resolveProductPrice(productVariant);
+            newItem.setPrice(price);
             favorite.getFavoriteItems().add(newItem);
         }
 
@@ -99,7 +100,7 @@ public class FavoriteService {
     @Transactional
     public void removeItemFromFavorite(UUID productId) {
         Favorite favorite = getFavorite();
-        favorite.getFavoriteItems().removeIf(item -> item.getProduct().getId().equals(productId));
+        favorite.getFavoriteItems().removeIf(item -> item.getProductVariant().getId().equals(productId));
         favoriteRepository.save(favorite);
     }
 
@@ -115,4 +116,17 @@ public class FavoriteService {
                 .map(favorite -> ResponseEntity.ok(favorite.getFavoriteItems()))
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    private BigDecimal resolveProductPrice(ProductVariant variant) {
+        if (variant.getPhoneSpec() != null && variant.getPhoneSpec().getPrice() != null) {
+            return variant.getPhoneSpec().getPrice();
+        } else if (variant.getLaptopSpec() != null && variant.getLaptopSpec().getPrice() != null) {
+            return variant.getLaptopSpec().getPrice();
+        } else if (variant.getProduct() != null && variant.getProduct().getPrice() != null) {
+            return variant.getProduct().getPrice();
+        } else {
+            throw new RuntimeException("Price not defined for product variant: " + variant.getId());
+        }
+    }
+
 }

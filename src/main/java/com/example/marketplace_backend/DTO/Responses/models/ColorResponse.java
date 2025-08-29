@@ -17,8 +17,5 @@ public class ColorResponse {
     private String name;
     private String hex;
     private List<FileResponse> images;
-
-    private List<PhoneSpecResponse> phoneSpecs;
-    private List<LaptopSpecResponse> laptopSpecs;
 }
 

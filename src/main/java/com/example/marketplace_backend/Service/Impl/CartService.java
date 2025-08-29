@@ -31,18 +31,23 @@ public class CartService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final UserServiceImpl  userService;
+    private final ProductVariantRepository productVariantRepository;
 
     @Autowired
     public CartService(CartRepository cartRepository,
                        CartItemRepository cartItemRepository,
                        ProductServiceImpl productService,
-                       UserRepository userRepository, ProductRepository productRepository, UserServiceImpl userService) {
+                       UserRepository userRepository,
+                       ProductRepository productRepository,
+                       UserServiceImpl userService,
+                       ProductVariantRepository productVariantRepository) {
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.productService = productService;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.userService = userService;
+        this.productVariantRepository = productVariantRepository;
     }
 
     public Cart getCart() {
@@ -70,16 +75,14 @@ public class CartService {
     }
 
     @Transactional
-    public Cart addItemToCart(UUID productId, int quantity) {
+    public Cart addItemToCart(UUID productVariantId, int quantity) {
 
         Cart cart = getCart();
-        Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
+        ProductVariant productVariant = productVariantRepository.findById(productVariantId).orElseThrow(() -> new RuntimeException("ProductVariant not found"));
 
         Optional<CartItem> existingItem = cart.getCartItems().stream()
-                .filter(item -> item.getProduct().equals(product))
+                .filter(item -> item.getProductVariant().equals(productVariant))
                 .findFirst();
-
-        BigDecimal productPrice = getProductPrice(productId);
 
         if (existingItem.isPresent()) {
             CartItem item = existingItem.get();
@@ -88,9 +91,10 @@ public class CartService {
 
             CartItem newItem = new CartItem();
             newItem.setCart(cart);
-            newItem.setProduct(product);
+            newItem.setProductVariant(productVariant);
             newItem.setQuantity(quantity);
-            newItem.setPrice(productPrice);
+            BigDecimal price = resolveProductPrice(productVariant);
+            newItem.setPrice(price);
             cart.getCartItems().add(newItem);
         }
 
@@ -104,7 +108,7 @@ public class CartService {
     @Transactional
     public void removeItemFromCart(UUID productId) {
         Cart cart = getCart();
-        cart.getCartItems().removeIf(item -> item.getProduct().getId().equals(productId));
+        cart.getCartItems().removeIf(item -> item.getProductVariant().getId().equals(productId));
         cartRepository.save(cart);
     }
 
@@ -129,7 +133,7 @@ public class CartService {
         Cart cart = getCart(); // твой метод, который достаёт корзину текущего пользователя
 
         CartItem cartItem = cart.getCartItems().stream()
-                .filter(item -> item.getProduct().getId().equals(productId))
+                .filter(item -> item.getProductVariant().getId().equals(productId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Product not found in cart"));
 
@@ -144,5 +148,19 @@ public class CartService {
 
         return cartRepository.save(cart);
     }
+
+    private BigDecimal resolveProductPrice(ProductVariant variant) {
+        if (variant.getPhoneSpec() != null && variant.getPhoneSpec().getPrice() != null) {
+            return variant.getPhoneSpec().getPrice();
+        } else if (variant.getLaptopSpec() != null && variant.getLaptopSpec().getPrice() != null) {
+            return variant.getLaptopSpec().getPrice();
+        } else if (variant.getProduct() != null && variant.getProduct().getPrice() != null) {
+            return variant.getProduct().getPrice();
+        } else {
+            throw new RuntimeException("Price not defined for product variant: " + variant.getId());
+        }
+    }
+
+
 }
 

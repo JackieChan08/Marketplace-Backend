@@ -18,7 +18,7 @@ import java.util.UUID;
 public class CartItemResponse {
     private UUID cartItemId;
     private UUID userId;
-    private ProductResponse productResponse;
+    private ProductVariantResponse productVariant;
     private int quantity;
     private BigDecimal pricePerItem;
     private BigDecimal totalPrice;

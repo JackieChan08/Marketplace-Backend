@@ -30,14 +30,14 @@ public class FavoriteController {
 
     @PostMapping(value = "/add", consumes = {"multipart/form-data"})
     public ResponseEntity<FavoriteResponse> addItem(@ModelAttribute FavoriteRequest request) {
-        Favorite favorite = favoriteService.addItemToFavorite(request.getProductId(), request.getQuantity());
+        Favorite favorite = favoriteService.addItemToFavorite(request.getProductVariantId(), request.getQuantity());
         return ResponseEntity.ok(converterService.convertToFavoriteResponse(favorite));
     }
 
     @DeleteMapping("/remove")
     public ResponseEntity<String> removeItem(@ModelAttribute FavoriteRequest request) {
-        favoriteService.removeItemFromFavorite(request.getProductId());
-        return ResponseEntity.ok("Removed product with ID: " + request.getProductId());
+        favoriteService.removeItemFromFavorite(request.getProductVariantId());
+        return ResponseEntity.ok("Removed product with ID: " + request.getProductVariantId());
     }
 
     @DeleteMapping("/clear")
@@ -73,7 +73,7 @@ public class FavoriteController {
         Favorite favorite = favoriteService.getFavorite();
 
         List<UUID> productIds = favorite.getFavoriteItems().stream()
-                .map(item -> item.getProduct().getId())
+                .map(item -> item.getProductVariant().getId())
                 .toList();
 
         return ResponseEntity.ok(productIds);

@@ -16,7 +16,7 @@ import java.util.UUID;
 public class FavoriteItemResponse {
     private UUID favoriteItemId;
     private int quantity;
-    private ProductResponse productResponse;
+    private ProductVariantResponse productVariant;
     private BigDecimal pricePerItem;
     private BigDecimal totalPrice;
     private LocalDateTime addedAt;
