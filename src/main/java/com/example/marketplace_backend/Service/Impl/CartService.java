@@ -101,10 +101,6 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    private BigDecimal getProductPrice(UUID productId) {
-        return productService.getById(productId).getPrice();
-    }
-
     @Transactional
     public void removeItemFromCart(UUID productId) {
         Cart cart = getCart();
@@ -159,6 +155,18 @@ public class CartService {
         } else {
             throw new RuntimeException("Price not defined for product variant: " + variant.getId());
         }
+    }
+
+    public List<UUID> getProductVariantsIds() {
+        return getCart().getCartItems().stream()
+                .map(ids -> ids.getProductVariant().getId())
+                .toList();
+    }
+
+    public List<UUID> getProductIds() {
+        return getCart().getCartItems().stream()
+                .map(ids -> ids.getProductVariant().getProduct().getId())
+                .toList();
     }
 
 

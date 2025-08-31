@@ -3,14 +3,10 @@ package com.example.marketplace_backend.controller;
 import com.example.marketplace_backend.DTO.Requests.models.CartRequest;
 import com.example.marketplace_backend.DTO.Responses.models.CartItemResponse;
 import com.example.marketplace_backend.DTO.Responses.models.CartResponse;
-import com.example.marketplace_backend.DTO.Responses.models.FavoriteItemResponse;
 import com.example.marketplace_backend.Model.Cart;
 import com.example.marketplace_backend.Model.Intermediate_objects.CartItem;
-import com.example.marketplace_backend.Model.Intermediate_objects.FavoriteItem;
 import com.example.marketplace_backend.Service.Impl.CartService;
 import com.example.marketplace_backend.Service.Impl.ConverterService;
-import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
-import com.example.marketplace_backend.Service.Impl.auth.UserServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -67,15 +63,14 @@ public class CartController {
        return ResponseEntity.ok(responses);
     }
 
+    @GetMapping("/product-variant-ids")
+    public ResponseEntity<List<UUID>> getProductVariantIds() {
+        return ResponseEntity.ok(cartService.getProductVariantsIds());
+    }
+
     @GetMapping("/product-ids")
     public ResponseEntity<List<UUID>> getProductIds() {
-        Cart cart = cartService.getCart();
-
-        List<UUID> productIds = cart.getCartItems().stream()
-                .map(item -> item.getProductVariant().getId())
-                .toList();
-
-        return ResponseEntity.ok(productIds);
+        return ResponseEntity.ok(cartService.getProductIds());
     }
 
     @PostMapping("/update-quantity")
