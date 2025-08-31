@@ -129,4 +129,16 @@ public class FavoriteService {
         }
     }
 
+    public List<UUID> getProductVariantsIds() {
+        return getFavorite().getFavoriteItems().stream()
+                .map(ids -> ids.getProductVariant().getId())
+                .toList();
+    }
+
+    public List<UUID> getProductIds() {
+        return getFavorite().getFavoriteItems().stream()
+                .map(ids -> ids.getProductVariant().getProduct().getId())
+                .toList();
+    }
+
 }

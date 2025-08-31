@@ -315,6 +315,10 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
 
                 productVariantRepository.save(variant);
             }
+        } else {
+            ProductVariant variant = new ProductVariant();
+            variant.setProduct(savedProduct);
+            productVariantRepository.save(variant);
         }
 
         // Process general product images if no variants with colors

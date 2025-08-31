@@ -68,15 +68,15 @@ public class FavoriteController {
         return ResponseEntity.ok(responses);
     }
 
+    @GetMapping("/product-variant-ids")
+    public ResponseEntity<List<UUID>> getProductVariantsIds() {
+        return ResponseEntity.ok(favoriteService.getProductVariantsIds());
+    }
+
     @GetMapping("/product-ids")
     public ResponseEntity<List<UUID>> getProductIds() {
-        Favorite favorite = favoriteService.getFavorite();
-
-        List<UUID> productIds = favorite.getFavoriteItems().stream()
-                .map(item -> item.getProductVariant().getId())
-                .toList();
-
-        return ResponseEntity.ok(productIds);
+        return ResponseEntity.ok(favoriteService.getProductIds());
     }
+
 }
 
