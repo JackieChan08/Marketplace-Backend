@@ -73,7 +73,7 @@ public class OrderController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         UUID userId = userService.findByEmail(email).getId();
-        return ResponseEntity.ok(orderService.createOrderFromCart(userId, request));
+        return ResponseEntity.ok(orderService.createOrderFromFullCart(userId, request));
     }
 
     @PostMapping(value = "/create/wholesale", consumes = {"multipart/form-data"})

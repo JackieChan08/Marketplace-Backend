@@ -2,16 +2,9 @@ package com.example.marketplace_backend.controller;
 
 import com.example.marketplace_backend.DTO.Responses.models.CategoryResponse;
 import com.example.marketplace_backend.DTO.Responses.models.CategoryWithSubcategoryResponse;
-import com.example.marketplace_backend.DTO.Responses.models.FileResponse;
-import com.example.marketplace_backend.DTO.Responses.models.ProductResponse;
 import com.example.marketplace_backend.Model.Category;
-import com.example.marketplace_backend.Model.FileEntity;
-import com.example.marketplace_backend.Model.Product;
-import com.example.marketplace_backend.Repositories.CategoryRepository;
-import com.example.marketplace_backend.Repositories.ProductRepository;
 import com.example.marketplace_backend.Service.Impl.CategoryServiceImpl;
 import com.example.marketplace_backend.Service.Impl.ConverterService;
-import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;

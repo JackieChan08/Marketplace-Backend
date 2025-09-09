@@ -1,6 +1,8 @@
 package com.example.marketplace_backend.DTO.Responses.models;
 
 
+import com.example.marketplace_backend.DTO.Responses.models.ImageReponse.CategoryIconResponse;
+import com.example.marketplace_backend.DTO.Responses.models.ImageReponse.CategoryImageResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

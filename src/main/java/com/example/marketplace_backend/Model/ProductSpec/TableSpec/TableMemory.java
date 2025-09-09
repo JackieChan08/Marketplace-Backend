@@ -1,6 +1,5 @@
-package com.example.marketplace_backend.Model.ProductSpec;
+package com.example.marketplace_backend.Model.ProductSpec.TableSpec;
 
-import com.example.marketplace_backend.Model.ProductColor;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,19 +10,23 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "laptop_spec")
+@Table(name = "table_memories")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LaptopSpec {
+public class TableMemory {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "ssd_memory", nullable = false)
-    private String ssdMemory;
+    @Column
+    private String name;
 
-    @Column(nullable = false)
+    @Column
     private BigDecimal price;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "module_id")
+    private TableModule tableModule;
 }

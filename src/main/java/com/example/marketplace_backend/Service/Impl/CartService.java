@@ -148,8 +148,18 @@ public class CartService {
     private BigDecimal resolveProductPrice(ProductVariant variant) {
         if (variant.getPhoneSpec() != null && variant.getPhoneSpec().getPrice() != null) {
             return variant.getPhoneSpec().getPrice();
-        } else if (variant.getLaptopSpec() != null && variant.getLaptopSpec().getPrice() != null) {
-            return variant.getLaptopSpec().getPrice();
+        } else if (variant.getLaptopSpec() != null
+                && !variant.getLaptopSpec().getChips().isEmpty()
+                && !variant.getLaptopSpec().getChips().get(0).getSsds().isEmpty()
+                && !variant.getLaptopSpec().getChips().get(0).getSsds().get(0).getRams().isEmpty()
+                && variant.getLaptopSpec().getChips().get(0).getSsds().get(0).getRams().get(0).getPrice() != null) {
+            return variant.getLaptopSpec().getChips()
+                    .get(0)
+                    .getSsds()
+                    .get(0)
+                    .getRams()
+                    .get(0)
+                    .getPrice();
         } else if (variant.getProduct() != null && variant.getProduct().getPrice() != null) {
             return variant.getProduct().getPrice();
         } else {

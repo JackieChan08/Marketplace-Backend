@@ -2,7 +2,7 @@
 2025-07-25 17:04:49.277 INFO  [restartedMain] c.e.m.MarketplaceBackendApplication      : No active profile set, falling back to 1 default profile: "default"
 2025-07-25 17:04:49.314 INFO  [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
 2025-07-25 17:04:49.314 INFO  [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2025-07-25 17:04:50.139 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-25 17:04:50.139 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data tableModules found, entering strict repository configuration mode
 2025-07-25 17:04:50.140 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
 2025-07-25 17:04:50.181 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.BrandImageRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
 2025-07-25 17:04:50.183 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.BrandRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
@@ -27,7 +27,7 @@
 2025-07-25 17:04:50.207 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.SubcategoryRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
 2025-07-25 17:04:50.208 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
 2025-07-25 17:04:50.208 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 63 ms. Found 0 JDBC repository interfaces.
-2025-07-25 17:04:50.220 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-25 17:04:50.220 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data tableModules found, entering strict repository configuration mode
 2025-07-25 17:04:50.220 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
 2025-07-25 17:04:50.291 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 66 ms. Found 22 JPA repository interfaces.
 2025-07-25 17:04:50.785 INFO  [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
@@ -261,7 +261,7 @@ Caused by: org.postgresql.util.PSQLException: ERROR: column "color" of relation 
 2025-07-25 17:04:52.290 INFO  [restartedMain] liquibase.command                        : Command execution complete
 2025-07-25 17:04:53.805 ERROR [restartedMain] o.s.b.web.embedded.tomcat.TomcatStarter  : Error starting Tomcat context. Exception: org.springframework.beans.factory.UnsatisfiedDependencyException. Message: Error creating bean with name 'jwtAuthenticationFilter' defined in file [C:\Jackie\Project\Marketplace_Backend\target\classes\com\example\marketplace_backend\config\JwtAuthenticationFilter.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'customUserDetailsService' defined in file [C:\Jackie\Project\Marketplace_Backend\target\classes\com\example\marketplace_backend\Service\Impl\auth\CustomUserDetailsService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'userRepository' defined in com.example.marketplace_backend.Repositories.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
 2025-07-25 17:04:53.833 INFO  [restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
-2025-07-25 17:04:53.836 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [HikariPool-1:housekeeper] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+2025-07-25 17:04:53.836 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [HikariPool-1:housekeeper] but has failed to stop it. This is very likely to create a tableMemory leak. Stack trace of thread:
  java.base@17.0.14/jdk.internal.misc.Unsafe.park(Native Method)
  java.base@17.0.14/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
  java.base@17.0.14/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1679)
@@ -271,7 +271,7 @@ Caused by: org.postgresql.util.PSQLException: ERROR: column "color" of relation 
  java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
  java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
  java.base@17.0.14/java.lang.Thread.run(Thread.java:840)
-2025-07-25 17:04:53.836 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [HikariPool-1:connection-adder] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+2025-07-25 17:04:53.836 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [HikariPool-1:connection-adder] but has failed to stop it. This is very likely to create a tableMemory leak. Stack trace of thread:
  java.base@17.0.14/jdk.internal.misc.Unsafe.park(Native Method)
  java.base@17.0.14/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
  java.base@17.0.14/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1679)
@@ -280,7 +280,7 @@ Caused by: org.postgresql.util.PSQLException: ERROR: column "color" of relation 
  java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
  java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
  java.base@17.0.14/java.lang.Thread.run(Thread.java:840)
-2025-07-25 17:04:53.836 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [Thread-4] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+2025-07-25 17:04:53.836 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [Thread-4] but has failed to stop it. This is very likely to create a tableMemory leak. Stack trace of thread:
  java.base@17.0.14/sun.nio.ch.SocketDispatcher.read0(Native Method)
  java.base@17.0.14/sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:46)
  java.base@17.0.14/sun.nio.ch.NioSocketImpl.tryRead(NioSocketImpl.java:266)
@@ -532,7 +532,7 @@ Caused by: org.postgresql.util.PSQLException: ERROR: column "color" of relation 
 2025-07-25 17:05:09.672 INFO  [restartedMain] c.e.m.MarketplaceBackendApplication      : No active profile set, falling back to 1 default profile: "default"
 2025-07-25 17:05:09.717 INFO  [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
 2025-07-25 17:05:09.717 INFO  [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2025-07-25 17:05:10.390 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-25 17:05:10.390 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data tableModules found, entering strict repository configuration mode
 2025-07-25 17:05:10.392 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
 2025-07-25 17:05:10.423 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.BrandImageRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
 2025-07-25 17:05:10.424 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.BrandRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
@@ -557,7 +557,7 @@ Caused by: org.postgresql.util.PSQLException: ERROR: column "color" of relation 
 2025-07-25 17:05:10.440 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.SubcategoryRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
 2025-07-25 17:05:10.440 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
 2025-07-25 17:05:10.441 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 43 ms. Found 0 JDBC repository interfaces.
-2025-07-25 17:05:10.448 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-25 17:05:10.448 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data tableModules found, entering strict repository configuration mode
 2025-07-25 17:05:10.448 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
 2025-07-25 17:05:10.489 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 37 ms. Found 22 JPA repository interfaces.
 2025-07-25 17:05:10.878 INFO  [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
@@ -917,7 +917,7 @@ Caused by: org.postgresql.util.PSQLException: ERROR: column "color" of relation 
 2025-07-25 17:05:12.500 INFO  [restartedMain] liquibase.command                        : Command execution complete
 2025-07-25 17:05:14.021 ERROR [restartedMain] o.s.b.web.embedded.tomcat.TomcatStarter  : Error starting Tomcat context. Exception: org.springframework.beans.factory.UnsatisfiedDependencyException. Message: Error creating bean with name 'jwtAuthenticationFilter' defined in file [C:\Jackie\Project\Marketplace_Backend\target\classes\com\example\marketplace_backend\config\JwtAuthenticationFilter.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'customUserDetailsService' defined in file [C:\Jackie\Project\Marketplace_Backend\target\classes\com\example\marketplace_backend\Service\Impl\auth\CustomUserDetailsService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'userRepository' defined in com.example.marketplace_backend.Repositories.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
 2025-07-25 17:05:14.039 INFO  [restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
-2025-07-25 17:05:14.042 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [HikariPool-1:housekeeper] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+2025-07-25 17:05:14.042 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [HikariPool-1:housekeeper] but has failed to stop it. This is very likely to create a tableMemory leak. Stack trace of thread:
  java.base@17.0.14/jdk.internal.misc.Unsafe.park(Native Method)
  java.base@17.0.14/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
  java.base@17.0.14/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1679)
@@ -927,7 +927,7 @@ Caused by: org.postgresql.util.PSQLException: ERROR: column "color" of relation 
  java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
  java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
  java.base@17.0.14/java.lang.Thread.run(Thread.java:840)
-2025-07-25 17:05:14.042 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [HikariPool-1:connection-adder] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+2025-07-25 17:05:14.042 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [HikariPool-1:connection-adder] but has failed to stop it. This is very likely to create a tableMemory leak. Stack trace of thread:
  java.base@17.0.14/jdk.internal.misc.Unsafe.park(Native Method)
  java.base@17.0.14/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
  java.base@17.0.14/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1679)
@@ -936,7 +936,7 @@ Caused by: org.postgresql.util.PSQLException: ERROR: column "color" of relation 
  java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
  java.base@17.0.14/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
  java.base@17.0.14/java.lang.Thread.run(Thread.java:840)
-2025-07-25 17:05:14.042 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [Thread-4] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+2025-07-25 17:05:14.042 WARN  [restartedMain] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [Thread-4] but has failed to stop it. This is very likely to create a tableMemory leak. Stack trace of thread:
  java.base@17.0.14/sun.nio.ch.SocketDispatcher.read0(Native Method)
  java.base@17.0.14/sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:46)
  java.base@17.0.14/sun.nio.ch.NioSocketImpl.tryRead(NioSocketImpl.java:266)
@@ -1188,7 +1188,7 @@ Caused by: org.postgresql.util.PSQLException: ERROR: column "color" of relation 
 2025-07-25 17:16:09.107 INFO  [restartedMain] c.e.m.MarketplaceBackendApplication      : No active profile set, falling back to 1 default profile: "default"
 2025-07-25 17:16:09.146 INFO  [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
 2025-07-25 17:16:09.146 INFO  [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2025-07-25 17:16:09.940 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-25 17:16:09.940 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data tableModules found, entering strict repository configuration mode
 2025-07-25 17:16:09.941 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
 2025-07-25 17:16:09.970 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.BrandImageRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
 2025-07-25 17:16:09.971 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.BrandRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
@@ -1213,7 +1213,7 @@ Caused by: org.postgresql.util.PSQLException: ERROR: column "color" of relation 
 2025-07-25 17:16:09.987 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.SubcategoryRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
 2025-07-25 17:16:09.988 INFO  [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.example.marketplace_backend.Repositories.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
 2025-07-25 17:16:09.988 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 42 ms. Found 0 JDBC repository interfaces.
-2025-07-25 17:16:09.995 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-25 17:16:09.995 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data tableModules found, entering strict repository configuration mode
 2025-07-25 17:16:09.996 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
 2025-07-25 17:16:10.043 INFO  [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 43 ms. Found 22 JPA repository interfaces.
 2025-07-25 17:16:10.486 INFO  [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)

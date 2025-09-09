@@ -11,8 +11,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class VariantRequest {
-    private ColorRequest color;
-    private PhoneSpecRequest phoneSpec;
-    private LaptopSpecRequest laptopSpec;
+    private ColorWithSpecsRequest colors;
 }
 

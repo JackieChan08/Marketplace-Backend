@@ -1,9 +1,6 @@
 package com.example.marketplace_backend.Model;
 
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductColorImage;
-import com.example.marketplace_backend.Model.ProductSpec.PhoneSpec;
-import com.example.marketplace_backend.Model.ProductSpec.LaptopSpec;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -31,6 +29,9 @@ public class ProductColor {
 
     @Column
     private String hex;
+
+    @Column
+    private BigDecimal price;
 
     @OneToMany(mappedBy = "color", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

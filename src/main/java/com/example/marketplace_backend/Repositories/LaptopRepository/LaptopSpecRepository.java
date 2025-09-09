@@ -1,6 +1,6 @@
-package com.example.marketplace_backend.Repositories;
+package com.example.marketplace_backend.Repositories.LaptopRepository;
 
-import com.example.marketplace_backend.Model.ProductSpec.LaptopSpec;
+import com.example.marketplace_backend.Model.ProductSpec.LaptopSpec.LaptopSpec;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
