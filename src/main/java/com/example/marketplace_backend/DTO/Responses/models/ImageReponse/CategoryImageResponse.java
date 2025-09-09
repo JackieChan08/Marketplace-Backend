@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.DTO.Responses.models;
+package com.example.marketplace_backend.DTO.Responses.models.ImageReponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CategoryIconResponse {
+public class CategoryImageResponse {
     private UUID id;
-    private FileResponse icon;
+    private FileResponse image;
 }
+

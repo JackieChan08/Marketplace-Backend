@@ -29,5 +29,5 @@ public class ProductRequest {
 
     private List<MultipartFile> images;
     private List<UUID> statusId;
-    private List<VariantRequest> variants;
+    private List<ColorWithSpecsRequest> colors;
 }

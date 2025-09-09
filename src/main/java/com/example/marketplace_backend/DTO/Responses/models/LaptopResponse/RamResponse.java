@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.DTO.Responses.models;
+package com.example.marketplace_backend.DTO.Responses.models.LaptopResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,10 +10,10 @@ import java.util.UUID;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class MemoryResponse {
+@AllArgsConstructor
+public class RamResponse {
     private UUID id;
-    private String memory;
+    private String name;
     private BigDecimal price;
 }

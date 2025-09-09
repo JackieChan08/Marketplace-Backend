@@ -3,6 +3,7 @@ package com.example.marketplace_backend.controller.admin;
 import com.example.marketplace_backend.DTO.Requests.models.ProductFilterRequest;
 import com.example.marketplace_backend.DTO.Requests.models.ProductRequest;
 import com.example.marketplace_backend.DTO.Responses.models.ProductResponse;
+import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductStatuses;
 import com.example.marketplace_backend.Model.Product;
 import com.example.marketplace_backend.Service.Impl.ConverterService;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -182,5 +184,17 @@ public class AdminProductController {
         return ResponseEntity.ok(responses);
     }
 
+    @PostMapping("/{id}/images")
+    public ResponseEntity<ProductImage> addImage(
+            @PathVariable UUID id,
+            @RequestParam("file") MultipartFile file
+    ) throws Exception {
+        return ResponseEntity.ok(productService.addProductImage(id, file));
+    }
 
+    @DeleteMapping("/images/{imageId}")
+    public ResponseEntity<Void> deleteImage(@PathVariable UUID imageId) {
+        productService.deleteProductImage(imageId);
+        return ResponseEntity.noContent().build();
+    }
 }

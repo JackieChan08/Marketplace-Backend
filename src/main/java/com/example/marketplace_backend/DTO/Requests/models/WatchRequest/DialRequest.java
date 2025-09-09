@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.DTO.Responses.models;
+package com.example.marketplace_backend.DTO.Requests.models.WatchRequest;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,14 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class LaptopSpecResponse {
-    private UUID id;
-    private String ssdMemory;
+@NoArgsConstructor
+public class DialRequest {
+    private String size_mm;
     private BigDecimal price;
 }

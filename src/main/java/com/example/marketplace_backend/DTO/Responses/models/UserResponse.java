@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.DTO.Responses.models;
 
+import com.example.marketplace_backend.DTO.Responses.models.ImageReponse.FileResponse;
 import com.example.marketplace_backend.enums.Role;
 import lombok.Data;
 

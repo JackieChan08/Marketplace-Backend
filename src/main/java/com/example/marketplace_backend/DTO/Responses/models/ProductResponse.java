@@ -1,9 +1,7 @@
 package com.example.marketplace_backend.DTO.Responses.models;
 
 
-import com.example.marketplace_backend.DTO.Requests.models.VariantRequest;
-import com.example.marketplace_backend.Model.Description;
-import com.example.marketplace_backend.Model.Statuses;
+import com.example.marketplace_backend.DTO.Responses.models.ImageReponse.FileResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

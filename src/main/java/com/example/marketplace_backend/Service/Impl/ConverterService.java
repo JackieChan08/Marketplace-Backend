@@ -1,10 +1,33 @@
 package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.DTO.Responses.models.*;
+import com.example.marketplace_backend.DTO.Responses.models.ImageReponse.BrandImageResponse;
+import com.example.marketplace_backend.DTO.Responses.models.ImageReponse.CategoryIconResponse;
+import com.example.marketplace_backend.DTO.Responses.models.ImageReponse.CategoryImageResponse;
+import com.example.marketplace_backend.DTO.Responses.models.ImageReponse.FileResponse;
+import com.example.marketplace_backend.DTO.Responses.models.LaptopResponse.ChipResponse;
+import com.example.marketplace_backend.DTO.Responses.models.LaptopResponse.LaptopSpecResponse;
+import com.example.marketplace_backend.DTO.Responses.models.LaptopResponse.RamResponse;
+import com.example.marketplace_backend.DTO.Responses.models.LaptopResponse.SsdResponse;
+import com.example.marketplace_backend.DTO.Responses.models.TableResponse.TableMemoryResponse;
+import com.example.marketplace_backend.DTO.Responses.models.TableResponse.TableModuleResponse;
+import com.example.marketplace_backend.DTO.Responses.models.TableResponse.TableSpecResponse;
+import com.example.marketplace_backend.DTO.Responses.models.WatchResponse.DialResponse;
+import com.example.marketplace_backend.DTO.Responses.models.WatchResponse.StrapSizeResponse;
+import com.example.marketplace_backend.DTO.Responses.models.WatchResponse.WatchSpecResponse;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.*;
-import com.example.marketplace_backend.Model.ProductSpec.LaptopSpec;
+import com.example.marketplace_backend.Model.ProductSpec.LaptopSpec.Chip;
+import com.example.marketplace_backend.Model.ProductSpec.LaptopSpec.LaptopSpec;
+import com.example.marketplace_backend.Model.ProductSpec.LaptopSpec.Ram;
+import com.example.marketplace_backend.Model.ProductSpec.LaptopSpec.Ssd;
 import com.example.marketplace_backend.Model.ProductSpec.PhoneSpec;
+import com.example.marketplace_backend.Model.ProductSpec.TableSpec.TableMemory;
+import com.example.marketplace_backend.Model.ProductSpec.TableSpec.TableModule;
+import com.example.marketplace_backend.Model.ProductSpec.TableSpec.TableSpec;
+import com.example.marketplace_backend.Model.ProductSpec.WatchSpec.Dial;
+import com.example.marketplace_backend.Model.ProductSpec.WatchSpec.StrapSize;
+import com.example.marketplace_backend.Model.ProductSpec.WatchSpec.WatchSpec;
 import com.example.marketplace_backend.Repositories.ProductColorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,6 +89,8 @@ public class ConverterService {
                         .color(variant.getColor() != null ? convertToColorResponse(variant.getColor()) : null)
                         .phoneSpec(variant.getPhoneSpec() != null ? convertToPhoneSpecResponse(variant.getPhoneSpec()) : null)
                         .laptopSpec(variant.getLaptopSpec() != null ? convertToLaptopSpecResponse(variant.getLaptopSpec()) : null)
+                        .tableSpec(variant.getTableSpec() != null ? convertToTableSpecResponse(variant.getTableSpec()) : null)
+                        .watchSpec(variant.getWatchSpec() != null ? convertToWatchSpecResponse(variant.getWatchSpec()) : null)
                         .build();
 
                 variantResponses.add(vr);
@@ -81,7 +106,7 @@ public class ConverterService {
 
         List<FileResponse> productImages = (product.getImages() != null)
                 ? product.getImages().stream()
-                .map(img -> toFileResponse(img.getImage()))
+                .map(img -> convertToFileResponse(img.getImage()))
                 .collect(Collectors.toList())
                 : List.of();
 
@@ -127,13 +152,27 @@ public class ConverterService {
 
     /* ---------- вспомогательные методы ---------- */
 
+    /**
+     * Универсальный метод для конвертации FileEntity в FileResponse
+     */
+    private FileResponse convertToFileResponse(FileEntity image) {
+        if (image == null) return null;
+        return FileResponse.builder()
+                .id(image.getId())
+                .uniqueName(image.getUniqueName())
+                .originalName(image.getOriginalName())
+                .url(baseUrl + "/uploads/" + image.getUniqueName())
+                .fileType(image.getFileType())
+                .build();
+    }
+
     private ColorResponse convertToColorResponse(ProductColor color) {
         if (color == null) return null;
 
         List<FileResponse> images = (color.getImages() != null)
                 ? color.getImages().stream()
                 // предполагается, что img.getImage() возвращает FileEntity
-                .map(img -> toFileResponse(img.getImage()))
+                .map(img -> convertToFileResponse(img.getImage()))
                 .collect(Collectors.toList())
                 : List.of();
 
@@ -141,6 +180,7 @@ public class ConverterService {
                 .id(color.getId())
                 .name(color.getName())
                 .hex(color.getHex())
+                .price(color.getPrice())
                 .images(images)
                 .build();
     }
@@ -159,19 +199,110 @@ public class ConverterService {
         if (spec == null) return null;
         return LaptopSpecResponse.builder()
                 .id(spec.getId())
-                .ssdMemory(spec.getSsdMemory())
-                .price(spec.getPrice())
+                .title(spec.getTitle())
+                .chips(spec.getChips() != null ? convertToChipResponse(spec.getChips()) : null)
                 .build();
     }
 
-    private FileResponse toFileResponse(FileEntity image) {
-        if (image == null) return null;
-        return FileResponse.builder()
-                .uniqueName(image.getUniqueName())
-                .originalName(image.getOriginalName())
-                .url(baseUrl + "/uploads/" + image.getUniqueName())
-                .fileType(image.getFileType())
+    private List<ChipResponse> convertToChipResponse(List<Chip> chips) {
+        if (chips == null) return null;
+        return chips.stream().map(chip -> {
+            ChipResponse chipResponse = new ChipResponse();
+            chipResponse.setId(chip.getId());
+            chipResponse.setName(chip.getName());
+            chipResponse.setSsdResponses(convertToSsdResponse(chip.getSsds()));
+            return chipResponse;
+        }).collect(Collectors.toList());
+    }
+
+    private List<SsdResponse> convertToSsdResponse(List<Ssd> ssds) {
+        if (ssds == null) return null;
+        return ssds.stream().map(ssd -> {
+            SsdResponse ssdResponse = new SsdResponse();
+            ssdResponse.setId(ssd.getId());
+            ssdResponse.setName(ssd.getName());
+            ssdResponse.setRams(convertToRamResponse(ssd.getRams()));
+            return ssdResponse;
+        }).collect(Collectors.toList());
+    }
+
+    private List<RamResponse> convertToRamResponse(List<Ram> rams) {
+        if (rams == null) return null;
+        return rams.stream().map(ram -> {
+            RamResponse ramResponse = new RamResponse();
+            ramResponse.setId(ram.getId());
+            ramResponse.setName(ram.getName());
+            ramResponse.setPrice(ram.getPrice());
+            return ramResponse;
+        }).collect(Collectors.toList());
+    }
+
+    // ============== WATCH SPEC CONVERTERS ==============
+
+    private WatchSpecResponse convertToWatchSpecResponse(WatchSpec spec) {
+        if (spec == null) return null;
+        return WatchSpecResponse.builder()
+                .id(spec.getId())
+                .title(spec.getTitle())
+                .strapSizes(spec.getStrapSizes() != null ? convertToStrapSizeResponse(spec.getStrapSizes()) : null)
                 .build();
+    }
+
+    private List<StrapSizeResponse> convertToStrapSizeResponse(List<StrapSize> strapSizes) {
+        if (strapSizes == null) return null;
+        return strapSizes.stream().map(strapSize -> {
+            StrapSizeResponse strapSizeResponse = new StrapSizeResponse();
+            strapSizeResponse.setId(strapSize.getId());
+            strapSizeResponse.setName(strapSize.getName());
+            strapSizeResponse.setDials(convertToDialResponse(strapSize.getDials()));
+            return strapSizeResponse;
+        }).collect(Collectors.toList());
+    }
+
+    private List<DialResponse> convertToDialResponse(List<Dial> dials) {
+        if (dials == null) return null;
+        return dials.stream().map(dial -> {
+            DialResponse dialResponse = new DialResponse();
+            dialResponse.setId(dial.getId());
+            dialResponse.setSize_mm(dial.getSize_mm());
+            dialResponse.setPrice(dial.getPrice());
+            return dialResponse;
+        }).collect(Collectors.toList());
+    }
+
+    private TableSpecResponse convertToTableSpecResponse(TableSpec spec) {
+        if (spec == null) return null;
+        return TableSpecResponse.builder()
+                .id(spec.getId())
+                .title(spec.getTitle())
+                .modules(spec.getTableModules() != null ? convertToModuleResponse(spec.getTableModules()) : null)
+                .build();
+    }
+
+    private List<TableModuleResponse> convertToModuleResponse(List<TableModule> tableModules) {
+        if (tableModules == null) return null;
+        return tableModules.stream().map(tableModule -> {
+            TableModuleResponse tableModuleResponse = new TableModuleResponse();
+            tableModuleResponse.setId(tableModule.getId());
+            tableModuleResponse.setName(tableModule.getName());
+            tableModuleResponse.setMemories(convertToMemoryResponse(tableModule.getMemories()));
+            return tableModuleResponse;
+        }).collect(Collectors.toList());
+    }
+
+    private List<TableMemoryResponse> convertToMemoryResponse(List<TableMemory> memories) {
+        if (memories == null) return null;
+        return memories.stream().map(tableMemory -> {
+            TableMemoryResponse tableMemoryResponse = new TableMemoryResponse();
+            tableMemoryResponse.setId(tableMemory.getId());
+            tableMemoryResponse.setName(tableMemory.getName());
+            tableMemoryResponse.setPrice(tableMemory.getPrice());
+            return tableMemoryResponse;
+        }).collect(Collectors.toList());
+    }
+
+    private FileResponse toFileResponse(FileEntity image) {
+        return convertToFileResponse(image);
     }
 
     public SubcategoryResponse convertToSubcategoryResponse(Subcategory subcategory) {
@@ -200,19 +331,8 @@ public class ConverterService {
         if (category.getCategoryImages() != null && !category.getCategoryImages().isEmpty()) {
             CategoryImage firstImage = category.getCategoryImages().iterator().next();
             CategoryImageResponse categoryImageResponse = new CategoryImageResponse();
-
-            FileEntity image = firstImage.getImage();
-            if (image != null) {
-                FileResponse fileResponse = new FileResponse();
-                fileResponse.setOriginalName(image.getOriginalName());
-                fileResponse.setUniqueName(image.getUniqueName());
-                fileResponse.setFileType(image.getFileType());
-                fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
-
-                categoryImageResponse.setId(firstImage.getId());
-                categoryImageResponse.setImage(fileResponse);
-            }
-
+            categoryImageResponse.setId(firstImage.getId());
+            categoryImageResponse.setImage(convertToFileResponse(firstImage.getImage()));
             response.setCategoryImage(categoryImageResponse);
         }
 
@@ -220,19 +340,8 @@ public class ConverterService {
         if (category.getCategoryIcons() != null && !category.getCategoryIcons().isEmpty()) {
             CategoryIcon firstIcon = category.getCategoryIcons().iterator().next();
             CategoryIconResponse categoryIconResponse = new CategoryIconResponse();
-
-            FileEntity icon = firstIcon.getIcon();
-            if (icon != null) {
-                FileResponse fileResponse = new FileResponse();
-                fileResponse.setOriginalName(icon.getOriginalName());
-                fileResponse.setUniqueName(icon.getUniqueName());
-                fileResponse.setFileType(icon.getFileType());
-                fileResponse.setUrl(baseUrl + "/uploads/" + icon.getUniqueName());
-
-                categoryIconResponse.setId(firstIcon.getId());
-                categoryIconResponse.setIcon(fileResponse);
-            }
-
+            categoryIconResponse.setId(firstIcon.getId());
+            categoryIconResponse.setIcon(convertToFileResponse(firstIcon.getIcon()));
             response.setCategoryIcon(categoryIconResponse);
         }
 
@@ -260,15 +369,7 @@ public class ConverterService {
 
         if (user.getUserImages() != null && !user.getUserImages().isEmpty()) {
             List<FileResponse> images = user.getUserImages().stream()
-                    .map(userImage -> {
-                        FileEntity image = userImage.getImage();
-                        FileResponse fileResponse = new FileResponse();
-                        fileResponse.setUniqueName(image.getUniqueName());
-                        fileResponse.setOriginalName(image.getOriginalName());
-                        fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
-                        fileResponse.setFileType(image.getFileType());
-                        return fileResponse;
-                    })
+                    .map(userImage -> convertToFileResponse(userImage.getImage()))
                     .collect(Collectors.toList());
             response.setImages(images);
         }
@@ -287,18 +388,8 @@ public class ConverterService {
         if (brand.getBrandImages() != null && !brand.getBrandImages().isEmpty()) {
             BrandImage firstImage = brand.getBrandImages().iterator().next();
             BrandImageResponse brandImageResponse = new BrandImageResponse();
-
-            FileEntity image = firstImage.getImage();
-            if (image != null) {
-                FileResponse fileResponse = new FileResponse();
-                fileResponse.setOriginalName(image.getOriginalName());
-                fileResponse.setUniqueName(image.getUniqueName());
-                fileResponse.setFileType(image.getFileType());
-                fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
-
-                brandImageResponse.setId(firstImage.getId());
-                brandImageResponse.setImage(fileResponse);
-            }
+            brandImageResponse.setId(firstImage.getId());
+            brandImageResponse.setImage(convertToFileResponse(firstImage.getImage()));
             response.setBrandImage(brandImageResponse);
         }
 
@@ -372,17 +463,7 @@ public class ConverterService {
         VipProductResponse response = new VipProductResponse();
         response.setId(vipProduct.getId());
         response.setName(vipProduct.getName());
-
-        FileEntity image = vipProduct.getImage();
-        if (image != null) {
-            FileResponse fileResponse = new FileResponse();
-            fileResponse.setOriginalName(image.getOriginalName());
-            fileResponse.setUniqueName(image.getUniqueName());
-            fileResponse.setFileType(image.getFileType());
-            fileResponse.setUrl(baseUrl + "/uploads/" + image.getUniqueName());
-
-            response.setImage(image);
-        }
+        response.setImage(vipProduct.getImage());
 
         return response;
     }
@@ -460,6 +541,7 @@ public class ConverterService {
                 .totalPrice(total)
                 .build();
     }
+
     public CartItemResponse convertToCartItemResponse(CartItem item) {
         BigDecimal totalPrice = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
 
@@ -569,6 +651,8 @@ public class ConverterService {
                 .color(convertToColorResponse(variant.getColor()))
                 .phoneSpec(convertToPhoneSpecResponse(variant.getPhoneSpec()))
                 .laptopSpec(convertToLaptopSpecResponse(variant.getLaptopSpec()))
+                .tableSpec(convertToTableSpecResponse(variant.getTableSpec()))
+                .watchSpec(convertToWatchSpecResponse(variant.getWatchSpec()))
                 .build();
     }
 }

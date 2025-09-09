@@ -1,12 +1,12 @@
 package com.example.marketplace_backend.DTO.Responses.models;
 
+import com.example.marketplace_backend.DTO.Responses.models.ImageReponse.BrandImageResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Data
