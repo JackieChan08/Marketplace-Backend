@@ -1,6 +1,6 @@
 package com.example.marketplace_backend.DTO.Requests.models;
 
-import com.example.marketplace_backend.DTO.Requests.models.LaptopRequest.LaptopSpecRequest;
+import com.example.marketplace_backend.DTO.Requests.models.LaptopRequest.ChipRequest;
 import com.example.marketplace_backend.DTO.Requests.models.TableRequest.TableSpecRequest;
 import com.example.marketplace_backend.DTO.Requests.models.WatchRequest.WatchSpecRequest;
 import com.example.marketplace_backend.Model.ProductSpec.WatchSpec.WatchSpec;
@@ -23,7 +23,7 @@ public class ColorWithSpecsRequest {
     private BigDecimal price;
     private List<MultipartFile> images;
     private List<PhoneSpecRequest> phoneSpecs;
-    private List<LaptopSpecRequest> laptopSpecs;
+    private List<ChipRequest> chipRequests; //laptopSpec
     private List<TableSpecRequest> tableSpecs;
     private List<WatchSpecRequest> watchSpecs;
 }

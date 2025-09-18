@@ -42,5 +42,6 @@ public class ProductResponse {
     private List<FileResponse> images;
     private List<StatusResponse> statuses;
     private List<ProductParameterResponse> parameters;
-    private List<VariantResponse> variants;
+    private List<ColorResponse> colors;
 }
+

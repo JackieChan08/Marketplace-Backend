@@ -618,75 +618,74 @@
         </createTable>
     </changeSet>
 
-    <!-- Changeset для таблицы laptop_spec -->
-    <changeSet id="create_laptop_spec_table" author="your_name">
-        <createTable tableName="laptop_spec">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="title" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
+<!--     Changeset для таблицы laptop_spec -->
+<!--    <changeSet id="create_laptop_spec_table" author="your_name">-->
+<!--        <createTable tableName="laptop_spec">-->
+<!--            <column name="id" type="uuid">-->
+<!--                <constraints primaryKey="true" nullable="false"/>-->
+<!--            </column>-->
+<!--            <column name="title" type="varchar(255)">-->
+<!--                <constraints nullable="false"/>-->
+<!--            </column>-->
+<!--        </createTable>-->
+<!--    </changeSet>-->
 
-    <!-- Changeset для таблицы chips с внешним ключом -->
-    <changeSet id="create_chips_table" author="your_name">
-        <createTable tableName="chips">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="name" type="varchar(255)"/>
-            <column name="laptop_spec_id" type="uuid"/>
-        </createTable>
+<!--    &lt;!&ndash; Changeset для таблицы chips с внешним ключом &ndash;&gt;-->
+<!--    <changeSet id="create_chips_table" author="your_name">-->
+<!--        <createTable tableName="chips">-->
+<!--            <column name="id" type="uuid">-->
+<!--                <constraints primaryKey="true" nullable="false"/>-->
+<!--            </column>-->
+<!--            <column name="name" type="varchar(255)"/>-->
+<!--            <column name="laptop_spec_id" type="uuid"/>-->
+<!--        </createTable>-->
 
-        <addForeignKeyConstraint
-                baseTableName="chips"
-                baseColumnNames="laptop_spec_id"
-                referencedTableName="laptop_spec"
-                referencedColumnNames="id"
-                constraintName="fk_chips_laptop_spec"/>
-    </changeSet>
+<!--        <addForeignKeyConstraint-->
+<!--                baseTableName="chips"-->
+<!--                baseColumnNames="laptop_spec_id"-->
+<!--                referencedTableName="laptop_spec"-->
+<!--                referencedColumnNames="id"-->
+<!--                constraintName="fk_chips_laptop_spec"/>-->
+<!--    </changeSet>-->
 
-    <!-- Changeset для таблицы ssds с внешним ключом -->
-    <changeSet id="create_ssds_table" author="aiteginbaratov">
-        <createTable tableName="ssds">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="name" type="varchar(255)"/>
-            <column name="chip_id" type="uuid"/>
-        </createTable>
+<!--    &lt;!&ndash; Changeset для таблицы ssds с внешним ключом &ndash;&gt;-->
+<!--    <changeSet id="create_ssds_table" author="aiteginbaratov">-->
+<!--        <createTable tableName="ssds">-->
+<!--            <column name="id" type="uuid">-->
+<!--                <constraints primaryKey="true" nullable="false"/>-->
+<!--            </column>-->
+<!--            <column name="name" type="varchar(255)"/>-->
+<!--            <column name="chip_id" type="uuid"/>-->
+<!--        </createTable>-->
 
-        <addForeignKeyConstraint
-                baseTableName="ssds"
-                baseColumnNames="chip_id"
-                referencedTableName="chips"
-                referencedColumnNames="id"
-                constraintName="fk_ssds_chips"/>
-    </changeSet>
+<!--        <addForeignKeyConstraint-->
+<!--                baseTableName="ssds"-->
+<!--                baseColumnNames="chip_id"-->
+<!--                referencedTableName="chips"-->
+<!--                referencedColumnNames="id"-->
+<!--                constraintName="fk_ssds_chips"/>-->
+<!--    </changeSet>-->
 
-    <!-- Changeset для таблицы rams с внешним ключом -->
-    <changeSet id="create_rams_table" author="aiteginbaratov">
-        <createTable tableName="rams">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="name" type="varchar(255)"/>
-            <column name="price" type="integer"/>
-            <column name="ssd_id" type="uuid"/>
-        </createTable>
+<!--    &lt;!&ndash; Changeset для таблицы rams с внешним ключом &ndash;&gt;-->
+<!--    <changeSet id="create_rams_table" author="aiteginbaratov">-->
+<!--        <createTable tableName="rams">-->
+<!--            <column name="id" type="uuid">-->
+<!--                <constraints primaryKey="true" nullable="false"/>-->
+<!--            </column>-->
+<!--            <column name="name" type="varchar(255)"/>-->
+<!--            <column name="price" type="integer"/>-->
+<!--            <column name="ssd_id" type="uuid"/>-->
+<!--        </createTable>-->
 
-        <addForeignKeyConstraint
-                baseTableName="rams"
-                baseColumnNames="ssd_id"
-                referencedTableName="ssds"
-                referencedColumnNames="id"
-                constraintName="fk_rams_ssds"/>
-    </changeSet>
+<!--        <addForeignKeyConstraint-->
+<!--                baseTableName="rams"-->
+<!--                baseColumnNames="ssd_id"-->
+<!--                referencedTableName="ssds"-->
+<!--                referencedColumnNames="id"-->
+<!--                constraintName="fk_rams_ssds"/>-->
+<!--    </changeSet>-->
 
-    <!-- Changesets для TableSpec -->
-
+<!--     Changesets для TableSpec -->
     <!-- Changeset для таблицы table_spec -->
     <changeSet id="create_table_spec_table" author="aiteginbaratov">
         <createTable tableName="table_spec">
@@ -746,42 +745,42 @@
         </createTable>
     </changeSet>
 
-    <!-- Changeset для таблицы strap_sizes с внешним ключом -->
-    <changeSet id="create_strap_sizes_table" author="aiteginbaratov">
-        <createTable tableName="strap_sizes">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="name" type="varchar(255)"/>
-            <column name="watch_spec_id" type="uuid"/>
-        </createTable>
+<!--    &lt;!&ndash; Changeset для таблицы strap_sizes с внешним ключом &ndash;&gt;-->
+<!--    <changeSet id="create_strap_sizes_table" author="aiteginbaratov">-->
+<!--        <createTable tableName="strap_sizes">-->
+<!--            <column name="id" type="uuid">-->
+<!--                <constraints primaryKey="true" nullable="false"/>-->
+<!--            </column>-->
+<!--            <column name="name" type="varchar(255)"/>-->
+<!--            <column name="watch_spec_id" type="uuid"/>-->
+<!--        </createTable>-->
 
-        <addForeignKeyConstraint
-                baseTableName="strap_sizes"
-                baseColumnNames="watch_spec_id"
-                referencedTableName="watch_spec"
-                referencedColumnNames="id"
-                constraintName="fk_strap_sizes_watch_spec"/>
-    </changeSet>
+<!--        <addForeignKeyConstraint-->
+<!--                baseTableName="strap_sizes"-->
+<!--                baseColumnNames="watch_spec_id"-->
+<!--                referencedTableName="watch_spec"-->
+<!--                referencedColumnNames="id"-->
+<!--                constraintName="fk_strap_sizes_watch_spec"/>-->
+<!--    </changeSet>-->
 
-    <!-- Changeset для таблицы dials с внешним ключом -->
-    <changeSet id="create_dials_table" author="aiteginbaratov">
-        <createTable tableName="dials">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="size_mm" type="varchar(255)"/>
-            <column name="price" type="decimal(19,2)"/>
-            <column name="strap_size_id" type="uuid"/>
-        </createTable>
+<!--    &lt;!&ndash; Changeset для таблицы dials с внешним ключом &ndash;&gt;-->
+<!--    <changeSet id="create_dials_table" author="aiteginbaratov">-->
+<!--        <createTable tableName="dials">-->
+<!--            <column name="id" type="uuid">-->
+<!--                <constraints primaryKey="true" nullable="false"/>-->
+<!--            </column>-->
+<!--            <column name="size_mm" type="varchar(255)"/>-->
+<!--            <column name="price" type="decimal(19,2)"/>-->
+<!--            <column name="strap_size_id" type="uuid"/>-->
+<!--        </createTable>-->
 
-        <addForeignKeyConstraint
-                baseTableName="dials"
-                baseColumnNames="strap_size_id"
-                referencedTableName="strap_sizes"
-                referencedColumnNames="id"
-                constraintName="fk_dials_strap_sizes"/>
-    </changeSet>
+<!--        <addForeignKeyConstraint-->
+<!--                baseTableName="dials"-->
+<!--                baseColumnNames="strap_size_id"-->
+<!--                referencedTableName="strap_sizes"-->
+<!--                referencedColumnNames="id"-->
+<!--                constraintName="fk_dials_strap_sizes"/>-->
+<!--    </changeSet>-->
 
     <changeSet id="create-product-variants-table" author="aiteginbaratov">
         <createTable tableName="product_variants">
@@ -801,9 +800,9 @@
                 <constraints nullable="true"/>
             </column>
 
-            <column name="laptop_spec_id" type="UUID">
-                <constraints nullable="true"/>
-            </column>
+<!--            <column name="laptop_spec_id" type="UUID">-->
+<!--                <constraints nullable="true"/>-->
+<!--            </column>-->
 
             <column name="table_spec_id" type="UUID">
                 <constraints nullable="true"/>
@@ -814,7 +813,7 @@
             </column>
         </createTable>
 
-        <!-- Внешние ключи для product_variants -->
+<!--         Внешние ключи для product_variants -->
         <addForeignKeyConstraint
                 baseTableName="product_variants"
                 baseColumnNames="product_id"
@@ -845,15 +844,15 @@
                 initiallyDeferred="false"
                 onDelete="CASCADE"/>
 
-        <addForeignKeyConstraint
-                baseTableName="product_variants"
-                baseColumnNames="laptop_spec_id"
-                constraintName="fk_product_variants_laptop_spec"
-                referencedTableName="laptop_spec"
-                referencedColumnNames="id"
-                deferrable="false"
-                initiallyDeferred="false"
-                onDelete="CASCADE"/>
+<!--        <addForeignKeyConstraint-->
+<!--                baseTableName="product_variants"-->
+<!--                baseColumnNames="laptop_spec_id"-->
+<!--                constraintName="fk_product_variants_laptop_spec"-->
+<!--                referencedTableName="laptop_spec"-->
+<!--                referencedColumnNames="id"-->
+<!--                deferrable="false"-->
+<!--                initiallyDeferred="false"-->
+<!--                onDelete="CASCADE"/>-->
 
         <addForeignKeyConstraint
                 baseTableName="product_variants"

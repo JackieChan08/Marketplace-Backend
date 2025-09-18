@@ -10,19 +10,25 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "laptop_spec")
+@Table(name = "laptop_specs")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class LaptopSpec {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue
     private UUID id;
 
-    @Column(name = "title", nullable = false)
-    private String title;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "chip_id", nullable = false)
+    private Chip chip;
 
-    @OneToMany(mappedBy = "laptopSpec", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Chip> chips;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "ssd_id", nullable = false)
+    private Ssd ssd;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "ram_id", nullable = false)
+    private Ram ram;
 }

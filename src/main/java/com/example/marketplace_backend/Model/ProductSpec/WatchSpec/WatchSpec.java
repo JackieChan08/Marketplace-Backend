@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,8 +22,11 @@ public class WatchSpec {
     private UUID id;
 
     @Column
-    private String title;
+    private String strapSize;
 
-    @OneToMany(mappedBy = "watchSpec", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<StrapSize> strapSizes;
+    @Column
+    private BigDecimal sizeMm;
+
+    @Column
+    private BigDecimal price;
 }

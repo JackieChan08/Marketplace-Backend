@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class WatchSpecResponse {
     private UUID id;
-    private String title;
-    private List<StrapSizeResponse> strapSizes;
+    private String strapSize;
+    private BigDecimal sizeMm;
+    private BigDecimal price;
 }

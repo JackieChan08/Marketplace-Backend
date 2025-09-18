@@ -85,8 +85,8 @@ public class FavoriteService {
             newItem.setFavorite(favorite);
             newItem.setProductVariant(productVariant);
             newItem.setQuantity(quantity);
-            BigDecimal price = resolveProductPrice(productVariant);
-            newItem.setPrice(price);
+//            BigDecimal price = resolveProductPrice(productVariant);
+//            newItem.setPrice(price);
             favorite.getFavoriteItems().add(newItem);
         }
 
@@ -117,27 +117,27 @@ public class FavoriteService {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    private BigDecimal resolveProductPrice(ProductVariant variant) {
-        if (variant.getPhoneSpec() != null && variant.getPhoneSpec().getPrice() != null) {
-            return variant.getPhoneSpec().getPrice();
-        } else if (variant.getLaptopSpec() != null
-                && !variant.getLaptopSpec().getChips().isEmpty()
-                && !variant.getLaptopSpec().getChips().get(0).getSsds().isEmpty()
-                && !variant.getLaptopSpec().getChips().get(0).getSsds().get(0).getRams().isEmpty()
-                && variant.getLaptopSpec().getChips().get(0).getSsds().get(0).getRams().get(0).getPrice() != null) {
-            return variant.getLaptopSpec().getChips()
-                    .get(0)
-                    .getSsds()
-                    .get(0)
-                    .getRams()
-                    .get(0)
-                    .getPrice();
-        } else if (variant.getProduct() != null && variant.getProduct().getPrice() != null) {
-            return variant.getProduct().getPrice();
-        } else {
-            throw new RuntimeException("Price not defined for product variant: " + variant.getId());
-        }
-    }
+//    private BigDecimal resolveProductPrice(ProductVariant variant) {
+//        if (variant.getPhoneSpec() != null && variant.getPhoneSpec().getPrice() != null) {
+//            return variant.getPhoneSpec().getPrice();
+//        } else if (variant.getLaptopSpec() != null
+//                && !variant.getLaptopSpec().getChips().isEmpty()
+//                && !variant.getLaptopSpec().getChips().get(0).getSsds().isEmpty()
+//                && !variant.getLaptopSpec().getChips().get(0).getSsds().get(0).getRams().isEmpty()
+//                && variant.getLaptopSpec().getChips().get(0).getSsds().get(0).getRams().get(0).getPrice() != null) {
+//            return variant.getLaptopSpec().getChips()
+//                    .get(0)
+//                    .getSsds()
+//                    .get(0)
+//                    .getRams()
+//                    .get(0)
+//                    .getPrice();
+//        } else if (variant.getProduct() != null && variant.getProduct().getPrice() != null) {
+//            return variant.getProduct().getPrice();
+//        } else {
+//            throw new RuntimeException("Price not defined for product variant: " + variant.getId());
+//        }
+//    }
 
     public List<UUID> getProductVariantsIds() {
         return getFavorite().getFavoriteItems().stream()

@@ -11,22 +11,16 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Table(name = "ssds")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "ssds")
 public class Ssd {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue
     private UUID id;
 
+    @Column(nullable = false, length = 30)
     private String name;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chip_id")
-    private Chip chip;
-
-    @OneToMany(mappedBy = "ssd", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Ram> rams;
 }

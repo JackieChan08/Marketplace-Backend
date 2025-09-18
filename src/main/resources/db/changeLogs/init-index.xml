@@ -45,9 +45,9 @@
             <column name="phone_spec_id"/>
         </createIndex>
 
-        <createIndex tableName="product_variants" indexName="idx_product_variants_laptop_spec_id">
-            <column name="laptop_spec_id"/>
-        </createIndex>
+<!--        <createIndex tableName="product_variants" indexName="idx_product_variants_laptop_spec_id">-->
+<!--            <column name="laptop_spec_id"/>-->
+<!--        </createIndex>-->
     </changeSet>
 
     <changeSet id="add-unique-index-order-number" author="your_name">
