@@ -13,5 +13,5 @@ import java.util.List;
 @NoArgsConstructor
 public class TableModuleRequest {
     private String name;
-    private List<TableMemoryRequest> memories;
+    private List<TableMemoryRequest> tableMemoryRequests;
 }

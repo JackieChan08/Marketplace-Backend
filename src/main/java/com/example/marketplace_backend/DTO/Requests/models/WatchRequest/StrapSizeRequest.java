@@ -13,5 +13,5 @@ import java.util.List;
 @NoArgsConstructor
 public class StrapSizeRequest {
     private String name;
-    private List<DialRequest> dials;
+    private List<DialRequest> dialRequests;
 }

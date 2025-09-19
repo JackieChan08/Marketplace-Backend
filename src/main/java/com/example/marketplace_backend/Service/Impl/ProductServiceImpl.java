@@ -449,8 +449,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                         StrapSize savedStrapSize = strapSizeRepository.save(strapSize);
 
                         // Если есть dials — развертываем комбинации strapSize × dial
-                        if (strapSizeReq.getDials() != null && !strapSizeReq.getDials().isEmpty()) {
-                            for (DialRequest dialReq : strapSizeReq.getDials()) {
+                        if (strapSizeReq.getDialRequests() != null && !strapSizeReq.getDialRequests().isEmpty()) {
+                            for (DialRequest dialReq : strapSizeReq.getDialRequests()) {
                                 // Создаем Dial
                                 Dial dial = Dial.builder()
                                         .name(dialReq.getSize_mm()) // используем size_mm как name
@@ -505,12 +505,12 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                                 .build();
                         TableModule savedModule = tableModuleRepository.save(tableModule);
 
-                        if (moduleReq.getMemories() != null && !moduleReq.getMemories().isEmpty()) {
-                            for (TableMemoryRequest memoryReq : moduleReq.getMemories()) {
+                        if (moduleReq.getTableMemoryRequests() != null && !moduleReq.getTableMemoryRequests().isEmpty()) {
+                            for (TableMemoryRequest memoryReq : moduleReq.getTableMemoryRequests()) {
                                 // Создаем TableMemory
                                 TableMemory tableMemory = TableMemory.builder()
                                         .name(memoryReq.getName())
-                                        .price(new BigDecimal(1111111))
+                                        .price(memoryReq.getPrice())
                                         .build();
                                 TableMemory savedMemory = tableMemoryRepository.save(tableMemory);
 
@@ -662,14 +662,244 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
             }
         }
 
-        // Цвета, спецификации, изображения и параметры
-        // --- можно переиспользовать ТВОЙ КОД ИЗ createProduct ---
-        // просто заменив "savedProduct" вместо нового продукта
-
-        // Например:
+        //Цвет и спецификации
         if (request.getColors() != null && !request.getColors().isEmpty()) {
             for (ColorWithSpecsRequest colorReq : request.getColors()) {
-                // ... вся логика создания цвета, спецификаций и вариантов
+                // Проверка, чтобы одновременно не было нескольких типов спецификаций
+                int specCount = 0;
+                if (colorReq.getSimTypeRequests() != null && !colorReq.getSimTypeRequests().isEmpty()) specCount++;
+                if (colorReq.getChipRequests() != null && !colorReq.getChipRequests().isEmpty()) specCount++;
+                if (colorReq.getStrapSizeRequests() != null && !colorReq.getStrapSizeRequests().isEmpty()) specCount++;
+                if (colorReq.getTableModuleRequests() != null && !colorReq.getTableModuleRequests().isEmpty()) specCount++;
+
+                if (specCount > 1) {
+                    throw new RuntimeException("Color " + colorReq.getName() + " can only have one type of specification");
+                }
+
+                // Создаём цвет
+                ProductColor color = ProductColor.builder()
+                        .name(colorReq.getName())
+                        .hex(colorReq.getHex())
+                        .price(colorReq.getPrice())
+                        .build();
+                ProductColor savedColor = productColorRepository.save(color);
+
+                // Сохраняем изображения цвета
+                if (colorReq.getImages() != null) {
+                    for (MultipartFile imageFile : colorReq.getImages()) {
+                        FileEntity fileEntity = fileUploadService.saveImage(imageFile);
+                        ProductColorImage colorImage = ProductColorImage.builder()
+                                .color(savedColor)
+                                .image(fileEntity)
+                                .build();
+                        productColorImageRepository.save(colorImage);
+                    }
+                }
+
+                // ИСПРАВЛЕННЫЕ СПЕЦИФИКАЦИИ ТЕЛЕФОНОВ
+                if (colorReq.getSimTypeRequests() != null && !colorReq.getSimTypeRequests().isEmpty()) {
+                    // Обрабатываем структуру SimType → PhoneMemory
+                    for (SimTypeRequest simTypeReq : colorReq.getSimTypeRequests()) {
+                        // Создаем или находим SimType
+                        SimType simType = SimType.builder()
+                                .name(simTypeReq.getName())
+                                .build();
+                        SimType savedSimType = simTypeRepository.save(simType);
+
+                        if (simTypeReq.getPhoneMemoryRequests() != null && !simTypeReq.getPhoneMemoryRequests().isEmpty()) {
+                            for (PhoneMemoryRequest memoryReq : simTypeReq.getPhoneMemoryRequests()) {
+                                // Создаем PhoneMemory
+                                PhoneMemory phoneMemory = PhoneMemory.builder()
+                                        .name(memoryReq.getName())
+                                        .price(memoryReq.getPrice())
+                                        .build();
+                                PhoneMemory savedPhoneMemory = phoneMemoryRepository.save(phoneMemory);
+
+                                // Создаем PhoneSpec с правильными связями
+                                PhoneSpec phoneSpec = PhoneSpec.builder()
+                                        .simType(savedSimType)
+                                        .phoneMemory(savedPhoneMemory)
+                                        .build();
+                                PhoneSpec savedPhoneSpec = phoneSpecRepository.save(phoneSpec);
+
+                                ProductVariant variant = ProductVariant.builder()
+                                        .product(savedProduct)
+                                        .color(savedColor)
+                                        .phoneSpec(savedPhoneSpec)
+                                        .build();
+                                productVariantRepository.save(variant);
+                            }
+                        }
+                    }
+                }
+                // Спецификации для ноутбука (уже правильно реализованы)
+                else if (colorReq.getChipRequests() != null && !colorReq.getChipRequests().isEmpty()) {
+                    for (ChipRequest chipReq : colorReq.getChipRequests()) {
+                        Chip chip = Chip.builder()
+                                .name(chipReq.getName())
+                                .build();
+                        Chip savedChip = chipRepository.save(chip);
+
+                        // Обработка SSD
+                        if (chipReq.getSsdRequests() != null && !chipReq.getSsdRequests().isEmpty()) {
+                            for (SsdRequest ssdReq : chipReq.getSsdRequests()) {
+                                Ssd ssd = Ssd.builder()
+                                        .name(ssdReq.getName())
+                                        .build();
+                                Ssd savedSsd = ssdRepository.save(ssd);
+
+                                // Обработка RAM
+                                if (ssdReq.getRamRequests() != null && !ssdReq.getRamRequests().isEmpty()) {
+                                    for (RamRequest ramReq : ssdReq.getRamRequests()) {
+                                        Ram ram = Ram.builder()
+                                                .name(ramReq.getName())
+                                                .price(ramReq.getPrice())
+                                                .build();
+                                        Ram savedRam = ramRepository.save(ram);
+
+                                        // Каждая комбинация chip + ssd + ram = LaptopSpec
+                                        LaptopSpec laptopSpec = LaptopSpec.builder()
+                                                .chip(savedChip)
+                                                .ssd(savedSsd)
+                                                .ram(savedRam)
+                                                .build();
+                                        LaptopSpec savedLaptopSpec = laptopSpecRepository.save(laptopSpec);
+
+                                        // Привязываем ProductVariant
+                                        ProductVariant variant = ProductVariant.builder()
+                                                .product(savedProduct)
+                                                .color(savedColor)
+                                                .laptopSpec(savedLaptopSpec)
+                                                .build();
+                                        productVariantRepository.save(variant);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                // ИСПРАВЛЕННЫЕ СПЕЦИФИКАЦИИ ЧАСОВ
+                else if (colorReq.getStrapSizeRequests() != null && !colorReq.getStrapSizeRequests().isEmpty()) {
+                    // Обрабатываем структуру StrapSize → Dial
+                    for (StrapSizeRequest strapSizeReq : colorReq.getStrapSizeRequests()) {
+                        // Создаем StrapSize
+                        StrapSize strapSize = StrapSize.builder()
+                                .name(strapSizeReq.getName())
+                                .build();
+                        StrapSize savedStrapSize = strapSizeRepository.save(strapSize);
+
+                        // Если есть dials — развертываем комбинации strapSize × dial
+                        if (strapSizeReq.getDialRequests() != null && !strapSizeReq.getDialRequests().isEmpty()) {
+                            for (DialRequest dialReq : strapSizeReq.getDialRequests()) {
+                                // Создаем Dial
+                                Dial dial = Dial.builder()
+                                        .name(dialReq.getSize_mm()) // используем size_mm как name
+                                        .price(dialReq.getPrice())
+                                        .build();
+                                Dial savedDial = dialRepository.save(dial);
+
+                                // Создаем WatchSpec с правильными связями
+                                WatchSpec watchSpec = WatchSpec.builder()
+                                        .strapSize(savedStrapSize)
+                                        .dial(savedDial)
+                                        .build();
+                                WatchSpec savedWatchSpec = watchSpecRepository.save(watchSpec);
+
+                                ProductVariant variant = ProductVariant.builder()
+                                        .product(savedProduct)
+                                        .color(savedColor)
+                                        .watchSpec(savedWatchSpec)
+                                        .build();
+                                productVariantRepository.save(variant);
+                            }
+                        } else {
+                            // Нет dials — создаём базовый dial
+                            Dial dial = Dial.builder()
+                                    .name("Standard")
+                                    .price(BigDecimal.ZERO)
+                                    .build();
+                            Dial savedDial = dialRepository.save(dial);
+
+                            WatchSpec watchSpec = WatchSpec.builder()
+                                    .strapSize(savedStrapSize)
+                                    .dial(savedDial)
+                                    .build();
+                            WatchSpec savedWatchSpec = watchSpecRepository.save(watchSpec);
+
+                            ProductVariant variant = ProductVariant.builder()
+                                    .product(savedProduct)
+                                    .color(savedColor)
+                                    .watchSpec(savedWatchSpec)
+                                    .build();
+                            productVariantRepository.save(variant);
+                        }
+                    }
+                }
+                // ИСПРАВЛЕННЫЕ СПЕЦИФИКАЦИИ ПЛАНШЕТОВ
+                else if (colorReq.getTableModuleRequests() != null && !colorReq.getTableModuleRequests().isEmpty()) {
+                    // Обрабатываем структуру TableModule → TableMemory
+                    for (TableModuleRequest moduleReq : colorReq.getTableModuleRequests()) {
+                        // Создаем TableModule
+                        TableModule tableModule = TableModule.builder()
+                                .name(moduleReq.getName())
+                                .build();
+                        TableModule savedModule = tableModuleRepository.save(tableModule);
+
+                        if (moduleReq.getTableMemoryRequests() != null && !moduleReq.getTableMemoryRequests().isEmpty()) {
+                            for (TableMemoryRequest memoryReq : moduleReq.getTableMemoryRequests()) {
+                                // Создаем TableMemory
+                                TableMemory tableMemory = TableMemory.builder()
+                                        .name(memoryReq.getName())
+                                        .price(memoryReq.getPrice())
+                                        .build();
+                                TableMemory savedMemory = tableMemoryRepository.save(tableMemory);
+
+                                // Создаем TableSpec с правильными связями
+                                TableSpec tableSpec = TableSpec.builder()
+                                        .tableModule(savedModule)
+                                        .tableMemory(savedMemory)
+                                        .build();
+                                TableSpec savedTableSpec = tableSpecRepository.save(tableSpec);
+
+                                // Создаем ProductVariant для каждой комбинации
+                                ProductVariant variant = ProductVariant.builder()
+                                        .product(savedProduct)
+                                        .color(savedColor)
+                                        .tableSpec(savedTableSpec)
+                                        .build();
+                                productVariantRepository.save(variant);
+                            }
+                        } else {
+                            // Если нет памяти, создаем базовую память
+                            TableMemory tableMemory = TableMemory.builder()
+                                    .name("Standard")
+                                    .price(BigDecimal.ZERO)
+                                    .build();
+                            TableMemory savedMemory = tableMemoryRepository.save(tableMemory);
+
+                            TableSpec tableSpec = TableSpec.builder()
+                                    .tableModule(savedModule)
+                                    .tableMemory(savedMemory)
+                                    .build();
+                            TableSpec savedTableSpec = tableSpecRepository.save(tableSpec);
+
+                            ProductVariant variant = ProductVariant.builder()
+                                    .product(savedProduct)
+                                    .color(savedColor)
+                                    .tableSpec(savedTableSpec)
+                                    .build();
+                            productVariantRepository.save(variant);
+                        }
+                    }
+                }
+                // Если нет спецификаций — создаём вариант только с цветом
+                else {
+                    ProductVariant variant = ProductVariant.builder()
+                            .product(savedProduct)
+                            .color(savedColor)
+                            .build();
+                    productVariantRepository.save(variant);
+                }
             }
         } else if (request.getImages() != null && !request.getImages().isEmpty()) {
             for (MultipartFile imageFile : request.getImages()) {
