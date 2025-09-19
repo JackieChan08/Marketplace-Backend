@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.DTO.Requests.models.TableRequest;
+package com.example.marketplace_backend.DTO.Requests.models.PhoneSpecRequest;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TableSpecRequest {
-    private String title;
-    private List<TableModuleRequest> modules;
+public class SimTypeRequest {
+    private String name;
+    private List<PhoneMemoryRequest> phoneMemoryRequests;
 }

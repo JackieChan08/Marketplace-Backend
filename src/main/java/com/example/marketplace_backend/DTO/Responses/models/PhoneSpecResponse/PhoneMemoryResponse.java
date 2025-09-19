@@ -1,6 +1,5 @@
-package com.example.marketplace_backend.DTO.Responses.models;
+package com.example.marketplace_backend.DTO.Responses.models.PhoneSpecResponse;
 
-import com.example.marketplace_backend.enums.SimType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,11 +10,11 @@ import java.util.UUID;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class PhoneSpecResponse {
+@NoArgsConstructor
+public class PhoneMemoryResponse {
     private UUID id;
-    private String memory;
+    private String name;
     private BigDecimal price;
-    private SimType simType;
+    private UUID productVariantId;
 }

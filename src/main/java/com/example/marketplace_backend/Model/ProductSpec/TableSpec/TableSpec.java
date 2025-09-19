@@ -20,9 +20,11 @@ public class TableSpec {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column
-    private String title;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "table_memory_id")
+    private TableMemory tableMemory;
 
-    @OneToMany(mappedBy = "tableSpec", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TableModule> tableModules;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "table_module_id")
+    private TableModule tableModule;
 }

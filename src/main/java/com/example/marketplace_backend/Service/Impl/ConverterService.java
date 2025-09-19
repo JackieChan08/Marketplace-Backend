@@ -8,17 +8,21 @@ import com.example.marketplace_backend.DTO.Responses.models.ImageReponse.FileRes
 import com.example.marketplace_backend.DTO.Responses.models.LaptopResponse.ChipResponse;
 import com.example.marketplace_backend.DTO.Responses.models.LaptopResponse.RamResponse;
 import com.example.marketplace_backend.DTO.Responses.models.LaptopResponse.SsdResponse;
+import com.example.marketplace_backend.DTO.Responses.models.PhoneSpecResponse.PhoneMemoryResponse;
+import com.example.marketplace_backend.DTO.Responses.models.PhoneSpecResponse.SimTypeResponse;
 import com.example.marketplace_backend.DTO.Responses.models.TableResponse.TableMemoryResponse;
 import com.example.marketplace_backend.DTO.Responses.models.TableResponse.TableModuleResponse;
-import com.example.marketplace_backend.DTO.Responses.models.TableResponse.TableSpecResponse;
-import com.example.marketplace_backend.DTO.Responses.models.WatchResponse.WatchSpecResponse;
+import com.example.marketplace_backend.DTO.Responses.models.WatchResponse.DialResponse;
+import com.example.marketplace_backend.DTO.Responses.models.WatchResponse.StrapSizeResponse;
 import com.example.marketplace_backend.Model.*;
 import com.example.marketplace_backend.Model.Intermediate_objects.*;
 import com.example.marketplace_backend.Model.ProductSpec.LaptopSpec.Chip;
 import com.example.marketplace_backend.Model.ProductSpec.LaptopSpec.LaptopSpec;
 import com.example.marketplace_backend.Model.ProductSpec.LaptopSpec.Ram;
 import com.example.marketplace_backend.Model.ProductSpec.LaptopSpec.Ssd;
-import com.example.marketplace_backend.Model.ProductSpec.PhoneSpec;
+import com.example.marketplace_backend.Model.ProductSpec.PhoneSpec.PhoneMemory;
+import com.example.marketplace_backend.Model.ProductSpec.PhoneSpec.PhoneSpec;
+import com.example.marketplace_backend.Model.ProductSpec.PhoneSpec.SimType;
 import com.example.marketplace_backend.Model.ProductSpec.TableSpec.TableMemory;
 import com.example.marketplace_backend.Model.ProductSpec.TableSpec.TableModule;
 import com.example.marketplace_backend.Model.ProductSpec.TableSpec.TableSpec;
@@ -26,6 +30,7 @@ import com.example.marketplace_backend.Model.ProductSpec.WatchSpec.Dial;
 import com.example.marketplace_backend.Model.ProductSpec.WatchSpec.StrapSize;
 import com.example.marketplace_backend.Model.ProductSpec.WatchSpec.WatchSpec;
 import com.example.marketplace_backend.Repositories.ProductColorRepository;
+import com.example.marketplace_backend.Repositories.ProductVariantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,6 +44,7 @@ import java.util.stream.Collectors;
 public class ConverterService {
     private final ProductParametersServiceImpl productParametersService;
     private final ProductColorRepository productColorRepository;
+    private final ProductVariantRepository productVariantRepository;
 
     @Value("${app.base-url}")
     private String baseUrl;
@@ -144,16 +150,11 @@ public class ConverterService {
                         .build())
                 .collect(Collectors.toList());
         response.setParameters(params);
-
         return response;
     }
 
 
     /* ---------- вспомогательные методы ---------- */
-
-    /**
-     * Универсальный метод для конвертации FileEntity в FileResponse
-     */
     private FileResponse convertToFileResponse(FileEntity image) {
         if (image == null) return null;
         return FileResponse.builder()
@@ -180,16 +181,6 @@ public class ConverterService {
                 .hex(color.getHex())
                 .price(color.getPrice())
                 .images(images)
-                .build();
-    }
-
-    private PhoneSpecResponse convertToPhoneSpecResponse(PhoneSpec spec) {
-        if (spec == null) return null;
-        return PhoneSpecResponse.builder()
-                .id(spec.getId())
-                .memory(spec.getMemory())
-                .price(spec.getPrice())
-                .simType(spec.getSimType())
                 .build();
     }
 
@@ -234,11 +225,16 @@ public class ConverterService {
             // --- RAM ---
             Ram ram = laptopSpec.getRam();
             if (ram != null && ssdResp.getRams().stream().noneMatch(r -> Objects.equals(r.getId(), ram.getId()))) {
+                ProductVariant variant = productVariantRepository.findByLaptopSpecId(laptopSpec.getId());
+
+                UUID variantId = (variant != null) ? variant.getId() : null;
+
                 ssdResp.getRams().add(
                         RamResponse.builder()
                                 .id(ram.getId())
                                 .name(ram.getName())
                                 .price(ram.getPrice())
+                                .productVariantId(variantId)
                                 .build()
                 );
             }
@@ -247,75 +243,121 @@ public class ConverterService {
         return new ArrayList<>(chipMap.values());
     }
 
+    // Конвертация для PhoneSpec: SimType -> PhoneMemory
+    private List<SimTypeResponse> convertToSimTypeResponse(PhoneSpec phoneSpec) {
+        if (phoneSpec == null) {
+            return Collections.emptyList();
+        }
 
+        Map<UUID, SimTypeResponse> simTypeMap = new LinkedHashMap<>();
 
-    // ============== WATCH SPEC CONVERTERS ==============
+        // --- SIM_TYPE ---
+        SimType simType = phoneSpec.getSimType();
+        if (simType == null) {
+            return Collections.emptyList();
+        }
 
-    private WatchSpecResponse convertToWatchSpecResponse(WatchSpec spec) {
-        if (spec == null) return null;
-        return WatchSpecResponse.builder()
-                .id(spec.getId())
-                .strapSize(spec.getStrapSize())
-                .sizeMm(spec.getSizeMm())
-                .price(spec.getPrice())
-                .build();
+        SimTypeResponse simTypeResp = simTypeMap.computeIfAbsent(
+                simType.getId(),
+                id -> SimTypeResponse.builder()
+                        .id(simType.getId())
+                        .name(simType.getName())
+                        .phoneMemoryResponses(new ArrayList<>())
+                        .build()
+        );
+
+        // --- PHONE_MEMORY ---
+        PhoneMemory phoneMemory = phoneSpec.getPhoneMemory();
+        if (phoneMemory != null && simTypeResp.getPhoneMemoryResponses().stream()
+                .noneMatch(pm -> Objects.equals(pm.getId(), phoneMemory.getId()))) {
+            simTypeResp.getPhoneMemoryResponses().add(
+                    PhoneMemoryResponse.builder()
+                            .id(phoneMemory.getId())
+                            .name(phoneMemory.getName())
+                            .price(phoneMemory.getPrice())
+                            .build()
+            );
+        }
+
+        return new ArrayList<>(simTypeMap.values());
     }
 
-//    private List<StrapSizeResponse> convertToStrapSizeResponse(List<StrapSize> strapSizes) {
-//        if (strapSizes == null) return null;
-//        return strapSizes.stream().map(strapSize -> {
-//            StrapSizeResponse strapSizeResponse = new StrapSizeResponse();
-//            strapSizeResponse.setId(strapSize.getId());
-//            strapSizeResponse.setName(strapSize.getName());
-//            strapSizeResponse.setDials(convertToDialResponse(strapSize.getDials()));
-//            return strapSizeResponse;
-//        }).collect(Collectors.toList());
-//    }
-//
-//    private List<DialResponse> convertToDialResponse(List<Dial> dials) {
-//        if (dials == null) return null;
-//        return dials.stream().map(dial -> {
-//            DialResponse dialResponse = new DialResponse();
-//            dialResponse.setId(dial.getId());
-//            dialResponse.setSize_mm(dial.getSize_mm());
-//            dialResponse.setPrice(dial.getPrice());
-//            return dialResponse;
-//        }).collect(Collectors.toList());
-//    }
+    // Конвертация для TableSpec: TableModule -> TableMemory
+    private List<TableModuleResponse> convertToTableModuleResponse(TableSpec tableSpec) {
+        if (tableSpec == null) {
+            return Collections.emptyList();
+        }
 
-    private TableSpecResponse convertToTableSpecResponse(TableSpec spec) {
-        if (spec == null) return null;
-        return TableSpecResponse.builder()
-                .id(spec.getId())
-                .title(spec.getTitle())
-                .modules(spec.getTableModules() != null ? convertToModuleResponse(spec.getTableModules()) : null)
-                .build();
+        Map<UUID, TableModuleResponse> moduleMap = new LinkedHashMap<>();
+
+        // --- TABLE_MODULE ---
+        TableModule tableModule = tableSpec.getTableModule();
+        if (tableModule == null) {
+            return Collections.emptyList();
+        }
+
+        TableModuleResponse moduleResp = moduleMap.computeIfAbsent(
+                tableModule.getId(),
+                id -> TableModuleResponse.builder()
+                        .id(tableModule.getId())
+                        .name(tableModule.getName())
+                        .tableMemoryResponses(new ArrayList<>())
+                        .build()
+        );
+
+        // --- TABLE_MEMORY ---
+        TableMemory tableMemory = tableSpec.getTableMemory();
+        if (tableMemory != null && moduleResp.getTableMemoryResponses().stream()
+                .noneMatch(tm -> Objects.equals(tm.getId(), tableMemory.getId()))) {
+            moduleResp.getTableMemoryResponses().add(
+                    TableMemoryResponse.builder()
+                            .id(tableMemory.getId())
+                            .name(tableMemory.getName())
+                            .price(tableMemory.getPrice())
+                            .build()
+            );
+        }
+
+        return new ArrayList<>(moduleMap.values());
     }
 
-    private List<TableModuleResponse> convertToModuleResponse(List<TableModule> tableModules) {
-        if (tableModules == null) return null;
-        return tableModules.stream().map(tableModule -> {
-            TableModuleResponse tableModuleResponse = new TableModuleResponse();
-            tableModuleResponse.setId(tableModule.getId());
-            tableModuleResponse.setName(tableModule.getName());
-            tableModuleResponse.setMemories(convertToMemoryResponse(tableModule.getMemories()));
-            return tableModuleResponse;
-        }).collect(Collectors.toList());
-    }
+    // Конвертация для WatchSpec: StrapSize -> Dial
+    private List<StrapSizeResponse> convertToStrapSizeResponse(WatchSpec watchSpec) {
+        if (watchSpec == null) {
+            return Collections.emptyList();
+        }
 
-    private List<TableMemoryResponse> convertToMemoryResponse(List<TableMemory> memories) {
-        if (memories == null) return null;
-        return memories.stream().map(tableMemory -> {
-            TableMemoryResponse tableMemoryResponse = new TableMemoryResponse();
-            tableMemoryResponse.setId(tableMemory.getId());
-            tableMemoryResponse.setName(tableMemory.getName());
-            tableMemoryResponse.setPrice(tableMemory.getPrice());
-            return tableMemoryResponse;
-        }).collect(Collectors.toList());
-    }
+        Map<UUID, StrapSizeResponse> strapSizeMap = new LinkedHashMap<>();
 
-    private FileResponse toFileResponse(FileEntity image) {
-        return convertToFileResponse(image);
+        // --- STRAP_SIZE ---
+        StrapSize strapSize = watchSpec.getStrapSize();
+        if (strapSize == null) {
+            return Collections.emptyList();
+        }
+
+        StrapSizeResponse strapSizeResp = strapSizeMap.computeIfAbsent(
+                strapSize.getId(),
+                id -> StrapSizeResponse.builder()
+                        .id(strapSize.getId())
+                        .name(strapSize.getName())
+                        .dials(new ArrayList<>())
+                        .build()
+        );
+
+        // --- DIAL ---
+        Dial dial = watchSpec.getDial();
+        if (dial != null && strapSizeResp.getDials().stream()
+                .noneMatch(d -> Objects.equals(d.getId(), dial.getId()))) {
+            strapSizeResp.getDials().add(
+                    DialResponse.builder()
+                            .id(dial.getId())
+                            .name(dial.getName())
+                            .price(dial.getPrice())
+                            .build()
+            );
+        }
+
+        return new ArrayList<>(strapSizeMap.values());
     }
 
     public SubcategoryResponse convertToSubcategoryResponse(Subcategory subcategory) {
@@ -662,14 +704,26 @@ public class ConverterService {
                 .id(variant.getId())
                 .productId(variant.getProduct().getId())
                 .color(convertToColorResponse(variant.getColor()))
-                .phoneSpec(convertToPhoneSpecResponse(variant.getPhoneSpec()))
+                .simTypeResponses(
+                        variant.getPhoneSpec() != null
+                                ? convertToSimTypeResponse(variant.getPhoneSpec())
+                                : null
+                )
                 .chipResponses(
                         variant.getLaptopSpec() != null
                                 ? convertToChipResponse(variant.getLaptopSpec())
                                 : null
                 )
-                .tableSpec(convertToTableSpecResponse(variant.getTableSpec()))
-                .watchSpec(convertToWatchSpecResponse(variant.getWatchSpec()))
+                .strapSizeResponses(
+                        variant.getTableSpec() != null
+                                ? convertToStrapSizeResponse(variant.getWatchSpec())
+                                : null
+                )
+                .tableModuleResponses(
+                        variant.getTableSpec() != null
+                                ? convertToTableModuleResponse(variant.getTableSpec())
+                                : null
+                )
                 .build();
     }
 
@@ -697,59 +751,169 @@ public class ConverterService {
                                             .collect(Collectors.toList())
                             )
                             .chipResponses(new ArrayList<>())
+                            .simTypeResponses(new ArrayList<>())
+                            .tableModuleResponses(new ArrayList<>())
+                            .strapSizeResponses(new ArrayList<>())
                             .build()
             );
 
-            if (variant.getLaptopSpec() == null || variant.getLaptopSpec().getChip() == null) continue;
+            // --- LAPTOP SPEC (existing logic) ---
+            if (variant.getLaptopSpec() != null && variant.getLaptopSpec().getChip() != null) {
+                handleLaptopSpec(variant, colorResp);
+            }
 
-            // --- CHIP ---
-            Chip chip = variant.getLaptopSpec().getChip();
-            ChipResponse chipResp = colorResp.getChipResponses().stream()
-                    .filter(c -> Objects.equals(c.getId(), chip.getId()))
-                    .findFirst()
-                    .orElseGet(() -> {
-                        ChipResponse newChip = ChipResponse.builder()
-                                .id(chip.getId())
-                                .name(chip.getName())
-                                .ssdResponses(new ArrayList<>())
-                                .build();
-                        colorResp.getChipResponses().add(newChip);
-                        return newChip;
-                    });
+            // --- PHONE SPEC ---
+            if (variant.getPhoneSpec() != null && variant.getPhoneSpec().getSimType() != null) {
+                handlePhoneSpec(variant, colorResp);
+            }
 
-            // --- SSD ---
-            Ssd ssd = variant.getLaptopSpec().getSsd();
-            if (ssd == null) continue;
+            // --- TABLE SPEC ---
+            if (variant.getTableSpec() != null && variant.getTableSpec().getTableModule() != null) {
+                handleTableSpec(variant, colorResp);
+            }
 
-            SsdResponse ssdResp = chipResp.getSsdResponses().stream()
-                    .filter(s -> Objects.equals(s.getId(), ssd.getId()))
-                    .findFirst()
-                    .orElseGet(() -> {
-                        SsdResponse newSsd = SsdResponse.builder()
-                                .id(ssd.getId())
-                                .name(ssd.getName())
-                                .rams(new ArrayList<>())
-                                .build();
-                        chipResp.getSsdResponses().add(newSsd);
-                        return newSsd;
-                    });
-
-            // --- RAM ---
-            Ram ram = variant.getLaptopSpec().getRam();
-            if (ram != null && ssdResp.getRams().stream().noneMatch(r -> Objects.equals(r.getId(), ram.getId()))) {
-                ssdResp.getRams().add(
-                        RamResponse.builder()
-                                .id(ram.getId())
-                                .name(ram.getName())
-                                .price(ram.getPrice())
-                                .build()
-                );
+            // --- WATCH SPEC ---
+            if (variant.getWatchSpec() != null && variant.getWatchSpec().getStrapSize() != null) {
+                handleWatchSpec(variant, colorResp);
             }
         }
 
         return new ArrayList<>(colorMap.values());
     }
 
+    private void handleLaptopSpec(ProductVariant variant, ColorResponse colorResp) {
+        Chip chip = variant.getLaptopSpec().getChip();
+        ChipResponse chipResp = colorResp.getChipResponses().stream()
+                .filter(c -> Objects.equals(c.getId(), chip.getId()))
+                .findFirst()
+                .orElseGet(() -> {
+                    ChipResponse newChip = ChipResponse.builder()
+                            .id(chip.getId())
+                            .name(chip.getName())
+                            .ssdResponses(new ArrayList<>())
+                            .build();
+                    colorResp.getChipResponses().add(newChip);
+                    return newChip;
+                });
 
+        // --- SSD ---
+        Ssd ssd = variant.getLaptopSpec().getSsd();
+        if (ssd == null) return;
 
+        SsdResponse ssdResp = chipResp.getSsdResponses().stream()
+                .filter(s -> Objects.equals(s.getId(), ssd.getId()))
+                .findFirst()
+                .orElseGet(() -> {
+                    SsdResponse newSsd = SsdResponse.builder()
+                            .id(ssd.getId())
+                            .name(ssd.getName())
+                            .rams(new ArrayList<>())
+                            .build();
+                    chipResp.getSsdResponses().add(newSsd);
+                    return newSsd;
+                });
+
+        // --- RAM ---
+        Ram ram = variant.getLaptopSpec().getRam();
+        if (ram != null && ssdResp.getRams().stream().noneMatch(r -> Objects.equals(r.getId(), ram.getId()))) {
+            ssdResp.getRams().add(
+                    RamResponse.builder()
+                            .id(ram.getId())
+                            .name(ram.getName())
+                            .price(ram.getPrice())
+                            .productVariantId(variant.getId())
+                            .build()
+            );
+        }
+    }
+
+    private void handlePhoneSpec(ProductVariant variant, ColorResponse colorResp) {
+        SimType simType = variant.getPhoneSpec().getSimType();
+        SimTypeResponse simTypeResp = colorResp.getSimTypeResponses().stream()
+                .filter(st -> Objects.equals(st.getId(), simType.getId()))
+                .findFirst()
+                .orElseGet(() -> {
+                    SimTypeResponse newSimType = SimTypeResponse.builder()
+                            .id(simType.getId())
+                            .name(simType.getName())
+                            .phoneMemoryResponses(new ArrayList<>())
+                            .build();
+                    colorResp.getSimTypeResponses().add(newSimType);
+                    return newSimType;
+                });
+
+        // --- PHONE_MEMORY ---
+        PhoneMemory phoneMemory = variant.getPhoneSpec().getPhoneMemory();
+        if (phoneMemory != null && simTypeResp.getPhoneMemoryResponses().stream()
+                .noneMatch(pm -> Objects.equals(pm.getId(), phoneMemory.getId()))) {
+            simTypeResp.getPhoneMemoryResponses().add(
+                    PhoneMemoryResponse.builder()
+                            .id(phoneMemory.getId())
+                            .name(phoneMemory.getName())
+                            .price(phoneMemory.getPrice())
+                            .productVariantId(variant.getId())
+                            .build()
+            );
+        }
+    }
+
+    private void handleTableSpec(ProductVariant variant, ColorResponse colorResp) {
+        TableModule tableModule = variant.getTableSpec().getTableModule();
+        TableModuleResponse moduleResp = colorResp.getTableModuleResponses().stream()
+                .filter(tm -> Objects.equals(tm.getId(), tableModule.getId()))
+                .findFirst()
+                .orElseGet(() -> {
+                    TableModuleResponse newModule = TableModuleResponse.builder()
+                            .id(tableModule.getId())
+                            .name(tableModule.getName())
+                            .tableMemoryResponses(new ArrayList<>())
+                            .build();
+                    colorResp.getTableModuleResponses().add(newModule);
+                    return newModule;
+                });
+
+        // --- TABLE_MEMORY ---
+        TableMemory tableMemory = variant.getTableSpec().getTableMemory();
+        if (tableMemory != null && moduleResp.getTableMemoryResponses().stream()
+                .noneMatch(tm -> Objects.equals(tm.getId(), tableMemory.getId()))) {
+            moduleResp.getTableMemoryResponses().add(
+                    TableMemoryResponse.builder()
+                            .id(tableMemory.getId())
+                            .name(tableMemory.getName())
+                            .price(tableMemory.getPrice())
+                            .productVariantId(variant.getId())
+                            .build()
+            );
+        }
+    }
+
+    private void handleWatchSpec(ProductVariant variant, ColorResponse colorResp) {
+        StrapSize strapSize = variant.getWatchSpec().getStrapSize();
+        StrapSizeResponse strapSizeResp = colorResp.getStrapSizeResponses().stream()
+                .filter(ss -> Objects.equals(ss.getId(), strapSize.getId()))
+                .findFirst()
+                .orElseGet(() -> {
+                    StrapSizeResponse newStrapSize = StrapSizeResponse.builder()
+                            .id(strapSize.getId())
+                            .name(strapSize.getName())
+                            .dials(new ArrayList<>())
+                            .build();
+                    colorResp.getStrapSizeResponses().add(newStrapSize);
+                    return newStrapSize;
+                });
+
+        // --- DIAL ---
+        Dial dial = variant.getWatchSpec().getDial();
+        if (dial != null && strapSizeResp.getDials().stream()
+                .noneMatch(d -> Objects.equals(d.getId(), dial.getId()))) {
+            strapSizeResp.getDials().add(
+                    DialResponse.builder()
+                            .id(dial.getId())
+                            .name(dial.getName())
+                            .price(dial.getPrice())
+                            .productVariantId(variant.getId())
+                            .build()
+            );
+        }
+    }
 }

@@ -14,6 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class DialResponse {
     private UUID id;
-    private String size_mm;
+    private String name;
     private BigDecimal price;
+    private UUID productVariantId;
 }

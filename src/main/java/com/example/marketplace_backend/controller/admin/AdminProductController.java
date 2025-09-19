@@ -127,14 +127,14 @@ public class AdminProductController {
         }
     }
 
-//    @PostMapping(value = "/edit/{id}", consumes = {"multipart/form-data"})
-//    public ResponseEntity<ProductResponse> editProduct(
-//            @PathVariable UUID id,
-//            @ModelAttribute ProductRequest request
-//    ) throws Exception {
-//        ProductResponse productResponse = converterService.convertToProductResponse(productService.editProduct(id, request));
-//        return ResponseEntity.ok(productResponse);
-//    }
+    @PostMapping(value = "/edit/{id}", consumes = {"multipart/form-data"})
+    public ResponseEntity<ProductResponse> editProduct(
+            @PathVariable UUID id,
+            @ModelAttribute ProductRequest request
+    ) throws Exception {
+        ProductResponse productResponse = converterService.convertToProductResponse(productService.editProduct(id, request));
+        return ResponseEntity.ok(productResponse);
+    }
 
 //    @DeleteMapping("{productId}/images/{imageId}")
 //    public ResponseEntity<Void> deleteProductImage(
