@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.Model.ProductSpec.WatchSpec;
+package com.example.marketplace_backend.Model.ProductSpec.PhoneSpec;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,25 +7,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "watch_spec")
+@Table(name = "phone_spec")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WatchSpec {
+public class PhoneSpec {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "strap_size_id", nullable = false)
-    private StrapSize strapSize;
+    @JoinColumn(name = "sim_type", nullable = false)
+    private SimType simType;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "dial_id", nullable = false)
-    private Dial dial;
+    @JoinColumn(name = "phone_memory_id", nullable = false)
+    private PhoneMemory phoneMemory;
 }

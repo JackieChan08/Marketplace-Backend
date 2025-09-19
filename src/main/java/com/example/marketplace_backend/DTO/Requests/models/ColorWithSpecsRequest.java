@@ -1,9 +1,9 @@
 package com.example.marketplace_backend.DTO.Requests.models;
 
 import com.example.marketplace_backend.DTO.Requests.models.LaptopRequest.ChipRequest;
-import com.example.marketplace_backend.DTO.Requests.models.TableRequest.TableSpecRequest;
-import com.example.marketplace_backend.DTO.Requests.models.WatchRequest.WatchSpecRequest;
-import com.example.marketplace_backend.Model.ProductSpec.WatchSpec.WatchSpec;
+import com.example.marketplace_backend.DTO.Requests.models.PhoneSpecRequest.SimTypeRequest;
+import com.example.marketplace_backend.DTO.Requests.models.TableRequest.TableModuleRequest;
+import com.example.marketplace_backend.DTO.Requests.models.WatchRequest.StrapSizeRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,8 +22,8 @@ public class ColorWithSpecsRequest {
     private String hex;
     private BigDecimal price;
     private List<MultipartFile> images;
-    private List<PhoneSpecRequest> phoneSpecs;
+    private List<SimTypeRequest> simTypeRequests;// phoneSpec
     private List<ChipRequest> chipRequests; //laptopSpec
-    private List<TableSpecRequest> tableSpecs;
-    private List<WatchSpecRequest> watchSpecs;
+    private List<TableModuleRequest> tableModuleRequests; //tableSpec
+    private List<StrapSizeRequest> strapSizeRequests; //watchSpec
 }

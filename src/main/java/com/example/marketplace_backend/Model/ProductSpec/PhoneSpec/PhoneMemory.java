@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.Model.ProductSpec.TableSpec;
+package com.example.marketplace_backend.Model.ProductSpec.PhoneSpec;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,20 +6,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "table_modules")
+@Table(name = "phone_memory")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TableModule {
+public class PhoneMemory {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue
     private UUID id;
 
     @Column(nullable = false, length = 30)
     private String name;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
 }

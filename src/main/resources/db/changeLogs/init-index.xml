@@ -33,17 +33,17 @@
     </changeSet>
 
     <changeSet id="add-product-variants-indexes" author="aiteginbaratov">
-        <createIndex tableName="product_variants" indexName="idx_product_variants_product_id">
-            <column name="product_id"/>
-        </createIndex>
+<!--        <createIndex tableName="product_variants" indexName="idx_product_variants_product_id">-->
+<!--            <column name="product_id"/>-->
+<!--        </createIndex>-->
 
-        <createIndex tableName="product_variants" indexName="idx_product_variants_color_id">
-            <column name="color_id"/>
-        </createIndex>
+<!--        <createIndex tableName="product_variants" indexName="idx_product_variants_color_id">-->
+<!--            <column name="color_id"/>-->
+<!--        </createIndex>-->
 
-        <createIndex tableName="product_variants" indexName="idx_product_variants_phone_spec_id">
-            <column name="phone_spec_id"/>
-        </createIndex>
+<!--        <createIndex tableName="product_variants" indexName="idx_product_variants_phone_spec_id">-->
+<!--            <column name="phone_spec_id"/>-->
+<!--        </createIndex>-->
 
 <!--        <createIndex tableName="product_variants" indexName="idx_product_variants_laptop_spec_id">-->
 <!--            <column name="laptop_spec_id"/>-->

@@ -598,241 +598,266 @@
         </createTable>
     </changeSet>
 
+    <!-- Laptop Spec Tables -->
+    <changeSet id="create-chips-table" author="aiteginbaratov">
+        <createTable tableName="chips">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-ssds-table" author="aiteginbaratov">
+        <createTable tableName="ssds">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-rams-table" author="aiteginbaratov">
+        <createTable tableName="rams">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-laptop-specs-table" author="aiteginbaratov">
+        <createTable tableName="laptop_specs">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="chip_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ssd_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ram_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="laptop_specs"
+                baseColumnNames="chip_id"
+                constraintName="fk_laptop_specs_chip"
+                referencedTableName="chips"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="laptop_specs"
+                baseColumnNames="ssd_id"
+                constraintName="fk_laptop_specs_ssd"
+                referencedTableName="ssds"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="laptop_specs"
+                baseColumnNames="ram_id"
+                constraintName="fk_laptop_specs_ram"
+                referencedTableName="rams"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <!-- Phone Spec Tables -->
+    <changeSet id="create-sim-type-table" author="aiteginbaratov">
+        <createTable tableName="sim_type">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-phone-memory-table" author="aiteginbaratov">
+        <createTable tableName="phone_memory">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
     <changeSet id="create-phone-spec-table" author="aiteginbaratov">
         <createTable tableName="phone_spec">
             <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-
-            <column name="tableMemory" type="VARCHAR(255)">
+            <column name="sim_type" type="UUID">
                 <constraints nullable="false"/>
             </column>
-
-            <column name="price" type="DECIMAL(15,2)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="sim_type" type="VARCHAR(50)">
+            <column name="phone_memory_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="phone_spec"
+                baseColumnNames="sim_type"
+                constraintName="fk_phone_spec_sim_type"
+                referencedTableName="sim_type"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="phone_spec"
+                baseColumnNames="phone_memory_id"
+                constraintName="fk_phone_spec_phone_memory"
+                referencedTableName="phone_memory"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
     </changeSet>
 
-<!--     Changeset для таблицы laptop_spec -->
-<!--    <changeSet id="create_laptop_spec_table" author="your_name">-->
-<!--        <createTable tableName="laptop_spec">-->
-<!--            <column name="id" type="uuid">-->
-<!--                <constraints primaryKey="true" nullable="false"/>-->
-<!--            </column>-->
-<!--            <column name="title" type="varchar(255)">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--        </createTable>-->
-<!--    </changeSet>-->
-
-<!--    &lt;!&ndash; Changeset для таблицы chips с внешним ключом &ndash;&gt;-->
-<!--    <changeSet id="create_chips_table" author="your_name">-->
-<!--        <createTable tableName="chips">-->
-<!--            <column name="id" type="uuid">-->
-<!--                <constraints primaryKey="true" nullable="false"/>-->
-<!--            </column>-->
-<!--            <column name="name" type="varchar(255)"/>-->
-<!--            <column name="laptop_spec_id" type="uuid"/>-->
-<!--        </createTable>-->
-
-<!--        <addForeignKeyConstraint-->
-<!--                baseTableName="chips"-->
-<!--                baseColumnNames="laptop_spec_id"-->
-<!--                referencedTableName="laptop_spec"-->
-<!--                referencedColumnNames="id"-->
-<!--                constraintName="fk_chips_laptop_spec"/>-->
-<!--    </changeSet>-->
-
-<!--    &lt;!&ndash; Changeset для таблицы ssds с внешним ключом &ndash;&gt;-->
-<!--    <changeSet id="create_ssds_table" author="aiteginbaratov">-->
-<!--        <createTable tableName="ssds">-->
-<!--            <column name="id" type="uuid">-->
-<!--                <constraints primaryKey="true" nullable="false"/>-->
-<!--            </column>-->
-<!--            <column name="name" type="varchar(255)"/>-->
-<!--            <column name="chip_id" type="uuid"/>-->
-<!--        </createTable>-->
-
-<!--        <addForeignKeyConstraint-->
-<!--                baseTableName="ssds"-->
-<!--                baseColumnNames="chip_id"-->
-<!--                referencedTableName="chips"-->
-<!--                referencedColumnNames="id"-->
-<!--                constraintName="fk_ssds_chips"/>-->
-<!--    </changeSet>-->
-
-<!--    &lt;!&ndash; Changeset для таблицы rams с внешним ключом &ndash;&gt;-->
-<!--    <changeSet id="create_rams_table" author="aiteginbaratov">-->
-<!--        <createTable tableName="rams">-->
-<!--            <column name="id" type="uuid">-->
-<!--                <constraints primaryKey="true" nullable="false"/>-->
-<!--            </column>-->
-<!--            <column name="name" type="varchar(255)"/>-->
-<!--            <column name="price" type="integer"/>-->
-<!--            <column name="ssd_id" type="uuid"/>-->
-<!--        </createTable>-->
-
-<!--        <addForeignKeyConstraint-->
-<!--                baseTableName="rams"-->
-<!--                baseColumnNames="ssd_id"-->
-<!--                referencedTableName="ssds"-->
-<!--                referencedColumnNames="id"-->
-<!--                constraintName="fk_rams_ssds"/>-->
-<!--    </changeSet>-->
-
-<!--     Changesets для TableSpec -->
-    <!-- Changeset для таблицы table_spec -->
-    <changeSet id="create_table_spec_table" author="aiteginbaratov">
-        <createTable tableName="table_spec">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="title" type="varchar(255)"/>
-        </createTable>
-    </changeSet>
-
-    <!-- Changeset для таблицы modules с внешним ключом -->
-    <changeSet id="create_modules_table" author="aiteginbaratov">
+    <!-- Table Spec Tables -->
+    <changeSet id="create-table-modules-table" author="aiteginbaratov">
         <createTable tableName="table_modules">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="name" type="varchar(255)"/>
-            <column name="table_spec_id" type="uuid"/>
-        </createTable>
-
-        <addForeignKeyConstraint
-                baseTableName="table_modules"
-                baseColumnNames="table_spec_id"
-                referencedTableName="table_spec"
-                referencedColumnNames="id"
-                constraintName="fk_table_modules_table_spec"/>
-    </changeSet>
-
-    <!-- Changeset для таблицы memories с внешним ключом -->
-    <changeSet id="create_memories_table" author="aiteginbaratov">
-        <createTable tableName="table_memories">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="name" type="varchar(255)"/>
-            <column name="price" type="decimal(19,2)"/>
-            <column name="table_module_id" type="uuid"/>
-        </createTable>
-
-        <addForeignKeyConstraint
-                baseTableName="table_memories"
-                baseColumnNames="table_module_id"
-                referencedTableName="table_modules"
-                referencedColumnNames="id"
-                constraintName="fk_table_memories_modules"/>
-    </changeSet>
-
-    <!-- Changesets для WatchSpec -->
-
-    <!-- Changeset для таблицы watch_spec -->
-    <changeSet id="create_watch_spec_table" author="aiteginbaratov">
-        <createTable tableName="watch_spec">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="title" type="varchar(255)"/>
-        </createTable>
-    </changeSet>
-
-<!--    &lt;!&ndash; Changeset для таблицы strap_sizes с внешним ключом &ndash;&gt;-->
-<!--    <changeSet id="create_strap_sizes_table" author="aiteginbaratov">-->
-<!--        <createTable tableName="strap_sizes">-->
-<!--            <column name="id" type="uuid">-->
-<!--                <constraints primaryKey="true" nullable="false"/>-->
-<!--            </column>-->
-<!--            <column name="name" type="varchar(255)"/>-->
-<!--            <column name="watch_spec_id" type="uuid"/>-->
-<!--        </createTable>-->
-
-<!--        <addForeignKeyConstraint-->
-<!--                baseTableName="strap_sizes"-->
-<!--                baseColumnNames="watch_spec_id"-->
-<!--                referencedTableName="watch_spec"-->
-<!--                referencedColumnNames="id"-->
-<!--                constraintName="fk_strap_sizes_watch_spec"/>-->
-<!--    </changeSet>-->
-
-<!--    &lt;!&ndash; Changeset для таблицы dials с внешним ключом &ndash;&gt;-->
-<!--    <changeSet id="create_dials_table" author="aiteginbaratov">-->
-<!--        <createTable tableName="dials">-->
-<!--            <column name="id" type="uuid">-->
-<!--                <constraints primaryKey="true" nullable="false"/>-->
-<!--            </column>-->
-<!--            <column name="size_mm" type="varchar(255)"/>-->
-<!--            <column name="price" type="decimal(19,2)"/>-->
-<!--            <column name="strap_size_id" type="uuid"/>-->
-<!--        </createTable>-->
-
-<!--        <addForeignKeyConstraint-->
-<!--                baseTableName="dials"-->
-<!--                baseColumnNames="strap_size_id"-->
-<!--                referencedTableName="strap_sizes"-->
-<!--                referencedColumnNames="id"-->
-<!--                constraintName="fk_dials_strap_sizes"/>-->
-<!--    </changeSet>-->
-
-    <changeSet id="create-product-variants-table" author="aiteginbaratov">
-        <createTable tableName="product_variants">
             <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-
-            <column name="product_id" type="UUID">
+            <column name="name" type="VARCHAR(30)">
                 <constraints nullable="false"/>
             </column>
+        </createTable>
+    </changeSet>
 
-            <column name="color_id" type="UUID">
-                <constraints nullable="true"/>
+    <changeSet id="create-table-memories-table" author="aiteginbaratov">
+        <createTable tableName="table_memories">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-
-            <column name="phone_spec_id" type="UUID">
-                <constraints nullable="true"/>
+            <column name="name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
             </column>
-
-<!--            <column name="laptop_spec_id" type="UUID">-->
-<!--                <constraints nullable="true"/>-->
-<!--            </column>-->
-
-            <column name="table_spec_id" type="UUID">
-                <constraints nullable="true"/>
+            <column name="price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
             </column>
+        </createTable>
+    </changeSet>
 
-            <column name="watch_spec_id" type="UUID">
-                <constraints nullable="true"/>
+    <changeSet id="create-table-spec-table" author="aiteginbaratov">
+        <createTable tableName="table_spec">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="table_memory_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="table_module_id" type="UUID">
+                <constraints nullable="false"/>
             </column>
         </createTable>
 
-<!--         Внешние ключи для product_variants -->
         <addForeignKeyConstraint
-                baseTableName="product_variants"
-                baseColumnNames="product_id"
-                constraintName="fk_product_variants_product"
-                referencedTableName="products"
+                baseTableName="table_spec"
+                baseColumnNames="table_memory_id"
+                constraintName="fk_table_spec_table_memory"
+                referencedTableName="table_memories"
                 referencedColumnNames="id"
-                deferrable="false"
-                initiallyDeferred="false"
                 onDelete="CASCADE"/>
 
         <addForeignKeyConstraint
-                baseTableName="product_variants"
-                baseColumnNames="color_id"
-                constraintName="fk_product_variants_color"
-                referencedTableName="product_colors"
+                baseTableName="table_spec"
+                baseColumnNames="table_module_id"
+                constraintName="fk_table_spec_table_module"
+                referencedTableName="table_modules"
                 referencedColumnNames="id"
-                deferrable="false"
-                initiallyDeferred="false"
                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <!-- Watch Spec Tables -->
+    <changeSet id="create-strap-sizes-table" author="aiteginbaratov">
+        <createTable tableName="strap_sizes">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-dials-table" author="aiteginbaratov">
+        <createTable tableName="dials">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-watch-spec-table" author="aiteginbaratov">
+        <createTable tableName="watch_spec">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="strap_size_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dial_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="watch_spec"
+                baseColumnNames="strap_size_id"
+                constraintName="fk_watch_spec_strap_size"
+                referencedTableName="strap_sizes"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="watch_spec"
+                baseColumnNames="dial_id"
+                constraintName="fk_watch_spec_dial"
+                referencedTableName="dials"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <!-- Product Variants Table Update -->
+    <changeSet id="update-product-variants-with-specs" author="aiteginbaratov">
+        <createTable tableName="product_variants">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product_id" type="UUID"/>
+            <column name="color_id" type="UUID"/>
+            <column name="phone_spec_id" type="UUID"/>
+            <column name="laptop_spec_id" type="UUID"/>
+            <column name="table_spec_id" type="UUID"/>
+            <column name="watch_spec_id" type="UUID"/>
+            <column name="price" type="DECIMAL(10,2)"/>
+        </createTable>
 
         <addForeignKeyConstraint
                 baseTableName="product_variants"
@@ -840,19 +865,15 @@
                 constraintName="fk_product_variants_phone_spec"
                 referencedTableName="phone_spec"
                 referencedColumnNames="id"
-                deferrable="false"
-                initiallyDeferred="false"
                 onDelete="CASCADE"/>
 
-<!--        <addForeignKeyConstraint-->
-<!--                baseTableName="product_variants"-->
-<!--                baseColumnNames="laptop_spec_id"-->
-<!--                constraintName="fk_product_variants_laptop_spec"-->
-<!--                referencedTableName="laptop_spec"-->
-<!--                referencedColumnNames="id"-->
-<!--                deferrable="false"-->
-<!--                initiallyDeferred="false"-->
-<!--                onDelete="CASCADE"/>-->
+        <addForeignKeyConstraint
+                baseTableName="product_variants"
+                baseColumnNames="laptop_spec_id"
+                constraintName="fk_product_variants_laptop_spec"
+                referencedTableName="laptop_specs"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
 
         <addForeignKeyConstraint
                 baseTableName="product_variants"
@@ -860,8 +881,6 @@
                 constraintName="fk_product_variants_table_spec"
                 referencedTableName="table_spec"
                 referencedColumnNames="id"
-                deferrable="false"
-                initiallyDeferred="false"
                 onDelete="CASCADE"/>
 
         <addForeignKeyConstraint
@@ -870,9 +889,21 @@
                 constraintName="fk_product_variants_watch_spec"
                 referencedTableName="watch_spec"
                 referencedColumnNames="id"
-                deferrable="false"
-                initiallyDeferred="false"
                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="product_variants"
+                baseColumnNames="product_id"
+                referencedTableName="products"
+                referencedColumnNames="id"
+                constraintName="fk_product_variants_product"/>
+
+        <addForeignKeyConstraint
+                baseTableName="product_variants"
+                baseColumnNames="color_id"
+                referencedTableName="product_colors"
+                referencedColumnNames="id"
+                constraintName="fk_product_variants_color"/>
     </changeSet>
 
     <!-- Cart items table -->

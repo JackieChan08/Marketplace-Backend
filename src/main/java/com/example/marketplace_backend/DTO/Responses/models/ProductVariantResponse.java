@@ -1,8 +1,9 @@
 package com.example.marketplace_backend.DTO.Responses.models;
 
 import com.example.marketplace_backend.DTO.Responses.models.LaptopResponse.ChipResponse;
-import com.example.marketplace_backend.DTO.Responses.models.TableResponse.TableSpecResponse;
-import com.example.marketplace_backend.DTO.Responses.models.WatchResponse.WatchSpecResponse;
+import com.example.marketplace_backend.DTO.Responses.models.PhoneSpecResponse.SimTypeResponse;
+import com.example.marketplace_backend.DTO.Responses.models.TableResponse.TableModuleResponse;
+import com.example.marketplace_backend.DTO.Responses.models.WatchResponse.StrapSizeResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,8 +20,8 @@ public class ProductVariantResponse {
     private UUID id;
     private UUID productId;
     private ColorResponse color;
-    private PhoneSpecResponse phoneSpec;
     private List<ChipResponse> chipResponses;
-    private TableSpecResponse tableSpec;
-    private WatchSpecResponse watchSpec;
+    private List<SimTypeResponse> simTypeResponses;
+    private List<TableModuleResponse> tableModuleResponses;
+    private List<StrapSizeResponse> strapSizeResponses;
 }

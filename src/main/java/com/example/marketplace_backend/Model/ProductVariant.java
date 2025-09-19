@@ -1,7 +1,7 @@
 package com.example.marketplace_backend.Model;
 
 import com.example.marketplace_backend.Model.ProductSpec.LaptopSpec.LaptopSpec;
-import com.example.marketplace_backend.Model.ProductSpec.PhoneSpec;
+import com.example.marketplace_backend.Model.ProductSpec.PhoneSpec.PhoneSpec;
 import com.example.marketplace_backend.Model.ProductSpec.TableSpec.TableSpec;
 import com.example.marketplace_backend.Model.ProductSpec.WatchSpec.WatchSpec;
 import jakarta.persistence.*;
@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -46,4 +47,7 @@ public class ProductVariant {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "watch_spec_id")
     private WatchSpec watchSpec;
+
+    @Column
+    private BigDecimal price;
 }

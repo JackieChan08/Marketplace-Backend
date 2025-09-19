@@ -17,16 +17,12 @@ import java.util.UUID;
 @Builder
 public class TableMemory {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue
     private UUID id;
 
-    @Column
+    @Column(nullable = false, length = 30)
     private String name;
 
-    @Column
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "module_id")
-    private TableModule tableModule;
 }

@@ -16,4 +16,5 @@ public class TableMemoryResponse {
     private UUID id;
     private String name;
     private BigDecimal price;
+    private UUID productVariantId;
 }

@@ -1,4 +1,4 @@
-package com.example.marketplace_backend.DTO.Requests.models.TableRequest;
+package com.example.marketplace_backend.DTO.Requests.models.PhoneSpecRequest;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TableMemoryRequest {
+public class PhoneMemoryRequest {
     private String name;
     private BigDecimal price;
 }

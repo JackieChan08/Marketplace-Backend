@@ -17,16 +17,9 @@ import java.util.UUID;
 @Builder
 public class StrapSize {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue
     private UUID id;
 
-    @Column
+    @Column(nullable = false, length = 30)
     private String name;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "watch_spec_id")
-    private WatchSpec watchSpec;
-
-    @OneToMany(mappedBy = "strapSize", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Dial> dials;
 }

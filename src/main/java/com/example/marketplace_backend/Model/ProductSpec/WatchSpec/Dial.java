@@ -17,16 +17,12 @@ import java.util.UUID;
 @Builder
 public class Dial {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue
     private UUID id;
 
-    @Column
-    private String size_mm;
+    @Column(nullable = false, length = 30)
+    private String name;
 
-    @Column
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "strap_size_id")
-    private StrapSize strapSize;
 }

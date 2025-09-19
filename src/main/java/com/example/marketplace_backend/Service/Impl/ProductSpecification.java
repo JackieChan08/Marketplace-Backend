@@ -9,7 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-//Специальный фильтр для продукта
+
 public class ProductSpecification {
 
 

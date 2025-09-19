@@ -15,5 +15,5 @@ import java.util.UUID;
 public class TableModuleResponse {
     private UUID id;
     private String name;
-    private List<TableMemoryResponse> memories;
+    private List<TableMemoryResponse> tableMemoryResponses;
 }

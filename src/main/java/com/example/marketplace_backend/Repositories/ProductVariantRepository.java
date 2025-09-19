@@ -12,6 +12,8 @@ import java.util.UUID;
 
 @Repository
 public interface ProductVariantRepository extends JpaRepository<ProductVariant, UUID> {
+
+    // По productId
     @Query("SELECT pv FROM ProductVariant pv WHERE pv.product.id = :productId")
     List<ProductVariant> findByProductId(@Param("productId") UUID productId);
 
@@ -19,14 +21,24 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
     @Query("DELETE FROM ProductVariant pv WHERE pv.product.id = :productId")
     void deleteByProductId(@Param("productId") UUID productId);
 
+    // По colorId
     @Query("SELECT pv FROM ProductVariant pv WHERE pv.color.id = :colorId")
     List<ProductVariant> findByColorId(@Param("colorId") UUID colorId);
 
+    // По phoneSpecId
     @Query("SELECT pv FROM ProductVariant pv WHERE pv.phoneSpec.id = :phoneSpecId")
-    List<ProductVariant> findByPhoneSpecId(@Param("phoneSpecId") UUID phoneSpecId);
+    ProductVariant findByPhoneSpecId(@Param("phoneSpecId") UUID phoneSpecId);
 
+    // По laptopSpecId
     @Query("SELECT pv FROM ProductVariant pv WHERE pv.laptopSpec.id = :laptopSpecId")
-    List<ProductVariant> findByLaptopSpecId(@Param("laptopSpecId") UUID laptopSpecId);
+    ProductVariant findByLaptopSpecId(@Param("laptopSpecId") UUID laptopSpecId);
 
+    // По tableSpecId
+    @Query("SELECT pv FROM ProductVariant pv WHERE pv.tableSpec.id = :tableSpecId")
+    ProductVariant findByTableSpecId(@Param("tableSpecId") UUID tableSpecId);
 
+    // По watchSpecId
+    @Query("SELECT pv FROM ProductVariant pv WHERE pv.watchSpec.id = :watchSpecId")
+    ProductVariant findByWatchSpecId(@Param("watchSpecId") UUID watchSpecId);
 }
+
