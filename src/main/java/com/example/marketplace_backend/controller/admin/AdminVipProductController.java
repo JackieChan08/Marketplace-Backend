@@ -61,4 +61,10 @@ public class AdminVipProductController {
             throw e;
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<VipProductResponse> getVipProductById(@PathVariable UUID id) {
+        log.info("Запрос на получение VIP продукта по ID: {}", id);
+        return ResponseEntity.ok(vipProductService.getVipProductById(id));
+    }
 }

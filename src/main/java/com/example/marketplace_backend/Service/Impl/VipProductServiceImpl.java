@@ -5,6 +5,7 @@ import com.example.marketplace_backend.DTO.Responses.models.VipProductResponse;
 import com.example.marketplace_backend.Model.FileEntity;
 import com.example.marketplace_backend.Model.VipProduct;
 import com.example.marketplace_backend.Repositories.VipProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -156,4 +157,19 @@ public class VipProductServiceImpl extends BaseServiceImpl<VipProduct, UUID> {
             throw new RuntimeException("Ошибка при удалении VIP продукта", e);
         }
     }
+
+    public VipProductResponse getVipProductById(UUID id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID продукта не может быть null");
+        }
+
+        log.info("Вывод VIP продукта по ID: {}", id);
+
+        VipProduct vipProduct = vipProductRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("VIP продукт с ID " + id + " не найден"));
+
+        return converterService.convertToVipProductResponse(vipProduct);
+    }
+
+
 }

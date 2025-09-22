@@ -13,6 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class FileResponse {
     private UUID id;
+    private UUID intermediateId;
     private String uniqueName;
     private String originalName;
     private String url;

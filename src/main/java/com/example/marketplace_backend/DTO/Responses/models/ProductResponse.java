@@ -43,5 +43,6 @@ public class ProductResponse {
     private List<StatusResponse> statuses;
     private List<ProductParameterResponse> parameters;
     private List<ColorResponse> colors;
+    private ProductVariantResponse singleVariant;
 }
 

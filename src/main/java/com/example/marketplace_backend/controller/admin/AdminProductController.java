@@ -3,6 +3,7 @@ package com.example.marketplace_backend.controller.admin;
 import com.example.marketplace_backend.DTO.Requests.models.ProductFilterRequest;
 import com.example.marketplace_backend.DTO.Requests.models.ProductRequest;
 import com.example.marketplace_backend.DTO.Responses.models.ProductResponse;
+import com.example.marketplace_backend.Model.Intermediate_objects.ProductColorImage;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductImage;
 import com.example.marketplace_backend.Model.Intermediate_objects.ProductStatuses;
 import com.example.marketplace_backend.Model.Product;
@@ -195,6 +196,20 @@ public class AdminProductController {
     @DeleteMapping("/images/{imageId}")
     public ResponseEntity<Void> deleteImage(@PathVariable UUID imageId) {
         productService.deleteProductImage(imageId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/color-images")
+    public ResponseEntity<ProductColorImage> addColorImage(
+            @PathVariable UUID id,
+            @RequestParam("file") MultipartFile file
+    ) throws Exception {
+        return ResponseEntity.ok(productService.addProductColorImage(id, file));
+    }
+
+    @DeleteMapping("/color-images/{imageId}")
+    public ResponseEntity<Void> deleteColorImage(@PathVariable UUID imageId) {
+        productService.deleteProductColorImage(imageId);
         return ResponseEntity.noContent().build();
     }
 }
