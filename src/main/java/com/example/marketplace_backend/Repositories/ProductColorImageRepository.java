@@ -14,6 +14,8 @@ import java.util.UUID;
 @Repository
 public interface ProductColorImageRepository extends JpaRepository<ProductColorImage, UUID> {
 
+    long countByImageId(UUID imageId);
+
     @Query("SELECT pci FROM ProductColorImage pci WHERE pci.color.id = :colorId")
     List<ProductColorImage> findByColorId(@Param("colorId") UUID colorId);
 

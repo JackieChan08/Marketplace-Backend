@@ -27,9 +27,7 @@ import java.util.UUID;
 public class BrandController {
 
     private final BrandServiceImpl brandService;
-    private final BrandRepository brandRepository;
     private final ConverterService converter;
-    private final BrandServiceImpl brandServiceImpl;
 
     @Value("${app.base-url}")
     private String baseUrl;

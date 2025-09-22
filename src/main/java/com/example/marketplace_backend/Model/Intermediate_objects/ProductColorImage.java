@@ -9,7 +9,7 @@ import lombok.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "product_color_images") // Переименовать таблицу для ясности
+@Table(name = "product_color_images")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

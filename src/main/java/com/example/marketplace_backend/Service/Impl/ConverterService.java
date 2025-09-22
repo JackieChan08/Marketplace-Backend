@@ -85,12 +85,20 @@ public class ConverterService {
         // Colors
         response.setColors(convertToColorTree(product.getVariants()));
 
+        // Если нет цветов и спеков → достаём базовый singleVariant
+        if (response.getColors() == null || response.getColors().isEmpty()) {
+            if (product.getVariants() != null && !product.getVariants().isEmpty()) {
+                response.setSingleVariant(convertToProductVariantResponse(product.getVariants().get(0)));
+            }
+        }
+
+
         // Images: приоритет — изображения из вариантов (цветов), иначе общие product images
         List<FileResponse> variantImages = product.getVariants() != null
                 ? product.getVariants().stream()
                 .filter(v -> v.getColor() != null && v.getColor().getImages() != null)
                 .flatMap(v -> v.getColor().getImages().stream()
-                        .map(img -> convertToFileResponse(img.getImage())))
+                        .map(this::convertToFileResponseForProductColorImage))
                 .collect(Collectors.toMap(
                         FileResponse::getId, // ключ = id файла
                         f -> f,
@@ -103,7 +111,7 @@ public class ConverterService {
 
         List<FileResponse> productImages = (product.getImages() != null)
                 ? product.getImages().stream()
-                .map(img -> convertToFileResponse(img.getImage()))
+                .map(this::convertToFileResponseForProductImage)
                 .collect(Collectors.toMap(
                         FileResponse::getId,
                         f -> f,
@@ -166,6 +174,36 @@ public class ConverterService {
                 .build();
     }
 
+    private FileResponse convertToFileResponseForProductColorImage(ProductColorImage pci) {
+        if (pci == null || pci.getImage() == null) return null;
+
+        FileEntity image = pci.getImage();
+        return FileResponse.builder()
+                .id(image.getId())
+                .intermediateId(pci.getId())
+                .uniqueName(image.getUniqueName())
+                .originalName(image.getOriginalName())
+                .url(baseUrl + "/uploads/" + image.getUniqueName())
+                .fileType(image.getFileType())
+                .build();
+    }
+
+    private FileResponse convertToFileResponseForProductImage(ProductImage pi) {
+        if (pi == null || pi.getImage() == null) return null;
+
+        FileEntity image = pi.getImage();
+        return FileResponse.builder()
+                .id(image.getId())
+                .intermediateId(pi.getId())
+                .uniqueName(image.getUniqueName())
+                .originalName(image.getOriginalName())
+                .url(baseUrl + "/uploads/" + image.getUniqueName())
+                .fileType(image.getFileType())
+                .build();
+    }
+
+
+
     private ColorResponse convertToColorResponse(ProductColor color) {
         if (color == null) return null;
 
@@ -179,7 +217,6 @@ public class ConverterService {
                 .id(color.getId())
                 .name(color.getName())
                 .hex(color.getHex())
-                .price(color.getPrice())
                 .images(images)
                 .build();
     }
@@ -735,7 +772,9 @@ public class ConverterService {
         Map<UUID, ColorResponse> colorMap = new LinkedHashMap<>();
 
         for (ProductVariant variant : variants) {
-            if (variant.getColor() == null) continue;
+            if (variant.getColor() == null){
+                continue;
+            }
 
             // --- COLOR ---
             ColorResponse colorResp = colorMap.computeIfAbsent(
@@ -744,10 +783,9 @@ public class ConverterService {
                             .id(variant.getColor().getId())
                             .name(variant.getColor().getName())
                             .hex(variant.getColor().getHex())
-                            .price(variant.getColor().getPrice())
                             .images(
                                     variant.getColor().getImages().stream()
-                                            .map(img -> convertToFileResponse(img.getImage()))
+                                            .map(this::convertToFileResponseForProductColorImage)
                                             .collect(Collectors.toList())
                             )
                             .chipResponses(new ArrayList<>())

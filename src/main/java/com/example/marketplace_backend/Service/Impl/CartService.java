@@ -93,8 +93,7 @@ public class CartService {
             newItem.setCart(cart);
             newItem.setProductVariant(productVariant);
             newItem.setQuantity(quantity);
-//            BigDecimal price = resolveProductPrice(productVariant);
-//            newItem.setPrice(price);
+            newItem.setPrice(productVariant.getPrice());
             cart.getCartItems().add(newItem);
         }
 

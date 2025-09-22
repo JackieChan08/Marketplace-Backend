@@ -120,9 +120,7 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="price" type="decimal(15,2)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="price" type="decimal(15,2)"/>
             <column name="price_description" type="text">
                 <constraints nullable="true"/>
             </column>
