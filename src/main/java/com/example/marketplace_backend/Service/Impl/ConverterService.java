@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.DTO.Responses.models.*;
+import com.example.marketplace_backend.DTO.Responses.models.CartOrderFavorite.ColorResponseBasic;
 import com.example.marketplace_backend.DTO.Responses.models.ImageReponse.BrandImageResponse;
 import com.example.marketplace_backend.DTO.Responses.models.ImageReponse.CategoryIconResponse;
 import com.example.marketplace_backend.DTO.Responses.models.ImageReponse.CategoryImageResponse;
@@ -220,6 +221,24 @@ public class ConverterService {
                 .images(images)
                 .build();
     }
+
+    private ColorResponseBasic convertToColorResponseBasic(ProductColor color) {
+        if (color == null) return null;
+
+        List<FileResponse> images = (color.getImages() != null)
+                ? color.getImages().stream()
+                .map(img -> convertToFileResponse(img.getImage()))
+                .collect(Collectors.toList())
+                : List.of();
+
+        return ColorResponseBasic.builder()
+                .id(color.getId())
+                .name(color.getName())
+                .hex(color.getHex())
+                .images(images)
+                .build();
+    }
+
 
     private List<ChipResponse> convertToChipResponse(LaptopSpec laptopSpec) {
         if (laptopSpec == null) {
@@ -611,6 +630,7 @@ public class ConverterService {
 
         return FavoriteItemResponse.builder()
                 .favoriteItemId(item.getId())
+                .userId(item.getFavorite().getUser().getId())
                 .quantity(item.getQuantity())
                 .pricePerItem(item.getPrice())
                 .totalPrice(totalPrice)
@@ -639,6 +659,7 @@ public class ConverterService {
 
         return CartItemResponse.builder()
                 .cartItemId(item.getId())
+                .userId(item.getCart().getUser().getId())
                 .quantity(item.getQuantity())
                 .pricePerItem(item.getPrice())
                 .totalPrice(totalPrice)
@@ -676,6 +697,7 @@ public class ConverterService {
         return OrderResponse.builder()
                 .id(order.getId())
                 .address(order.getAddress())
+                .city(order.getCity())
                 .phoneNumber(order.getPhoneNumber())
                 .comment(order.getComment())
                 .totalPrice(order.getTotalPrice())
@@ -740,7 +762,7 @@ public class ConverterService {
         return ProductVariantResponse.builder()
                 .id(variant.getId())
                 .productId(variant.getProduct().getId())
-                .color(convertToColorResponse(variant.getColor()))
+                .color(convertToColorResponseBasic(variant.getColor()))
                 .simTypeResponses(
                         variant.getPhoneSpec() != null
                                 ? convertToSimTypeResponse(variant.getPhoneSpec())

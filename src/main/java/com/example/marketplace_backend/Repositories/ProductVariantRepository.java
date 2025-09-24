@@ -40,5 +40,8 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
     // По watchSpecId
     @Query("SELECT pv FROM ProductVariant pv WHERE pv.watchSpec.id = :watchSpecId")
     ProductVariant findByWatchSpecId(@Param("watchSpecId") UUID watchSpecId);
+
+    @Query("SELECT COUNT(DISTINCT v.color) FROM ProductVariant v WHERE v.product.id = :productId")
+    long countDistinctColorsByProductId(@Param("productId") UUID productId);
 }
 

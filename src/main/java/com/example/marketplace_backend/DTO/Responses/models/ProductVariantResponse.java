@@ -1,5 +1,6 @@
 package com.example.marketplace_backend.DTO.Responses.models;
 
+import com.example.marketplace_backend.DTO.Responses.models.CartOrderFavorite.ColorResponseBasic;
 import com.example.marketplace_backend.DTO.Responses.models.LaptopResponse.ChipResponse;
 import com.example.marketplace_backend.DTO.Responses.models.PhoneSpecResponse.SimTypeResponse;
 import com.example.marketplace_backend.DTO.Responses.models.TableResponse.TableModuleResponse;
@@ -19,7 +20,7 @@ import java.util.UUID;
 public class ProductVariantResponse {
     private UUID id;
     private UUID productId;
-    private ColorResponse color;
+    private ColorResponseBasic color;
     private List<ChipResponse> chipResponses;
     private List<SimTypeResponse> simTypeResponses;
     private List<TableModuleResponse> tableModuleResponses;

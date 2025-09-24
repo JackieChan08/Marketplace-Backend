@@ -15,6 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class FavoriteItemResponse {
     private UUID favoriteItemId;
+    private UUID userId;
     private int quantity;
     private ProductVariantResponse productVariant;
     private BigDecimal pricePerItem;

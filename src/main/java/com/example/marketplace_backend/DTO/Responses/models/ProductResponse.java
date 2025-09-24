@@ -23,7 +23,7 @@ public class ProductResponse {
     private BigDecimal price;
     private String priceDescription;
     private BigDecimal discountedPrice;
-    private boolean availability;
+    private Boolean availability;
     private String title;
     private String description;
 

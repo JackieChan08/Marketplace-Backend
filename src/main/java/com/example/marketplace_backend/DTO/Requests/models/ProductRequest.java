@@ -22,7 +22,7 @@ public class ProductRequest {
     private String priceDescription;
     private UUID subCategoryId;
     private UUID brandId;
-    private boolean availability;
+    private Boolean availability;
     private String title;
     private String description;
     private String parametersJson;
