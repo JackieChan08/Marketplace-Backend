@@ -165,7 +165,8 @@
                                  baseColumnNames="product_id"
                                  referencedTableName="products"
                                  referencedColumnNames="id"
-                                 constraintName="fk_product_parameters_product"/>
+                                 constraintName="fk_product_parameters_product"
+                                 onDelete="CASCADE"/>
     </changeSet>
 
     <!-- Product sub parameters table -->
@@ -188,7 +189,8 @@
                                  baseColumnNames="product_parameter_id"
                                  referencedTableName="product_parameters"
                                  referencedColumnNames="id"
-                                 constraintName="fk_product_sub_parameters_parameter"/>
+                                 constraintName="fk_product_sub_parameters_parameter"
+                                 onDelete="CASCADE"/>
     </changeSet>
 
     <!-- User image table -->

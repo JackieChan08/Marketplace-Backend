@@ -1,5 +1,7 @@
 package com.example.marketplace_backend.Service.Impl.auth;
 
+import com.example.marketplace_backend.Repositories.CartRepository;
+import com.example.marketplace_backend.Repositories.FavoriteRepository;
 import com.example.marketplace_backend.Repositories.RefreshTokenRepository;
 import com.example.marketplace_backend.Repositories.UserRepository;
 import com.example.marketplace_backend.DTO.Requests.Jwt.RegisterRequest;
@@ -29,22 +31,33 @@ public class UserServiceImpl extends BaseServiceImpl<User, UUID> {
     private final JwtService jwtService;
     private final RefreshTokenRepository refreshTokenRepository;
     private final ConverterService converterService;
+    private final CartRepository cartRepository;
+    private final FavoriteRepository favoriteRepository;
 
     @Value("${jwt.refresh.expiration}")
     private long refreshExpiration;
 
-    protected UserServiceImpl(UserRepository repository, PasswordEncoder passwordEncoder, JwtService jwtService, RefreshTokenRepository refreshTokenRepository, ConverterService converterService) {
+    protected UserServiceImpl(UserRepository repository,
+                              PasswordEncoder passwordEncoder,
+                              JwtService jwtService,
+                              RefreshTokenRepository refreshTokenRepository,
+                              ConverterService converterService,
+                              CartRepository cartRepository,
+                              FavoriteRepository favoriteRepository) {
         super(repository);
         this.userRepository = repository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.refreshTokenRepository = refreshTokenRepository;
         this.converterService = converterService;
+        this.cartRepository = cartRepository;
+        this.favoriteRepository = favoriteRepository;
     }
 
     @Transactional
     public JwtResponse register(RegisterRequest request) {
 
+        // Создаём пользователя
         User saved = userRepository.save(
                 User.builder()
                         .email(request.getEmail())
@@ -54,6 +67,19 @@ public class UserServiceImpl extends BaseServiceImpl<User, UUID> {
                         .build()
         );
 
+        // Создаём пустую корзину для пользователя
+        Cart cart = Cart.builder()
+                .user(saved)
+                .build();
+        cartRepository.save(cart); // <--- нужен CartRepository
+
+        // Создаём пустое избранное для пользователя
+        Favorite favorite = Favorite.builder()
+                .user(saved)
+                .build();
+        favoriteRepository.save(favorite); // <--- нужен FavoriteRepository
+
+        // Генерация токенов
         String accessToken = jwtService.generateAccessToken(saved);
         String refreshTokenStr = jwtService.generateRefreshToken(saved);
 
@@ -66,10 +92,10 @@ public class UserServiceImpl extends BaseServiceImpl<User, UUID> {
         return new JwtResponse(accessToken, refreshTokenStr);
     }
 
-
     public List<Order> ordersByUser(User user) {
         return userRepository.ordersByUser(user);
     }
+
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
     }
