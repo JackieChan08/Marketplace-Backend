@@ -59,7 +59,7 @@ public class ConverterService {
                 .price(product.getPrice())
                 .priceDescription(product.getPriceDescription())
                 .discountedPrice(product.getDiscountedPrice())
-                .availability(product.isAvailability())
+                .availability(product.getAvailability())
                 .title(product.getTitle())
                 .description(product.getDescription())
                 .createdAt(product.getCreatedAt())
@@ -762,6 +762,8 @@ public class ConverterService {
         return ProductVariantResponse.builder()
                 .id(variant.getId())
                 .productId(variant.getProduct().getId())
+                .name(variant.getProduct().getName())
+                .availability(variant.getProduct().getAvailability())
                 .color(convertToColorResponseBasic(variant.getColor()))
                 .simTypeResponses(
                         variant.getPhoneSpec() != null

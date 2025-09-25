@@ -20,6 +20,8 @@ import java.util.UUID;
 public class ProductVariantResponse {
     private UUID id;
     private UUID productId;
+    private String name;
+    private Boolean availability;
     private ColorResponseBasic color;
     private List<ChipResponse> chipResponses;
     private List<SimTypeResponse> simTypeResponses;

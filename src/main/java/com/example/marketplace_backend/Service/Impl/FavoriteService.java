@@ -85,16 +85,11 @@ public class FavoriteService {
             newItem.setFavorite(favorite);
             newItem.setProductVariant(productVariant);
             newItem.setQuantity(quantity);
-//            BigDecimal price = resolveProductPrice(productVariant);
-//            newItem.setPrice(price);
+            newItem.setPrice(productVariant.getPrice());
             favorite.getFavoriteItems().add(newItem);
         }
 
         return favoriteRepository.save(favorite);
-    }
-
-    private BigDecimal getProductPrice(UUID productId) {
-        return productService.getById(productId).getPrice();
     }
 
     @Transactional
