@@ -47,6 +47,7 @@
         <loadData tableName="product_color_images" file="data/product_color_image.csv" relativeToChangelogFile="true" separator=";"/>
     </changeSet>
     <changeSet id="Admin" author="JekiChan08">
+        <loadData tableName="users" file="data/admins.csv" relativeToChangelogFile="true" separator=";"/>
         <loadData tableName="users" file="data/users.csv" relativeToChangelogFile="true" separator=";"/>
     </changeSet>
     <changeSet id="vps" author="aiteginbaratov">

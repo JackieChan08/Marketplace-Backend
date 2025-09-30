@@ -173,8 +173,6 @@ public class BrandServiceImpl{
         }
 
         if (request.getImage() != null && !request.getImage().isEmpty()) {
-            deleteOldBrandImage(brand);
-
             FileEntity savedImage = fileUploadService.saveImage(request.getImage());
 
             BrandImage brandImage = BrandImage.builder()
@@ -185,15 +183,13 @@ public class BrandServiceImpl{
             if (brand.getBrandImages() == null) {
                 brand.setBrandImages(new ArrayList<>());
             } else {
-                brand.getBrandImages().clear(); // если нужно удалить старые
+                brand.getBrandImages().clear();
             }
             brand.getBrandImages().add(brandImage);
-
         }
 
         brand.setUpdatedAt(LocalDateTime.now());
-        save(brand);
-        return brand;
+        return save(brand);
     }
 
     @Transactional

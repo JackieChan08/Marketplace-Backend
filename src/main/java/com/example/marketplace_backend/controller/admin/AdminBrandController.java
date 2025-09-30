@@ -1,7 +1,9 @@
 package com.example.marketplace_backend.controller.admin;
 
 import com.example.marketplace_backend.DTO.Requests.models.BrandRequest;
+import com.example.marketplace_backend.DTO.Requests.models.CategoryRequest;
 import com.example.marketplace_backend.DTO.Responses.models.BrandResponse;
+import com.example.marketplace_backend.DTO.Responses.models.CategoryResponse;
 import com.example.marketplace_backend.Model.Brand;
 import com.example.marketplace_backend.Service.Impl.BrandServiceImpl;
 import com.example.marketplace_backend.Service.Impl.ConverterService;
@@ -133,24 +135,6 @@ public class AdminBrandController {
         return ResponseEntity.ok(brandResponse);
     }
 
-    /*
-     * try {
-     *     Optional<Brand> brandOpt = brandService.findById(brandId);
-     *     if (brandOpt.isEmpty()) {
-     *         return ResponseEntity.notFound().build();
-     *     }
-     *     Brand brand = brandOpt.get();
-     *     if (brand.getBrandImages() != null) {
-     *         brand.getBrandImages().removeIf(img ->
-     *                 img.getImage() != null && img.getImage().getId().equals(imageId)
-     *         );
-     *         brandService.save(brand);
-     *     }
-     *     return ResponseEntity.noContent().build();
-     * } catch (Exception e) {
-     *     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-     * }
-     */
     @DeleteMapping("/{brandId}/image") // ИЗМЕНЕНО: path с /images/{imageId} на /image
     public ResponseEntity<Void> deleteBrandImage(@PathVariable UUID brandId) {
         try {

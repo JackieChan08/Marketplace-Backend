@@ -70,7 +70,7 @@ public class Product {
     private Subcategory subcategory;
 
     @Column(name = "availability", columnDefinition = "boolean")
-    private boolean availability;
+    private Boolean availability;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("status-products")
