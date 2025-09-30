@@ -33,7 +33,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-
         String registrationId = userRequest.getClientRegistration().getRegistrationId().toLowerCase();
         String email;
         String name;
@@ -69,7 +68,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .email(finalEmail)
                     .name(finalName != null ? finalName : finalEmail)
                     .role(Role.USER)
-                    .password(passwordEncoder.encode("oauth2_placeholder"))
+                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
                     .provider(registrationId)
                     .build();
             return userRepository.save(newUser);

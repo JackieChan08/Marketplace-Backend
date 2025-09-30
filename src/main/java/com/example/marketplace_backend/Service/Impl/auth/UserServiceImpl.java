@@ -13,6 +13,7 @@ import com.example.marketplace_backend.Service.Impl.JwtService;
 import com.example.marketplace_backend.enums.Role;
 import com.example.marketplace_backend.Model.*;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,12 +25,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class UserServiceImpl extends BaseServiceImpl<User, UUID> {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenService refreshTokenService;
     private final ConverterService converterService;
     private final CartRepository cartRepository;
     private final FavoriteRepository favoriteRepository;
@@ -40,7 +42,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UUID> {
     protected UserServiceImpl(UserRepository repository,
                               PasswordEncoder passwordEncoder,
                               JwtService jwtService,
-                              RefreshTokenRepository refreshTokenRepository,
+                              RefreshTokenService refreshTokenService,
                               ConverterService converterService,
                               CartRepository cartRepository,
                               FavoriteRepository favoriteRepository) {
@@ -48,7 +50,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UUID> {
         this.userRepository = repository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
-        this.refreshTokenRepository = refreshTokenRepository;
+        this.refreshTokenService = refreshTokenService;
         this.converterService = converterService;
         this.cartRepository = cartRepository;
         this.favoriteRepository = favoriteRepository;
@@ -56,8 +58,16 @@ public class UserServiceImpl extends BaseServiceImpl<User, UUID> {
 
     @Transactional
     public JwtResponse register(RegisterRequest request) {
+        if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("Email cannot be empty");
+        }
 
-        // Создаём пользователя
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("User with email " + request.getEmail() + " already exists");
+        }
+
+        log.info("Registering new user: {}", request.getEmail());
+
         User saved = userRepository.save(
                 User.builder()
                         .email(request.getEmail())
@@ -67,29 +77,26 @@ public class UserServiceImpl extends BaseServiceImpl<User, UUID> {
                         .build()
         );
 
-        // Создаём пустую корзину для пользователя
         Cart cart = Cart.builder()
                 .user(saved)
                 .build();
-        cartRepository.save(cart); // <--- нужен CartRepository
+        cartRepository.save(cart);
 
-        // Создаём пустое избранное для пользователя
         Favorite favorite = Favorite.builder()
                 .user(saved)
                 .build();
-        favoriteRepository.save(favorite); // <--- нужен FavoriteRepository
+        favoriteRepository.save(favorite);
 
-        // Генерация токенов
         String accessToken = jwtService.generateAccessToken(saved);
-        String refreshTokenStr = jwtService.generateRefreshToken(saved);
+        String refreshToken = jwtService.generateRefreshToken(saved);
 
-        RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setUser(saved);
-        refreshToken.setToken(refreshTokenStr);
-        refreshToken.setExpiryDate(Instant.now().plusMillis(refreshExpiration));
-        refreshTokenRepository.save(refreshToken);
+        refreshTokenService.createOrUpdateRefreshToken(
+                saved,
+                refreshToken,
+                Instant.now().plusMillis(refreshExpiration)
+        );
 
-        return new JwtResponse(accessToken, refreshTokenStr);
+        return new JwtResponse(accessToken, refreshToken);
     }
 
     public List<Order> ordersByUser(User user) {
@@ -105,7 +112,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UUID> {
         return users.map(converterService::convertToUserResponse);
     }
 
-
     public Page<UserResponse> findAll(Pageable pageable) {
         Page<User> users = userRepository.findAll(pageable);
         return users.map(converterService::convertToUserResponse);
@@ -113,7 +119,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UUID> {
 
     public User getCurrentUser(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
-
 }
