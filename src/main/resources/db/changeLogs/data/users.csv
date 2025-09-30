@@ -1,2 +1,3 @@
 id;email;name;role;provider;password;created_at
-3b9f1e2a-6c4b-4d9e-bf2a-8a1c2e3d4f5b;ivan.petrov@example.com;Ivan Petrov;USER;;$2a$10$7uVb9QeKf3Lh2M8nPqR5eO1sTzYxC0vWbYzAqS9cFhGkLrTnUvXa;2025-09-25T15:00:00
+5e0a2fdc-48da-479a-bd76-8cf896131dcc;mistergeki06@gmail.com;Admin;ADMIN;;$2a$10$jH8RK2YajyFszQgws8ahY.rDK6PUylxTQyQpspovvchyi5qQJ7b0e;2025-07-01T12:00:00
+3a9f1b2e-6c4d-4f78-9a2b-0d1e2f3a4b5c;user@example.com;FirstUser;USER;;$2b$10$sRlNBduY77TxmwuClNVJXuTubxguqpfn3kFdG7KGg05ES4z0GSdLC;2025-09-29T23:00:00

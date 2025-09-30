@@ -7,6 +7,7 @@ import com.example.marketplace_backend.Repositories.RefreshTokenRepository;
 import com.example.marketplace_backend.Repositories.UserRepository;
 import com.example.marketplace_backend.Service.Impl.auth.ExternalOAuth2ServiceImpl;
 import com.example.marketplace_backend.Service.Impl.JwtService;
+import com.example.marketplace_backend.Service.Impl.auth.RefreshTokenService;
 import com.example.marketplace_backend.Service.Impl.auth.UserServiceImpl;
 import com.example.marketplace_backend.DTO.Requests.Jwt.LoginRequest;
 import com.example.marketplace_backend.DTO.Requests.Jwt.OAuth2TokenRequest;
@@ -14,7 +15,10 @@ import com.example.marketplace_backend.DTO.Requests.Jwt.RegisterRequest;
 import com.example.marketplace_backend.DTO.Responses.Jwt.JwtResponse;
 
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,23 +34,40 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
-    private AuthenticationManager authenticationManager;
-    private UserRepository userRepository;
-    private JwtService jwtService;
-    private RefreshTokenRepository refreshTokenRepository;
-    private UserServiceImpl userService;
-    private ExternalOAuth2ServiceImpl externalOAuth2Service;
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final JwtService jwtService;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final UserServiceImpl userService;
+    private final ExternalOAuth2ServiceImpl externalOAuth2Service;
+    private final RefreshTokenService refreshTokenService;
+
+    @Value("${jwt.refresh.expiration}")
+    private long refreshExpiration;
+
+    @Value("${app.cookie.domain:}")
+    private String cookieDomain;
+
+    @Value("${app.cookie.secure:true}")
+    private boolean cookieSecure;
 
     @PostMapping("/register")
-    public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest request) {
-        JwtResponse jwtResponse = userService.register(request);
-        return ResponseEntity.ok(jwtResponse);
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        try {
+            JwtResponse jwtResponse = userService.register(request);
+            return ResponseEntity.ok(jwtResponse);
+        } catch (IllegalArgumentException e) {
+            log.error("Registration failed: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
     }
 
     @PostMapping("/login")
+    @Transactional
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -59,16 +80,15 @@ public class AuthController {
             String accessToken = jwtService.generateAccessToken(user);
             String refreshToken = jwtService.generateRefreshToken(user);
 
-            refreshTokenRepository.deleteByUser(user);
-
-            RefreshToken rt = new RefreshToken();
-            rt.setUser(user);
-            rt.setToken(refreshToken);
-            rt.setExpiryDate(Instant.now().plusMillis(2592000000L));
-            refreshTokenRepository.save(rt);
+            refreshTokenService.deleteByUser(user);
+            refreshTokenService.createOrUpdateRefreshToken(
+                    user,
+                    refreshToken,
+                    Instant.now().plusMillis(refreshExpiration)
+            );
 
             setCookie(response, "accessToken", accessToken, 3600);
-            setCookie(response, "refreshToken", refreshToken, 2592000);
+            setCookie(response, "refreshToken", refreshToken, (int) (refreshExpiration / 1000));
 
             return ResponseEntity.ok(Map.of(
                     "accessToken", accessToken,
@@ -76,39 +96,51 @@ public class AuthController {
                     "email", user.getEmail()
             ));
         } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+            log.error("Login failed for email: {}", loginRequest.getEmail());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));
+        } catch (Exception ex) {
+            log.error("Unexpected error during login: {}", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Login failed"));
         }
     }
 
     @GetMapping("/oauth2/success")
+    @Transactional
     public ResponseEntity<?> oauth2Success(@AuthenticationPrincipal OAuth2User oauth2User, HttpServletResponse response) {
-        String email = oauth2User.getAttribute("email");
+        try {
+            String email = oauth2User.getAttribute("email");
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found after OAuth2 login"));
-        String accessToken = jwtService.generateAccessToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found after OAuth2 login"));
 
-        refreshTokenRepository.deleteByUser(user);
+            String accessToken = jwtService.generateAccessToken(user);
+            String refreshToken = jwtService.generateRefreshToken(user);
 
-        RefreshToken token = new RefreshToken();
-        token.setUser(user);
-        token.setToken(refreshToken);
-        token.setExpiryDate(Instant.now().plusMillis(2592000000L));
-        refreshTokenRepository.save(token);
+            refreshTokenService.deleteByUser(user);
+            refreshTokenService.createOrUpdateRefreshToken(
+                    user,
+                    refreshToken,
+                    Instant.now().plusMillis(refreshExpiration)
+            );
 
-        setCookie(response, "accessToken", accessToken, 3600);
-        setCookie(response, "refreshToken", refreshToken, 2592000);
+            setCookie(response, "accessToken", accessToken, 3600);
+            setCookie(response, "refreshToken", refreshToken, (int) (refreshExpiration / 1000));
 
-        return ResponseEntity.ok(Map.of(
-                "accessToken", accessToken,
-                "refreshToken", refreshToken,
-                "email", user.getEmail(),
-                "name", user.getName()
-        ));
+            return ResponseEntity.ok(Map.of(
+                    "accessToken", accessToken,
+                    "refreshToken", refreshToken,
+                    "email", user.getEmail(),
+                    "name", user.getName()
+            ));
+        } catch (Exception e) {
+            log.error("OAuth2 success handler failed: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "OAuth2 authentication failed"));
+        }
     }
 
     @PostMapping("/oauth2/token")
+    @Transactional
     public ResponseEntity<?> oauth2TokenLogin(@RequestBody OAuth2TokenRequest request, HttpServletResponse response) {
         try {
             User user = externalOAuth2Service.processOAuth2Token(request.getToken(), request.getProvider());
@@ -116,16 +148,15 @@ public class AuthController {
             String accessToken = jwtService.generateAccessToken(user);
             String refreshToken = jwtService.generateRefreshToken(user);
 
-            refreshTokenRepository.deleteByUser(user);
-
-            RefreshToken token = new RefreshToken();
-            token.setUser(user);
-            token.setToken(refreshToken);
-            token.setExpiryDate(Instant.now().plusMillis(2592000000L));
-            refreshTokenRepository.save(token);
+            refreshTokenService.deleteByUser(user);
+            refreshTokenService.createOrUpdateRefreshToken(
+                    user,
+                    refreshToken,
+                    Instant.now().plusMillis(refreshExpiration)
+            );
 
             setCookie(response, "accessToken", accessToken, 3600);
-            setCookie(response, "refreshToken", refreshToken, 2592000);
+            setCookie(response, "refreshToken", refreshToken, (int) (refreshExpiration / 1000));
 
             return ResponseEntity.ok(Map.of(
                     "email", user.getEmail(),
@@ -133,62 +164,77 @@ public class AuthController {
                     "accessToken", accessToken,
                     "refreshToken", refreshToken
             ));
+        } catch (IllegalArgumentException e) {
+            log.error("OAuth2 token login failed: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("OAuth2 Login failed: " + e.getMessage());
+            log.error("OAuth2 token login failed: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "OAuth2 Login failed: " + e.getMessage()));
         }
     }
 
     @PostMapping("/logout")
+    @Transactional
     public ResponseEntity<?> logout(
             @CookieValue(value = "refreshToken", required = false) String refreshToken,
             HttpServletResponse response
     ) {
-        if (refreshToken != null) {
-            refreshTokenRepository.deleteByToken(refreshToken);
+        try {
+            if (refreshToken != null) {
+                refreshTokenRepository.deleteByToken(refreshToken);
+            }
+
+            clearCookie(response, "accessToken");
+            clearCookie(response, "refreshToken");
+
+            return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
+        } catch (Exception e) {
+            log.error("Logout failed: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Logout failed"));
         }
-
-        clearCookie(response, "accessToken");
-        clearCookie(response, "refreshToken");
-
-        return ResponseEntity.ok("Logged out successfully");
     }
 
     private void setCookie(HttpServletResponse response, String name, String value, int maxAgeSeconds) {
-//         ====== PROD версия ======
-        String cookie = String.format(
-                "%s=%s; Path=/; Max-Age=%d; HttpOnly; Secure; SameSite=None; Domain=baistore.net",
-                name, value, maxAgeSeconds
-        );
-        response.addHeader("Set-Cookie", cookie);
+        StringBuilder cookie = new StringBuilder()
+                .append(name).append("=").append(value)
+                .append("; Path=/")
+                .append("; Max-Age=").append(maxAgeSeconds)
+                .append("; HttpOnly");
 
-        // ====== DEV версия ======
-//        String cookie = String.format(
-//                "%s=%s; Path=/; Max-Age=%d; HttpOnly",
-//                name, value, maxAgeSeconds
-//        );
-        response.addHeader("Set-Cookie", cookie);
+        if (cookieSecure) {
+            cookie.append("; Secure; SameSite=None");
+        }
 
+        if (cookieDomain != null && !cookieDomain.isEmpty()) {
+            cookie.append("; Domain=").append(cookieDomain);
+        }
+
+        response.addHeader("Set-Cookie", cookie.toString());
     }
 
     private void clearCookie(HttpServletResponse response, String name) {
-        // ====== PROD версия ======
-        String cookie = String.format(
-                "%s=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=None; Domain=baistore.net",
-                name
-        );
-        response.addHeader("Set-Cookie", cookie);
+        StringBuilder cookie = new StringBuilder()
+                .append(name).append("=")
+                .append("; Path=/")
+                .append("; Max-Age=0")
+                .append("; HttpOnly");
 
-//        // ====== DEV версия ======
-//
-//        String cookie = String.format(
-//                "%s=; Path=/; Max-Age=0; HttpOnly",
-//                name
-//        );
-        response.addHeader("Set-Cookie", cookie);
+        if (cookieSecure) {
+            cookie.append("; Secure; SameSite=None");
+        }
+
+        if (cookieDomain != null && !cookieDomain.isEmpty()) {
+            cookie.append("; Domain=").append(cookieDomain);
+        }
+
+        response.addHeader("Set-Cookie", cookie.toString());
     }
 
-
     @PostMapping("/refresh")
+    @Transactional
     public ResponseEntity<?> refreshAccessToken(
             @RequestBody RefreshTokenRequest request,
             @CookieValue(value = "refreshToken", required = false) String refreshTokenCookie,
@@ -196,37 +242,33 @@ public class AuthController {
     ) {
         try {
             if (refreshTokenCookie == null || request.getAccessToken() == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing tokens");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("error", "Missing tokens"));
             }
 
-            // Проверяем refresh токен в базе
             RefreshToken savedToken = refreshTokenRepository.findByToken(refreshTokenCookie)
                     .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
 
-            // Проверяем срок действия refresh токена
             if (savedToken.getExpiryDate().isBefore(Instant.now())) {
                 refreshTokenRepository.delete(savedToken);
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token expired");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Refresh token expired"));
             }
 
-            // Проверяем accessToken: валиден, но истёк (если у тебя есть такая логика)
             String userEmail = jwtService.extractUsername(request.getAccessToken());
 
             User user = userRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
-            // Генерация нового access токена
             String newAccessToken = jwtService.generateAccessToken(user);
 
-            // Устанавливаем новый accessToken в cookie
             setCookie(response, "accessToken", newAccessToken, 3600);
 
-            return ResponseEntity.ok(Map.of(
-                    "accessToken", newAccessToken
-            ));
+            return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token refresh failed: " + e.getMessage());
+            log.error("Token refresh failed: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Token refresh failed: " + e.getMessage()));
         }
     }
-
 }
