@@ -34,9 +34,9 @@ public class CartController {
     }
 
     @DeleteMapping("/remove")
-    public ResponseEntity<String> removeItem(@ModelAttribute CartRequest request) {
-        cartService.removeItemFromCart(request.getProductVariantId());
-        return ResponseEntity.ok("Removed productVariant with ID: " + request.getProductVariantId());
+    public ResponseEntity<String> removeItem(@RequestParam UUID productVariantId) {
+        cartService.removeItemFromCart(productVariantId);
+        return ResponseEntity.ok("Removed productVariant with ID: " + productVariantId);
     }
 
     @DeleteMapping("/clear")
@@ -75,23 +75,10 @@ public class CartController {
 
     @PostMapping("/update-quantity")
     public ResponseEntity<CartResponse> updateItemQuantity(
-            @RequestParam UUID productId,
+            @RequestParam UUID productVariantId,
             @RequestParam int quantity
     ) {
-        Cart updatedCart = cartService.updateItemQuantity(productId, quantity);
+        Cart updatedCart = cartService.updateItemQuantity(productVariantId, quantity);
         return ResponseEntity.ok(converterService.convertToCartResponse(updatedCart));
     }
-
-
-//    @GetMapping("/items")
-//    public ResponseEntity<Page<FavoriteItemResponse>> getPaginatedFavoriteItems(
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "10") int size
-//    ) {
-//        Pageable pageable = PageRequest.of(page, size);
-//        Page<FavoriteItem> favoriteItems = favoriteService.findAllItems(pageable);
-//
-//        Page<FavoriteItemResponse> responses = favoriteItems.map(converterService::convertToFavoriteItemResponse);
-//        return ResponseEntity.ok(responses);
-//    }
 }

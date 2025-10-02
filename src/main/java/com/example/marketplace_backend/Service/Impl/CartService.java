@@ -101,9 +101,9 @@ public class CartService {
     }
 
     @Transactional
-    public void removeItemFromCart(UUID productId) {
+    public void removeItemFromCart(UUID productVariantId) {
         Cart cart = getCart();
-        cart.getCartItems().removeIf(item -> item.getProductVariant().getId().equals(productId));
+        cart.getCartItems().removeIf(item -> item.getProductVariant().getId().equals(productVariantId));
         cartRepository.save(cart);
     }
 
