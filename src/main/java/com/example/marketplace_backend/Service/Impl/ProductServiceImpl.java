@@ -324,7 +324,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
             }
         }
 
-        // Переменная для хранения первой найденной цены из спецификаций
+        // Переменная для хранения первой найденной цены из спецификаций или цветов
         BigDecimal firstSpecPrice = null;
 
         // Обработка цветов и спецификаций
@@ -349,6 +349,11 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                         .build();
                 ProductColor savedColor = productColorRepository.save(color);
 
+                // Сохраняем первую цену из цвета, если она есть и еще не установлена
+                if (firstSpecPrice == null && colorReq.getPrice() != null) {
+                    firstSpecPrice = colorReq.getPrice();
+                }
+
                 // Сохраняем изображения цвета
                 if (colorReq.getImages() != null) {
                     for (MultipartFile imageFile : colorReq.getImages()) {
@@ -371,7 +376,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
 
                         if (simTypeReq.getPhoneMemoryRequests() != null && !simTypeReq.getPhoneMemoryRequests().isEmpty()) {
                             for (PhoneMemoryRequest memoryReq : simTypeReq.getPhoneMemoryRequests()) {
-                                // Сохраняем первую цену, если еще не установлена
+                                // Сохраняем первую цену из спецификации, если еще не установлена
                                 if (firstSpecPrice == null && memoryReq.getPrice() != null) {
                                     firstSpecPrice = memoryReq.getPrice();
                                 }
@@ -416,7 +421,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
 
                                 if (ssdReq.getRamRequests() != null && !ssdReq.getRamRequests().isEmpty()) {
                                     for (RamRequest ramReq : ssdReq.getRamRequests()) {
-                                        // Сохраняем первую цену, если еще не установлена
+                                        // Сохраняем первую цену из спецификации, если еще не установлена
                                         if (firstSpecPrice == null && ramReq.getPrice() != null) {
                                             firstSpecPrice = ramReq.getPrice();
                                         }
@@ -457,7 +462,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
 
                         if (strapSizeReq.getDialRequests() != null && !strapSizeReq.getDialRequests().isEmpty()) {
                             for (DialRequest dialReq : strapSizeReq.getDialRequests()) {
-                                // Сохраняем первую цену, если еще не установлена
+                                // Сохраняем первую цену из спецификации, если еще не установлена
                                 if (firstSpecPrice == null && dialReq.getPrice() != null) {
                                     firstSpecPrice = dialReq.getPrice();
                                 }
@@ -483,7 +488,11 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                                 productVariantRepository.save(variant);
                             }
                         } else {
-                            // Нет dials — создаём базовый dial
+                            // Нет dials — создаём базовый dial с ценой из цвета
+                            BigDecimal variantPrice = colorReq.getPrice() != null
+                                    ? colorReq.getPrice()
+                                    : (product.getPrice() != null ? product.getPrice() : BigDecimal.ZERO);
+
                             Dial dial = Dial.builder()
                                     .name("Standard")
                                     .price(BigDecimal.ZERO)
@@ -500,6 +509,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                                     .product(savedProduct)
                                     .color(savedColor)
                                     .watchSpec(savedWatchSpec)
+                                    .price(variantPrice)
                                     .build();
                             productVariantRepository.save(variant);
                         }
@@ -515,7 +525,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
 
                         if (moduleReq.getTableMemoryRequests() != null && !moduleReq.getTableMemoryRequests().isEmpty()) {
                             for (TableMemoryRequest memoryReq : moduleReq.getTableMemoryRequests()) {
-                                // Сохраняем первую цену, если еще не установлена
+                                // Сохраняем первую цену из спецификации, если еще не установлена
                                 if (firstSpecPrice == null && memoryReq.getPrice() != null) {
                                     firstSpecPrice = memoryReq.getPrice();
                                 }
@@ -541,6 +551,11 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                                 productVariantRepository.save(variant);
                             }
                         } else {
+                            // Нет памяти — создаём базовую память с ценой из цвета
+                            BigDecimal variantPrice = colorReq.getPrice() != null
+                                    ? colorReq.getPrice()
+                                    : (product.getPrice() != null ? product.getPrice() : BigDecimal.ZERO);
+
                             TableMemory tableMemory = TableMemory.builder()
                                     .name("Standard")
                                     .price(BigDecimal.ZERO)
@@ -557,6 +572,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                                     .product(savedProduct)
                                     .color(savedColor)
                                     .tableSpec(savedTableSpec)
+                                    .price(variantPrice)
                                     .build();
                             productVariantRepository.save(variant);
                         }
@@ -564,9 +580,15 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                 }
                 // Если нет спецификаций — создаём вариант только с цветом
                 else {
+                    // Определяем цену для варианта: берём из цвета, если есть, иначе из продукта
+                    BigDecimal variantPrice = colorReq.getPrice() != null
+                            ? colorReq.getPrice()
+                            : (product.getPrice() != null ? product.getPrice() : null);
+
                     ProductVariant variant = ProductVariant.builder()
                             .product(savedProduct)
                             .color(savedColor)
+                            .price(variantPrice)
                             .build();
                     productVariantRepository.save(variant);
                 }
@@ -580,16 +602,17 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                         .image(fileEntity)
                         .build();
                 productImageRepository.save(productImage);
-
-                ProductVariant variant = ProductVariant.builder()
-                        .product(savedProduct)
-                        .price(product.getPrice())
-                        .build();
-                productVariantRepository.save(variant);
             }
+
+            // Создаём один базовый вариант без цвета
+            ProductVariant variant = ProductVariant.builder()
+                    .product(savedProduct)
+                    .price(product.getPrice())
+                    .build();
+            productVariantRepository.save(variant);
         }
 
-        // Устанавливаем цену продукта из первой спецификации, если она не была указана
+        // Устанавливаем цену продукта из первой найденной цены (из спецификации или цвета)
         if (request.getPrice() == null && firstSpecPrice != null) {
             savedProduct.setPrice(firstSpecPrice);
             productRepository.save(savedProduct);
@@ -651,8 +674,6 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         if (request.getDescription() != null) {
             product.setDescription(request.getDescription());
         }
-        // Для boolean поля проверяем через метод или используем Boolean wrapper
-        // Предполагая, что в ProductRequest availability имеет тип Boolean (не boolean)
         if (request.getAvailability() != null) {
             product.setAvailability(request.getAvailability());
         }
@@ -675,7 +696,6 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         Product savedProduct = productRepository.save(product);
 
         // --- ОБНОВЛЕНИЕ СВЯЗАННЫХ СУЩНОСТЕЙ ---
-        // Обновляем только если соответствующие данные переданы в request
 
         // Статусы - очищаем и пересоздаем только если переданы новые
         if (request.getStatusId() != null) {
@@ -696,7 +716,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
 
         // Цвета и спецификации - обновляем только если переданы
         if (request.getColors() != null) {
-            // Очищаем старые связи только если передаются новые цвета
+            // Очищаем старые связи только если передают новые цвета
             productVariantRepository.deleteByProductId(productId);
             productColorRepository.deleteByProductId(productId);
 
@@ -759,6 +779,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                                             .product(savedProduct)
                                             .color(savedColor)
                                             .phoneSpec(savedPhoneSpec)
+                                            .price(memoryReq.getPrice())
                                             .build();
                                     productVariantRepository.save(variant);
                                 }
@@ -799,6 +820,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                                                     .product(savedProduct)
                                                     .color(savedColor)
                                                     .laptopSpec(savedLaptopSpec)
+                                                    .price(ramReq.getPrice())
                                                     .build();
                                             productVariantRepository.save(variant);
                                         }
@@ -833,10 +855,16 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                                             .product(savedProduct)
                                             .color(savedColor)
                                             .watchSpec(savedWatchSpec)
+                                            .price(dialReq.getPrice())
                                             .build();
                                     productVariantRepository.save(variant);
                                 }
                             } else {
+                                // Нет dials — создаём базовый dial с ценой из цвета
+                                BigDecimal variantPrice = colorReq.getPrice() != null
+                                        ? colorReq.getPrice()
+                                        : (savedProduct.getPrice() != null ? savedProduct.getPrice() : BigDecimal.ZERO);
+
                                 Dial dial = Dial.builder()
                                         .name("Standard")
                                         .price(BigDecimal.ZERO)
@@ -853,6 +881,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                                         .product(savedProduct)
                                         .color(savedColor)
                                         .watchSpec(savedWatchSpec)
+                                        .price(variantPrice)
                                         .build();
                                 productVariantRepository.save(variant);
                             }
@@ -884,10 +913,16 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                                             .product(savedProduct)
                                             .color(savedColor)
                                             .tableSpec(savedTableSpec)
+                                            .price(memoryReq.getPrice())
                                             .build();
                                     productVariantRepository.save(variant);
                                 }
                             } else {
+                                // Нет памяти — создаём базовую память с ценой из цвета
+                                BigDecimal variantPrice = colorReq.getPrice() != null
+                                        ? colorReq.getPrice()
+                                        : (savedProduct.getPrice() != null ? savedProduct.getPrice() : BigDecimal.ZERO);
+
                                 TableMemory tableMemory = TableMemory.builder()
                                         .name("Standard")
                                         .price(BigDecimal.ZERO)
@@ -904,6 +939,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                                         .product(savedProduct)
                                         .color(savedColor)
                                         .tableSpec(savedTableSpec)
+                                        .price(variantPrice)
                                         .build();
                                 productVariantRepository.save(variant);
                             }
@@ -911,9 +947,15 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
                     }
                     // Если нет спецификаций — создаём вариант только с цветом
                     else {
+                        // Определяем цену для варианта: берём из цвета, если есть, иначе из продукта
+                        BigDecimal variantPrice = colorReq.getPrice() != null
+                                ? colorReq.getPrice()
+                                : (savedProduct.getPrice() != null ? savedProduct.getPrice() : null);
+
                         ProductVariant variant = ProductVariant.builder()
                                 .product(savedProduct)
                                 .color(savedColor)
+                                .price(variantPrice)
                                 .build();
                         productVariantRepository.save(variant);
                     }

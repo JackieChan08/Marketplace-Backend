@@ -62,7 +62,7 @@ public class Order {
     @Column(name = "is_wholesale")
     private boolean isWholesale;// true — опт, false — розница
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "status_id")
     private Statuses status;
 

@@ -519,7 +519,7 @@
         </createTable>
     </changeSet>
 
-    <!-- Добавляем колонку status_id в таблицу orders для OneToOne связи -->
+    <!-- Добавляем колонку status_id в таблицу orders для Many-to-One связи -->
     <changeSet id="add-status-id-to-orders" author="developer">
         <addColumn tableName="orders">
             <column name="status_id" type="UUID"/>
