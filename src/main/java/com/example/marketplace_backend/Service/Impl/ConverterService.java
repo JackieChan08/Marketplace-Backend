@@ -805,6 +805,7 @@ public class ConverterService {
                             .id(variant.getColor().getId())
                             .name(variant.getColor().getName())
                             .hex(variant.getColor().getHex())
+                            .price(variant.getColor().getPrice())
                             .images(
                                     variant.getColor().getImages().stream()
                                             .map(this::convertToFileResponseForProductColorImage)
@@ -821,21 +822,22 @@ public class ConverterService {
             if (variant.getLaptopSpec() != null && variant.getLaptopSpec().getChip() != null) {
                 handleLaptopSpec(variant, colorResp);
             }
-
             // --- PHONE SPEC ---
-            if (variant.getPhoneSpec() != null && variant.getPhoneSpec().getSimType() != null) {
+            else if (variant.getPhoneSpec() != null && variant.getPhoneSpec().getSimType() != null) {
                 handlePhoneSpec(variant, colorResp);
             }
-
             // --- TABLE SPEC ---
-            if (variant.getTableSpec() != null && variant.getTableSpec().getTableModule() != null) {
+            else if (variant.getTableSpec() != null && variant.getTableSpec().getTableModule() != null) {
                 handleTableSpec(variant, colorResp);
             }
-
             // --- WATCH SPEC ---
-            if (variant.getWatchSpec() != null && variant.getWatchSpec().getStrapSize() != null) {
+            else if (variant.getWatchSpec() != null && variant.getWatchSpec().getStrapSize() != null) {
                 handleWatchSpec(variant, colorResp);
             }
+            else {
+                colorResp.setColorVariantId(variant.getId());
+            }
+
         }
 
         return new ArrayList<>(colorMap.values());

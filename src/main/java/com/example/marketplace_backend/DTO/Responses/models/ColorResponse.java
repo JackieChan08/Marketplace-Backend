@@ -20,8 +20,10 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ColorResponse {
     private UUID id;
+    private UUID colorVariantId;
     private String name;
     private String hex;
+    private BigDecimal price;
     private List<FileResponse> images;
     private List<ChipResponse> chipResponses;
     private List<SimTypeResponse> simTypeResponses;
