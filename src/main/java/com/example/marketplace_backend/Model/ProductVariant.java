@@ -9,8 +9,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -28,26 +30,29 @@ public class ProductVariant {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "color_id")
     private ProductColor color;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "phone_spec_id")
     private PhoneSpec phoneSpec;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "laptop_spec_id")
     private LaptopSpec laptopSpec;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "table_spec_id")
     private TableSpec tableSpec;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "watch_spec_id")
     private WatchSpec watchSpec;
 
     @Column
     private BigDecimal price;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 }

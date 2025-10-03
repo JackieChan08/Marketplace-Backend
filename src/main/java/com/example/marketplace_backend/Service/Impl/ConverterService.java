@@ -846,6 +846,10 @@ public class ConverterService {
     }
 
     private void handleLaptopSpec(ProductVariant variant, ColorResponse colorResp) {
+        if (variant.getDeletedAt() != null) {
+            return;
+        }
+
         Chip chip = variant.getLaptopSpec().getChip();
         ChipResponse chipResp = colorResp.getChipResponses().stream()
                 .filter(c -> Objects.equals(c.getId(), chip.getId()))
@@ -892,6 +896,10 @@ public class ConverterService {
     }
 
     private void handlePhoneSpec(ProductVariant variant, ColorResponse colorResp) {
+        if (variant.getDeletedAt() != null) {
+            return;
+        }
+
         SimType simType = variant.getPhoneSpec().getSimType();
         SimTypeResponse simTypeResp = colorResp.getSimTypeResponses().stream()
                 .filter(st -> Objects.equals(st.getId(), simType.getId()))
@@ -922,6 +930,10 @@ public class ConverterService {
     }
 
     private void handleTableSpec(ProductVariant variant, ColorResponse colorResp) {
+        if (variant.getDeletedAt() != null) {
+            return;
+        }
+
         TableModule tableModule = variant.getTableSpec().getTableModule();
         TableModuleResponse moduleResp = colorResp.getTableModuleResponses().stream()
                 .filter(tm -> Objects.equals(tm.getId(), tableModule.getId()))
@@ -952,6 +964,10 @@ public class ConverterService {
     }
 
     private void handleWatchSpec(ProductVariant variant, ColorResponse colorResp) {
+        if (variant.getDeletedAt() != null) {
+            return;
+        }
+
         StrapSize strapSize = variant.getWatchSpec().getStrapSize();
         StrapSizeResponse strapSizeResp = colorResp.getStrapSizeResponses().stream()
                 .filter(ss -> Objects.equals(ss.getId(), strapSize.getId()))

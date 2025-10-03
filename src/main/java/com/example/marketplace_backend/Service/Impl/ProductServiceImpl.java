@@ -717,8 +717,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, UUID> {
         // Цвета и спецификации - обновляем только если переданы
         if (request.getColors() != null) {
             // Очищаем старые связи только если передают новые цвета
-            productVariantRepository.deleteByProductId(productId);
-            productColorRepository.deleteByProductId(productId);
+            productVariantRepository.softDeleteByProductId(productId);
+            productColorRepository.softDeleteByProductId(productId);
 
             if (!request.getColors().isEmpty()) {
                 for (ColorWithSpecsRequest colorReq : request.getColors()) {

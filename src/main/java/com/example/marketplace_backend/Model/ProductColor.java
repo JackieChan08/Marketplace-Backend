@@ -7,8 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +21,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Where(clause = "deleted_at IS NULL")
 public class ProductColor {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -36,4 +39,7 @@ public class ProductColor {
     @OneToMany(mappedBy = "color", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<ProductColorImage> images = new ArrayList<>();
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 }

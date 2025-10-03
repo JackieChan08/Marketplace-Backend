@@ -35,9 +35,9 @@ public class FavoriteController {
     }
 
     @DeleteMapping("/remove")
-    public ResponseEntity<String> removeItem(@ModelAttribute FavoriteRequest request) {
-        favoriteService.removeItemFromFavorite(request.getProductVariantId());
-        return ResponseEntity.ok("Removed product with ID: " + request.getProductVariantId());
+    public ResponseEntity<String> removeItem(@RequestParam UUID productVariantId) {
+        favoriteService.removeItemFromFavorite(productVariantId);
+        return ResponseEntity.ok("Removed productVariant with ID: " + productVariantId);
     }
 
     @DeleteMapping("/clear")
@@ -56,6 +56,7 @@ public class FavoriteController {
 //    public ResponseEntity<List<FavoriteItem>> getFavoriteItems() {
 //        return favoriteService.getFavoriteItemsByUserId();
 //    }
+
     @GetMapping("/items")
     public ResponseEntity<Page<FavoriteItemResponse>> getPaginatedFavoriteItems(
             @RequestParam(defaultValue = "0") int page,

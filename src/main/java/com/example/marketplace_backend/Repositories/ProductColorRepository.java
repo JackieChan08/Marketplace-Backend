@@ -18,4 +18,12 @@ public interface ProductColorRepository extends JpaRepository<ProductColor, UUID
     @Query("DELETE FROM ProductColor pc WHERE pc.id IN (" +
             "SELECT pv.color.id FROM ProductVariant pv WHERE pv.product.id = :productId)")
     void deleteByProductId(@Param("productId") UUID productId);
+
+    @Modifying
+    @Transactional
+    @Query("update ProductColor pc set pc.deletedAt = CURRENT_TIMESTAMP " +
+            "where pc.id in (" +
+            "  select pv.color.id from ProductVariant pv where pv.product.id = :productId" +
+            ")")
+    void softDeleteByProductId(@Param("productId") UUID productId);
 }

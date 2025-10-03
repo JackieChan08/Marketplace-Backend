@@ -93,9 +93,9 @@ public class FavoriteService {
     }
 
     @Transactional
-    public void removeItemFromFavorite(UUID productId) {
+    public void removeItemFromFavorite(UUID productVariantId) {
         Favorite favorite = getFavorite();
-        favorite.getFavoriteItems().removeIf(item -> item.getProductVariant().getId().equals(productId));
+        favorite.getFavoriteItems().removeIf(item -> item.getProductVariant().getId().equals(productVariantId));
         favoriteRepository.save(favorite);
     }
 
