@@ -1,13 +1,16 @@
 package com.example.marketplace_backend.Service.Impl;
 
 import com.example.marketplace_backend.Model.*;
+import com.example.marketplace_backend.Model.Intermediate_objects.CartItem;
 import com.example.marketplace_backend.Model.Intermediate_objects.FavoriteItem;
 import com.example.marketplace_backend.Repositories.*;
 import com.example.marketplace_backend.DTO.Responses.models.FavoriteItemResponse;
 import com.example.marketplace_backend.DTO.Responses.models.FavoriteResponse;
 import com.example.marketplace_backend.Service.Impl.auth.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -50,16 +53,32 @@ public class FavoriteService {
     }
 
     public Favorite getFavorite() {
-        return favoriteRepository.findFavoriteByUserId(extractUser().getId()).orElseGet(() -> {
+        UUID userId = extractUser().getId();
+
+        return favoriteRepository.findFavoriteByUserId(userId).orElseGet(() -> {
             Favorite newFavorite = new Favorite();
             newFavorite.setUser(extractUser());
             newFavorite.setFavoriteItems(new ArrayList<>());
-            return favoriteRepository.save(newFavorite);
+            try {
+                return favoriteRepository.save(newFavorite);
+            } catch (DataIntegrityViolationException e) {
+                return favoriteRepository.findFavoriteByUserId(userId)
+                        .orElseThrow(() -> new RuntimeException("Failed to create or retrieve favorite"));
+            }
+
         });
     }
 
     public Page<FavoriteItem> findAllItems(Pageable pageable) {
-        return favoriteItemRepository.findAll(pageable);
+        Favorite favorite = getFavorite();
+        List<FavoriteItem> favoriteItems = favorite.getFavoriteItems();
+
+        int start = (int)pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), favoriteItems.size());
+
+        List<FavoriteItem> pageContent = favoriteItems.subList(start, end);
+
+        return new PageImpl<>(pageContent, pageable, pageable.getPageSize());
     }
 
     private User extractUser() {
