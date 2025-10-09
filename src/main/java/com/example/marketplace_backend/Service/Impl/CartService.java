@@ -9,6 +9,7 @@ import com.example.marketplace_backend.Service.Impl.auth.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -60,7 +61,6 @@ public class CartService {
             try {
                 return cartRepository.save(newCart);
             } catch (DataIntegrityViolationException e) {
-                // Если во время сохранения другой поток уже создал корзину, просто вернем её
                 return cartRepository.findCartByUserId(userId)
                         .orElseThrow(() -> new RuntimeException("Failed to create or retrieve cart"));
             }
@@ -120,12 +120,20 @@ public class CartService {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    public Page<CartItem> findAllItems (Pageable pageable) {
-        return cartItemRepository.findAll(pageable);
+    public Page<CartItem> findAllItems(Pageable pageable) {
+        Cart cart = getCart();
+        List<CartItem> cartItems = cart.getCartItems();
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), cartItems.size());
+
+        List<CartItem> pageContent = cartItems.subList(start, end);
+
+        return new PageImpl<>(pageContent, pageable, cartItems.size());
     }
 
     public Cart updateItemQuantity(UUID productId, int quantity) {
-        Cart cart = getCart(); // твой метод, который достаёт корзину текущего пользователя
+        Cart cart = getCart();
 
         CartItem cartItem = cart.getCartItems().stream()
                 .filter(item -> item.getProductVariant().getId().equals(productId))
@@ -133,7 +141,6 @@ public class CartService {
                 .orElseThrow(() -> new RuntimeException("Product not found in cart"));
 
         if (quantity <= 0) {
-            // если количество <= 0, удаляем товар из корзины
             cart.getCartItems().remove(cartItem);
             cartItemRepository.delete(cartItem);
         } else {
@@ -143,28 +150,6 @@ public class CartService {
 
         return cartRepository.save(cart);
     }
-
-//    private BigDecimal resolveProductPrice(ProductVariant variant) {
-//        if (variant.getPhoneSpec() != null && variant.getPhoneSpec().getPrice() != null) {
-//            return variant.getPhoneSpec().getPrice();
-//        } else if (variant.getLaptopSpec() != null
-//                && !variant.getLaptopSpec().getChips().isEmpty()
-//                && !variant.getLaptopSpec().getChips().get(0).getSsds().isEmpty()
-//                && !variant.getLaptopSpec().getChips().get(0).getSsds().get(0).getRams().isEmpty()
-//                && variant.getLaptopSpec().getChips().get(0).getSsds().get(0).getRams().get(0).getPrice() != null) {
-//            return variant.getLaptopSpec().getChips()
-//                    .get(0)
-//                    .getSsds()
-//                    .get(0)
-//                    .getRams()
-//                    .get(0)
-//                    .getPrice();
-//        } else if (variant.getProduct() != null && variant.getProduct().getPrice() != null) {
-//            return variant.getProduct().getPrice();
-//        } else {
-//            throw new RuntimeException("Price not defined for product variant: " + variant.getId());
-//        }
-//    }
 
     public List<UUID> getProductVariantsIds() {
         return getCart().getCartItems().stream()
@@ -177,7 +162,4 @@ public class CartService {
                 .map(ids -> ids.getProductVariant().getProduct().getId())
                 .toList();
     }
-
-
 }
-
