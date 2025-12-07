@@ -10,6 +10,7 @@ import com.example.marketplace_backend.Model.Product;
 import com.example.marketplace_backend.Service.Impl.ConverterService;
 import com.example.marketplace_backend.Service.Impl.FileUploadService;
 import com.example.marketplace_backend.Service.Impl.ProductServiceImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -99,7 +100,7 @@ public class AdminProductController {
 
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     public ResponseEntity<?> createProductWithImages(
-            @ModelAttribute ProductRequest request
+            @Valid @ModelAttribute ProductRequest request
     ) throws Exception {
         ProductResponse productResponse = converterService.convertToProductResponse(
                 productService.createProduct(request)

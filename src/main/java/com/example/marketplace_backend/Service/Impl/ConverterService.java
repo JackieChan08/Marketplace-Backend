@@ -603,17 +603,9 @@ public class ConverterService {
     }
 
     public FavoriteResponse convertToFavoriteResponse(Favorite favorite) {
-        List<FavoriteItemResponse> items = favorite.getFavoriteItems().stream().map(item -> {
-            BigDecimal totalPrice = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
-            return FavoriteItemResponse.builder()
-                    .productVariant(convertToProductVariantResponse(item.getProductVariant()))
-                    .quantity(item.getQuantity())
-                    .pricePerItem(item.getPrice())
-                    .totalPrice(totalPrice)
-                    .favoriteItemId(item.getId())
-                    .addedAt(item.getAddedAt())
-                    .build();
-        }).collect(Collectors.toList());
+        List<FavoriteItemResponse> items = favorite.getFavoriteItems().stream()
+                .map(this::convertToFavoriteItemResponse) // <-- ВОТ ТАК
+                .collect(Collectors.toList());
 
         BigDecimal total = items.stream()
                 .map(FavoriteItemResponse::getTotalPrice)
@@ -624,6 +616,7 @@ public class ConverterService {
                 .totalPrice(total)
                 .build();
     }
+
 
     public FavoriteItemResponse convertToFavoriteItemResponse(FavoriteItem item) {
         BigDecimal totalPrice = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
