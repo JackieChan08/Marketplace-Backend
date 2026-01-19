@@ -1,6 +1,7 @@
 package com.example.marketplace_backend.DTO.Responses.models;
 
 import com.example.marketplace_backend.DTO.Responses.models.CartOrderFavorite.ColorResponseBasic;
+import com.example.marketplace_backend.DTO.Responses.models.ImageReponse.FileResponse;
 import com.example.marketplace_backend.DTO.Responses.models.LaptopResponse.ChipResponse;
 import com.example.marketplace_backend.DTO.Responses.models.PhoneSpecResponse.SimTypeResponse;
 import com.example.marketplace_backend.DTO.Responses.models.TableResponse.TableModuleResponse;
@@ -27,4 +28,5 @@ public class ProductVariantResponse {
     private List<SimTypeResponse> simTypeResponses;
     private List<TableModuleResponse> tableModuleResponses;
     private List<StrapSizeResponse> strapSizeResponses;
+    private FileResponse image;
 }

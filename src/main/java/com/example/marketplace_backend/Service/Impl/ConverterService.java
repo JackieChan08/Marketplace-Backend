@@ -748,8 +748,17 @@ public class ConverterService {
     }
 
     public ProductVariantResponse convertToProductVariantResponse(ProductVariant variant) {
-        if (variant == null) {
-            return null;
+        if (variant == null) return null;
+
+        ColorResponseBasic color = convertToColorResponseBasic(variant.getColor());
+
+        FileResponse image = null;
+
+        if (color != null && color.getImages() != null && !color.getImages().isEmpty()) {
+            image = color.getImages().get(0); // первая картинка цвета
+        } else if (variant.getProduct() != null && variant.getProduct().getImages() != null
+                && !variant.getProduct().getImages().isEmpty()) {
+            image = convertToFileResponseForProductImage(variant.getProduct().getImages().get(0));
         }
 
         return ProductVariantResponse.builder()
@@ -757,19 +766,20 @@ public class ConverterService {
                 .productId(variant.getProduct().getId())
                 .name(variant.getProduct().getName())
                 .availability(variant.getProduct().getAvailability())
-                .color(convertToColorResponseBasic(variant.getColor()))
-                .simTypeResponses(
-                        variant.getPhoneSpec() != null
-                                ? convertToSimTypeResponse(variant.getPhoneSpec())
-                                : null
-                )
+                .color(color)
+                .image(image)
                 .chipResponses(
                         variant.getLaptopSpec() != null
                                 ? convertToChipResponse(variant.getLaptopSpec())
                                 : null
                 )
+                .simTypeResponses(
+                        variant.getPhoneSpec() != null
+                                ? convertToSimTypeResponse(variant.getPhoneSpec())
+                                : null
+                )
                 .strapSizeResponses(
-                        variant.getTableSpec() != null
+                        variant.getWatchSpec() != null
                                 ? convertToStrapSizeResponse(variant.getWatchSpec())
                                 : null
                 )

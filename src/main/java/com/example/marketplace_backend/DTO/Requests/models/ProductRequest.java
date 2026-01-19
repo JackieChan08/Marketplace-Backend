@@ -38,7 +38,6 @@ public class ProductRequest {
     @NotNull(message = "Необходимо указать доступность товара")
     private Boolean availability;
 
-    @NotBlank(message = "Заголовок не может быть пустым")
     private String title;
 
     @NotBlank(message = "Описание не может быть пустым")
@@ -46,7 +45,6 @@ public class ProductRequest {
 
     private String parametersJson;
 
-    @NotEmpty(message = "Необходимо загрузить хотя бы одно изображение")
     private List<MultipartFile> images;
 
     @NotEmpty(message = "Необходимо указать хотя бы один статус")
